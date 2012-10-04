@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="">
+
+  <title>Insta Everything</title>
+  
+  <link rel="stylesheet" href="css/screen.css" type="text/css" media="screen" charset="utf-8">
+  <link rel="stylesheet" href="css/layout.css" type="text/css" media="screen" charset="utf-8">
+  <!--[if lt IE 9]>
+    <script src="excanvas.js"></script>
+  <![endif]-->
+  <script src="http://www.google.com/jsapi?key="></script>
+  <script>
+    google.load("jquery", "1.5");
+  </script>
+  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+  <script src="js/jquery.ui.touch-punch.min.js"></script>
+  <script src="js/jquery.corner.js"></script>
+  <script src="js/canvasMask.min.js"></script>
+  <script src="js/jquery.getimagedata.js"></script>
+  <script src="js/jquery.jsonp.min.js"></script>
+  
+  <script src="js/jcarousellite_1.0.1.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="../lib/jquery.ad-gallery.css">
+  <script type="text/javascript" src="../lib/jquery.ad-gallery.js"></script>
+  <script src="js/application.js"></script>
+</head>
+<body ONDRAGSTART="window.event.returnValue=false">
+<canvas id="mCanvas" width="391" height="657"></canvas>
+
+<div class="mainmenu">
+<table id="maintable">
+<tr>
+<td></td>
+<td></td>
+<td>
+<a id="login" href="https://instagram.com/oauth/authorize/?client_id=1e05a75f3b1548bbbdab2072bb0ed6e7&amp;redirect_uri=http://insta.camangiwebstation.com/&amp;response_type=token">登入 Instagram</a>
+<a id="get-user-data" href="#">Get my photos</a>
+</td>
+</tr>
+</table>
+</div>
+<div id="menubar">
+<ul class="accordion">			
+	<li id="one" class="device">
+		<a href="#one">手機型號<span>iPhone 4/4S</span></a>
+		<ul class="sub-menu">				
+			<li><a href="#"><em>01</em>iPhone 4/4S</a></li>				
+			<li><a href="#"><em>02</em>Galaxy S III</a></li>
+			<li><a href="#"><em>03</em>HTC One</a></li>
+		</ul>
+	</li>			
+	<li id="two" class="layout">
+		<a href="#two">版型設計<span>菱格紋</span></a>
+		<ul class="sub-menu">					
+			<li><a href="#"><em>01</em>菱格紋</a></li>					
+			<li><a href="#"><em>02</em>水滴狀</a></li>
+		</ul>
+	</li>			
+	<li id="three" class="color">
+		<a href="#three">背蓋顏色<span>白色</span></a>
+		<ul class="sub-menu">					
+			<li><a href="#"><em>01</em>白色</a></li>					
+			<li><a href="#"><em>02</em>黑色</a></li>
+			<li><a href="#"><em>03</em>透明</a></li>
+		</ul>
+	</li>
+	<li id="four" class="filter">
+		<a href="#four">濾鏡效果<span>復古</span></a>
+		<ul class="sub-menu">					
+			<li><a href="#"><em>01</em>復古</a></li>					
+			<li><a href="#"><em>02</em>LOMO風</a></li>
+			<li><a href="#"><em>03</em>Vintage</a></li>
+		</ul>
+	</li>		
+</ul>
+</div>
+  <div id="wrapper">
+    <p class="js-alert">You need javascript support for this. <br>Either it's turned of or your browser doesn't support it.</p>
+  </div>
+<div class="recent">
+<div class="sources"></div>
+<div class="ad-gallery"> 
+<div class="ad-nav"><div class="ad-thumbs"><ul class="ad-thumb-list"></ul></div></div>
+</div>
+</div>
+</body>
+</html>
