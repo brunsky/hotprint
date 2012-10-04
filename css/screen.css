@@ -102,6 +102,7 @@ section {
 	height:150px;
 	text-align:center;
 	line-height:150px;
+	z-index:999;
 }
 
 .sources {

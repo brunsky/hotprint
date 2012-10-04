@@ -156,7 +156,7 @@
 function cirClipper(ctx, img, diameter) {
     ctx.save(); 
     ctx.beginPath();
-    ctx.arc(diameter/2, diameter/2, diameter/2, 0, Math.PI * 2, true);      
+    ctx.arc(diameter/2, diameter/2, diameter/2+1, 0, Math.PI * 2, true);      
     ctx.clip();  
     ctx.globalAlpha = 0.9;        
     ctx.drawImage(img, 0, 0);
@@ -215,9 +215,11 @@ function doClipping(srcImg, destDiv, clipper) {
     var len = parseFloat(destDiv.css('width'), 10);
     var destCanvas = document.createElement('canvas');
     var destCtx = destCanvas.getContext('2d');
-    destCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; opacity:0.9; -webkit-backface-visibility:hidden');
-    //destCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; opacity:0.9; z-index:998;');
-	destDiv.append(destCanvas);
+    //destCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; opacity:0.9; -webkit-backface-visibility:hidden; z-index: 1');
+    destCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; opacity:0.9; z-index:997;');
+	destCanvas.style.top = parseFloat(destDiv.css('top'), 10)+3+'px';
+	destCanvas.style.left = parseFloat(destDiv.css('left'), 10)+3+'px';
+	destDiv.after(destCanvas);
     clipper(destCtx, srcImg, len);  
 }
 
@@ -250,6 +252,9 @@ function loadLayout(maskImg, ox , oy){
     $( ".layout_circle" ).droppable({
 		accept: ".draggable",
 		drop: function( event, ui ) {
+			if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
+				$(this).next().remove();
+			}
 			$(this).html('');
 			$(this).append($(ui.draggable).clone());
 			$(this).children(".draggable").css({
