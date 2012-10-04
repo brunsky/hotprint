@@ -215,8 +215,9 @@ function doClipping(srcImg, destDiv, clipper) {
     var len = parseFloat(destDiv.css('width'), 10);
     var destCanvas = document.createElement('canvas');
     var destCtx = destCanvas.getContext('2d');
-    destCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; opacity:0.9; z-index:998');
-    destDiv.append(destCanvas);
+    destCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; opacity:0.9; -webkit-backface-visibility:hidden');
+    //destCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; opacity:0.9; z-index:998;');
+	destDiv.append(destCanvas);
     clipper(destCtx, srcImg, len);  
 }
 
@@ -238,6 +239,12 @@ function loadLayout(maskImg, ox , oy){
       		.html(css)
       		.appendTo("head");
 	});
+	
+	// Adjust position according to mCanvas
+	var _x = parseFloat($destDiv.css('top'), 10);
+	var _y = parseFloat($destDiv.css('left'), 10);
+	$destDiv.css('top', _y+oy+'px');
+	$destDiv.css('left', _x+ox+'px');
 
     // Define Drag&Drop
     $( ".layout_circle" ).droppable({
