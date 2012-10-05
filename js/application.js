@@ -106,47 +106,6 @@
 			}
 		}
 	});
-	/*
-	$( ".landing" ).droppable({
-		accept: ".draggable",
-		drop: function( event, ui ) {
-			$(this).html('');
-			$(this).append($(ui.draggable).clone());
-			$(this).children(".draggable").css({
-				"position": "relative",
-				"top": "0px",
-				"left": "0px"
-			});
-			$(this).children(".draggable").draggable({
-				cursor: 'auto', 
-				distance: 10, 
-				revert:"invalid",
-				drag: function(event, ui) {
-					if ($(this).attr("class").indexOf("ui-draggable-dragging") >= 0) {
-						$(".ui-draggable-dragging").css('z-index','1000');
-					}
-				}
-			});
-			$(this).children(".draggable").css('z-index','');
-			$(this).removeClass("removed");	
-			$(this).children(".draggable").removeClass("ui-draggable-dragging");		
-			$('.landing').css('cursor', 'move');
-		},
-		out: function(event, ui) {
-			if($(this).children(".draggable").css('left') != "0px" && 
-				$(this).children(".draggable").css('top') != "0px") {
-				$(this).addClass("removed");
-			}
-		},
-		deactivate: function(event, ui) {
-			if ($(this).attr("class").indexOf("removed") >= 0) {
-				$(this).children(".draggable").remove();
-				$(this).css('cursor', 'default');
-				$(this).html('<p>Drag Here!</p>');
-			}
-		}
-	});
-	*/
   };
   
 })(jQuery);
@@ -327,19 +286,17 @@ function setContainer(){
 }  
   
 function setFooterTop(){  
-    var winH=$(window).height();  
-    var docH=$(document).height();  
-    $('.recent').css('top',winH-$('.recent').height()+'px');  
+    var winH=$(window).height();   
+    $('.recent').css('top',winH-$('.recent').height()+$(document).scrollTop()+'px');  
     $('.recent').css('width',$(window).width()+'px');  
 	$('.ad-gallery').css('width',($(window).width()-50)+'px');
 }
 
 function setCanvas() {
 
-	var winH=$(window).height();  
-    var docH=$(document).height();
+	var winH=$(window).height();
     $("#mCanvas").css('top', winH * 0.1);
-    $("#mCanvas").css('left', docH/2);  
+    $("#mCanvas").css('left', winH/2);  
 
     var canvas = document.getElementById('mCanvas');
     var context = canvas.getContext('2d');
@@ -404,12 +361,12 @@ $(function(){
 	setFooterTop();
 	// Create phone case canvas and layout
 	setCanvas();
-	
-	
+		
   $.instagramr();
 });
 
 $(window).resize(function() { setContainer();setFooterTop(); }); 
+$(window).scroll(function() { setFooterTop(); });
 
 // If browser didn't support console, then set it empty !
 if (!window.console) window.console = {};

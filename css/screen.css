@@ -21,7 +21,8 @@ body {
   color: #821D1D;
 }
 html {
-overflow-y: scroll;
+	height: 1024px;
+	overflow-y: scroll;
 }
 html.no-js .js-alert {
   display: block;
