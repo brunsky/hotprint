@@ -20,6 +20,9 @@ body {
   background: #FF6B6B;
   color: #821D1D;
 }
+html {
+overflow-y: scroll;
+}
 html.no-js .js-alert {
   display: block;
 }

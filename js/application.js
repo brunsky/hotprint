@@ -173,6 +173,22 @@ function boxClipper(ctx, img, length) {
     ctx.restore();
 }
 
+// No return value, just draw imgae on canvas inside div
+// clipper is the function for clipping
+// support circle and square box
+function doClipping(srcImg, destDiv, clipper) {
+    var len = parseFloat(destDiv.css('width'), 10);
+	var bdr = parseFloat(destDiv.css('border-left-width'), 10);
+    var destCanvas = document.createElement('canvas');
+    var destCtx = destCanvas.getContext('2d');
+    //destCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; opacity:0.9; -webkit-backface-visibility:hidden; z-index: 1');
+    destCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; opacity:0.9; z-index:997;');
+	destCanvas.style.top = parseFloat(destDiv.css('top'), 10) + bdr + 'px';
+	destCanvas.style.left = parseFloat(destDiv.css('left'), 10) + bdr + 'px';
+	destDiv.after(destCanvas);
+    clipper(destCtx, srcImg, len);  
+}
+
 // return value: Canvas Object
 // (ox, oy) is the position of case image
 function doMasking(oriImg, maskImg, destDiv, ox, oy) {
@@ -208,50 +224,14 @@ function doMasking(oriImg, maskImg, destDiv, ox, oy) {
     return resCanvas;
 }
 
-// No return value, just draw imgae on canvas inside div
-// clipper is the function for clipping
-// support circle and square box
-function doClipping(srcImg, destDiv, clipper) {
-    var len = parseFloat(destDiv.css('width'), 10);
-    var destCanvas = document.createElement('canvas');
-    var destCtx = destCanvas.getContext('2d');
-    //destCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; opacity:0.9; -webkit-backface-visibility:hidden; z-index: 1');
-    destCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; opacity:0.9; z-index:997;');
-	destCanvas.style.top = parseFloat(destDiv.css('top'), 10)+3+'px';
-	destCanvas.style.left = parseFloat(destDiv.css('left'), 10)+3+'px';
-	destDiv.after(destCanvas);
-    clipper(destCtx, srcImg, len);  
-}
-
 ////////////////////////////
-// (ox, oy) is the position of case image
-function loadLayout(maskImg, ox , oy){
-    //Create DIV 
-    //var destDiv = document.createElement('div');
-    $destDiv = $(document.createElement('div'));
-    $destDiv.attr('id', 'corner1');
-    $destDiv.attr('class', 'layout_circle');
-    $("#mCanvas").after($destDiv);    
-    $destDiv.corner("999px");
-    
-    //Import CSS
-	var cssLocation = "css/layout.css";
-	$.get(cssLocation, function(css) {
-   		$('<style type="text/css"></style>')
-      		.html(css)
-      		.appendTo("head");
-	});
-	
-	// Adjust position according to mCanvas
-	var _x = parseFloat($destDiv.css('top'), 10);
-	var _y = parseFloat($destDiv.css('left'), 10);
-	$destDiv.css('top', _y+oy+'px');
-	$destDiv.css('left', _x+ox+'px');
 
-    // Define Drag&Drop
-    $( ".layout_circle" ).droppable({
+// Define Drag&Drop
+function setDnD(maskImg, ox, oy) {
+	$( ".layout_circle" ).droppable({
 		accept: ".draggable",
 		drop: function( event, ui ) {
+			console.log("drag drop:"+$(this).attr('id'));
 			if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
 				$(this).next().remove();
 			}
@@ -261,7 +241,7 @@ function loadLayout(maskImg, ox , oy){
 				"position": "relative",
 				"top": "0px",
 				"left": "0px",
-				"opacity": "0.0"
+				"opacity": "0.1"
 			});
 			$(this).children(".draggable").draggable({
 				cursor: 'auto', 
@@ -270,6 +250,7 @@ function loadLayout(maskImg, ox , oy){
 				drag: function(event, ui) {
 					if ($(this).attr("class").indexOf("ui-draggable-dragging") >= 0) {
 						$(".ui-draggable-dragging").css('z-index','1000');
+						$(".ui-draggable-dragging").css("opacity", "0.9");
 					}
 				}
 			});
@@ -281,22 +262,10 @@ function loadLayout(maskImg, ox , oy){
         		url: imgSrc,
         		server: "http://insta.camangiwebstation.com/proxy/getImageData.php",
         		success: function(image){
-        			 /*
-        			 // for testing
-        			 var _img = doMasking(image, maskImg, divObj, ox, oy);
-
-        			var adjustMaskCanvas = document.createElement('canvas');
-    				var adjustMaskCtx = adjustMaskCanvas.getContext('2d'); 
-    				adjustMaskCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; opacity:0.9; z-index:998');                       
-    				adjustMaskCtx.drawImage(_img, 0, 0);
-    				divObj.append(adjustMaskCanvas);
-    				*/
             		doClipping( 
             			doMasking(image, maskImg, divObj, ox, oy), 
             			divObj, 
             			cirClipper);
-            		
-            		console.log("Get image:"+imgSrc);
         		},
         		error: function(xhr, text_status){
             		console.log("Fail to get image:"+imgSrc);
@@ -306,20 +275,47 @@ function loadLayout(maskImg, ox , oy){
 			$(this).children(".draggable").css('z-index','');
 			$(this).removeClass("removed");	
 			$(this).children(".draggable").removeClass("ui-draggable-dragging");		
-			$('.landing').css('cursor', 'move');
+			$(this).css('cursor', 'move');
 		},
 		out: function(event, ui) {
-			if($(this).children(".draggable").css('left') != "0px" && 
-				$(this).children(".draggable").css('top') != "0px") {
-				$(this).addClass("removed");
+			console.log("drag out:"+$(this).attr('id'));
+			if ($(this).children(".draggable").length > 0 ) { 
+				if ($(this).children(".draggable").attr("class").indexOf("ui-draggable-dragging") >= 0)
+					$(this).addClass("removed");
 			}
 		},
 		deactivate: function(event, ui) {
+			console.log("drag deactivate:"+$(this).attr('id'));
 			if ($(this).attr("class").indexOf("removed") >= 0) {
 				$(this).children(".draggable").remove();
 				$(this).css('cursor', 'default');
+				if ($(this).next().attr('class') == '')
+				if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
+					$(this).next().remove();
+				}
+				$(this).removeClass("removed");
 			}
 		}
+	});
+}
+
+// (ox, oy) is the position of case image
+function loadLayout(maskImg, ox , oy){ 
+    //Import CSS
+	var cssLocation = "css/layout_1.css";
+	$.get(cssLocation, function(css) {
+   		$('<style type="text/css"></style>').html(css).appendTo("head");	
+		//Import layout js
+		layout_oy = oy;
+		layout_ox = ox;
+		var layoutLocation = "js/layout_1.js";
+		$.getScript(layoutLocation)
+			.done(function(data, textStatus, jqxhr) {
+				setDnD(maskImg, ox, oy); // Define Drag&Drop
+			})
+			.fail(function(data, textStatus, jqxhr) {
+				console.log('load layout.js failed');
+			})
 	});
 }
 
@@ -414,3 +410,7 @@ $(function(){
 });
 
 $(window).resize(function() { setContainer();setFooterTop(); }); 
+
+// If browser didn't support console, then set it empty !
+if (!window.console) window.console = {};
+if (!window.console.log) window.console.log = function () { };
