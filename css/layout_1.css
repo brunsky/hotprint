@@ -1,0 +1,49 @@
+#corner1 {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    top: 30px;
+    left: 30px;
+    border: 1px solid silver;
+	z-index: 998;
+}
+
+#corner2 {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    top: 130px;
+    left: 30px;
+    border: 1px solid silver;
+	z-index: 998;
+}
+
+#corner3 {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    top: 230px;
+    left: 30px;
+    border: 1px solid silver;
+	z-index: 998;
+}
+
+#corner4 {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    top: 330px;
+    left: 30px;
+    border: 1px solid silver;
+	z-index: 998;
+}
+
+#corner5 {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    top: 430px;
+    left: 30px;
+    border: 1px solid silver;
+	z-index: 998;
+}
