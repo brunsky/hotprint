@@ -1,7 +1,7 @@
 var _x;
 var _y;
 
-for (var i=1; i<6; i++) {
+for (var i=1; i<=23; i++) {
 	//Create DIV 
 	$destDiv = $(document.createElement('div'));
 	$destDiv.attr('id', 'corner'+i);
