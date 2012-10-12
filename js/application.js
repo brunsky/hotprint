@@ -111,6 +111,259 @@
 })(jQuery);
 
 //////////////////////////////////////////////////
+// realClipper
+
+function realClipper(cornerDiv, srcImg) {
+	var theSelection;
+	var canvas;
+	var ctx;
+	var iMouseX, iMouseY = 1;
+	var cornerX = parseFloat(cornerDiv.css('left'), 10);
+	var cornerY = parseFloat(cornerDiv.css('top'), 10);
+	var cornerW = parseFloat(cornerDiv.css('width'), 10);
+	var cornerH = parseFloat(cornerDiv.css('height'), 10);
+	
+	function Selection(x, y, w, h){
+		this.x = x; // initial positions
+		this.y = y;
+		this.w = w; // and size
+		this.h = h;
+		this.px = x; // extra variables to dragging calculations
+		this.py = y;
+		this.csize = 10; // resize cubes size
+		this.csizeh = 15; // resize cubes size (on hover)
+		this.bHow = [false, false, false, false]; // hover statuses
+		this.iCSize = [this.csize, this.csize, this.csize, this.csize]; // resize cubes sizes
+		this.bDrag = [false, false, false, false]; // drag statuses
+		this.bDragAll = false; // drag whole selection
+		this.oImg;
+	}
+
+	Selection.prototype.draw = function(){
+		ctx.drawImage(srcImg, 0, 0, 150, 150, 
+					  theSelection.x,theSelection.y, 
+					  theSelection.w, theSelection.h);  
+		theSelection.oImg = ctx.getImageData(cornerX, cornerY, cornerW, cornerH);   
+		ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+		ctx.fillRect(theSelection.x,theSelection.y, 
+					 theSelection.w, theSelection.h);   
+		// draw origuanl bright zone
+		ctx.putImageData(theSelection.oImg, cornerX, cornerY);       
+		ctx.strokeStyle = '#fff';
+		ctx.lineWidth = 1;
+		ctx.strokeRect(theSelection.x-theSelection.iCSize[0],
+					   theSelection.y-theSelection.iCSize[0], 
+					   theSelection.w+theSelection.iCSize[0]*2,
+					   theSelection.h+theSelection.iCSize[0]*2);
+		
+		ctx.strokeRect(cornerX, cornerY, cornerW, cornerH);
+			
+		// draw resize cubes
+		ctx.fillStyle = '#fff';
+		ctx.fillRect(theSelection.x - theSelection.iCSize[0]*2, 
+					 theSelection.y - theSelection.iCSize[0]*2, 
+					 theSelection.iCSize[0] * 2, theSelection.iCSize[0] * 2);
+		ctx.fillRect(theSelection.x + theSelection.w, 
+					 theSelection.y - theSelection.iCSize[1]*2, 
+					 theSelection.iCSize[1] * 2, theSelection.iCSize[1] * 2);
+		ctx.fillRect(theSelection.x + theSelection.w, 
+					 theSelection.y + theSelection.h, 
+					 theSelection.iCSize[2] * 2, theSelection.iCSize[2] * 2);
+		ctx.fillRect(theSelection.x - theSelection.iCSize[3]*2, 
+					 theSelection.y + theSelection.h, 
+					 theSelection.iCSize[3] * 2, theSelection.iCSize[3] * 2);
+	}
+	
+	$wDiv = $(document.createElement('div'));
+	// creating canvas and context objects
+    canvas = document.createElement('canvas');
+    ctx = canvas.getContext('2d');
+	$wDiv.attr('class', 'modalOverlay');
+	$wDiv.append(canvas);
+	$("body").append($wDiv);
+	
+	/*
+	mCanvas = document.createElement('canvas');
+	var mCtx = mCanvas .getContext('2d');
+	mCtx.drawImage(dstCanvas, 0, 0, dstCanvas.width, dstCanvas.height);
+	*/
+	theSelection = new Selection(cornerX, cornerY, cornerW, cornerH);                
+	drawScene();
+
+    $('#canvasOne').mousemove(function(e) { // binding mouse move event
+        var canvasOffset = $(canvas).offset();
+        iMouseX = Math.floor(e.pageX - canvasOffset.left);
+        iMouseY = Math.floor(e.pageY - canvasOffset.top);
+
+        // in case of drag of whole selector
+        if (theSelection.bDragAll) {
+            theSelection.x = iMouseX - theSelection.px;
+            if (theSelection.x >= cornerX) theSelection.x = cornerX;
+            if (theSelection.x+theSelection.w <= cornerX+cornerW) 
+                theSelection.x = cornerX+cornerW-theSelection.w;
+            theSelection.y = iMouseY - theSelection.py;
+            if (theSelection.y >= cornerY) theSelection.y = cornerY;
+            if (theSelection.y+theSelection.h <= cornerY+cornerH) 
+                theSelection.y = cornerY+cornerH-theSelection.h;   
+        }
+
+        for (i = 0; i < 4; i++) {
+            theSelection.bHow[i] = false;
+            theSelection.iCSize[i] = theSelection.csize;
+        }
+
+        // hovering over resize cubes
+        if (iMouseX > theSelection.x - theSelection.csizeh && iMouseX < theSelection.x + theSelection.csizeh &&
+            iMouseY > theSelection.y - theSelection.csizeh && iMouseY < theSelection.y + theSelection.csizeh) {
+
+            theSelection.bHow[0] = true;
+            //theSelection.iCSize[0] = theSelection.csizeh;
+        }
+        if (iMouseX > theSelection.x + theSelection.w-theSelection.csizeh && iMouseX < theSelection.x + theSelection.w + theSelection.csizeh &&
+            iMouseY > theSelection.y - theSelection.csizeh && iMouseY < theSelection.y + theSelection.csizeh) {
+
+            theSelection.bHow[1] = true;
+            //theSelection.iCSize[1] = theSelection.csizeh;
+        }
+        if (iMouseX > theSelection.x + theSelection.w-theSelection.csizeh && iMouseX < theSelection.x + theSelection.w + theSelection.csizeh &&
+            iMouseY > theSelection.y + theSelection.h-theSelection.csizeh && iMouseY < theSelection.y + theSelection.h + theSelection.csizeh) {
+
+            theSelection.bHow[2] = true;
+            //theSelection.iCSize[2] = theSelection.csizeh;
+        }
+        if (iMouseX > theSelection.x - theSelection.csizeh && iMouseX < theSelection.x + theSelection.csizeh &&
+            iMouseY > theSelection.y + theSelection.h-theSelection.csizeh && iMouseY < theSelection.y + theSelection.h + theSelection.csizeh) {
+
+            theSelection.bHow[3] = true;
+            //theSelection.iCSize[3] = theSelection.csizeh;
+        }
+
+        // in case of dragging of resize cubes
+        var iFW, iFH;
+        if (theSelection.bDrag[0]) {
+            var iFX = iMouseX - theSelection.px;
+            var iFY = iMouseY - theSelection.py;
+            if (iFX > cornerX) iFX = cornerX;
+            if (iFY > cornerY) iFY = cornerY;
+            iFW = theSelection.w + theSelection.x - iFX;
+            iFH = theSelection.h + theSelection.y - iFY;
+        }
+        if (theSelection.bDrag[1]) {
+            var iFX = theSelection.x;
+            var iFY = iMouseY - theSelection.py;
+            if (iFY > cornerY) iFY = cornerY;
+            iFW = iMouseX - theSelection.px - iFX;
+            iFH = theSelection.h + theSelection.y - iFY;
+        }
+        if (theSelection.bDrag[2]) {
+            var iFX = theSelection.x;
+            var iFY = theSelection.y;
+            iFW = iMouseX - theSelection.px - iFX;
+            iFH = iMouseY - theSelection.py - iFY;
+        }
+        if (theSelection.bDrag[3]) {
+            var iFX = iMouseX - theSelection.px;
+            if (iFX > cornerX) iFX = cornerX;
+            var iFY = theSelection.y;
+            iFW = theSelection.w + theSelection.x - iFX;
+            iFH = iMouseY - theSelection.py - iFY;
+        }
+
+        if (iFW > theSelection.csizeh * 2 && iFH > theSelection.csizeh * 2) {
+            
+            if (iFX+iFW >= cornerX+cornerW && iFY+iFH >= cornerY+cornerH) {
+            
+                if (iFW >= iFH) {
+                    var r = iFW / theSelection.w;
+                    theSelection.w = iFW;
+                    theSelection.h = r * theSelection.h;
+                }
+                else {
+                    var r = iFH / theSelection.h;
+                    theSelection.w = r * theSelection.w;
+                    theSelection.h = iFH;
+                }
+            }
+            theSelection.x = iFX;
+            theSelection.y = iFY;
+        }
+        drawScene();            
+    });
+
+	wCanvas.dblclick(function(e) {
+        var canvasOffset = $(canvas).offset();
+        iMouseX = Math.floor(e.pageX - canvasOffset.left);
+        iMouseY = Math.floor(e.pageY - canvasOffset.top);
+
+        if (iMouseX < theSelection.x-theSelection.csize  || 
+            iMouseX > theSelection.x+theSelection.w+theSelection.csize ||
+            iMouseY < theSelection.y-theSelection.csize || 
+            iMouseY > theSelection.y+theSelection.h+theSelection.csize ) {
+                
+            var dstCtx = dstCanvas.getContext('2d');
+            dstCtx.putImageData(theSelection.oImg, 0, 0);
+        }
+    });
+
+    wCanvas.mousedown(function(e) { // binding mousedown event
+        var canvasOffset = $(canvas).offset();
+        iMouseX = Math.floor(e.pageX - canvasOffset.left);
+        iMouseY = Math.floor(e.pageY - canvasOffset.top);
+
+        theSelection.px = iMouseX - theSelection.x;
+        theSelection.py = iMouseY - theSelection.y;
+
+        if (theSelection.bHow[0]) {
+            theSelection.px = iMouseX - theSelection.x;
+            theSelection.py = iMouseY - theSelection.y;
+        }
+        if (theSelection.bHow[1]) {
+            theSelection.px = iMouseX - theSelection.x - theSelection.w;
+            theSelection.py = iMouseY - theSelection.y;
+        }
+        if (theSelection.bHow[2]) {
+            theSelection.px = iMouseX - theSelection.x - theSelection.w;
+            theSelection.py = iMouseY - theSelection.y - theSelection.h;
+        }
+        if (theSelection.bHow[3]) {
+            theSelection.px = iMouseX - theSelection.x;
+            theSelection.py = iMouseY - theSelection.y - theSelection.h;
+        }
+        
+
+        if (iMouseX > theSelection.x && iMouseX < theSelection.x+theSelection.w &&
+            iMouseY > theSelection.y && iMouseY < theSelection.y+theSelection.h ) {
+
+            theSelection.bDragAll = true;
+        }
+
+        for (i = 0; i < 4; i++) {
+            if (theSelection.bHow[i]) {
+                theSelection.bDrag[i] = true;
+            }
+        }
+    });
+
+    wCanvas.mouseup(function(e) { // binding mouseup event
+        theSelection.bDragAll = false;
+
+        for (i = 0; i < 4; i++) {
+            theSelection.bDrag[i] = false;
+        }
+        theSelection.px = 0;
+        theSelection.py = 0;
+    });
+		
+	function drawScene(){ 
+		ctx.clearRect(-theSelection.csize/2, -theSelection.csize/2,
+						ctx.canvas.width+theSelection.csize,
+						ctx.canvas.height+theSelection.csize);
+		// draw selection
+		theSelection.draw();
+	}
+}
+
+//////////////////////////////////////////////////
 
 function cirClipper(ctx, img, diameter) {
     ctx.save(); 
@@ -200,7 +453,7 @@ function setDnD(maskImg, ox, oy) {
 				"position": "relative",
 				"top": "0px",
 				"left": "0px",
-				"opacity": "0.1"
+				"opacity": "0"
 			});
 			$(this).children(".draggable").draggable({
 				cursor: 'auto', 
@@ -217,19 +470,31 @@ function setDnD(maskImg, ox, oy) {
 			var imgSrc = $(this).children(".draggable").attr('src');
 			var divObj = $(this);
 			
-			$.getImageData({
-        		url: imgSrc,
-        		server: "http://insta.camangiwebstation.com/proxy/getImageData.php",
-        		success: function(image){
-            		doClipping( 
-            			doMasking(image, maskImg, divObj, ox, oy), 
-            			divObj, 
-            			cirClipper);
-        		},
-        		error: function(xhr, text_status){
-            		console.log("Fail to get image:"+imgSrc);
-        		}
-    		});
+			if ($(this).children(".draggable").attr("class").indexOf("cached") >= 0) {
+				var _img = new Image();
+				_img.src = imgSrc;
+				doClipping( 
+					doMasking(_img, maskImg, divObj, ox, oy), 
+					divObj, 
+					cirClipper);
+			}
+			else {		
+				$.getImageData({
+					url: imgSrc,
+					server: "http://insta.camangiwebstation.com/proxy/getImageData.php",
+					success: function(image){
+						divObj.children(".draggable").attr('src', image.src);
+						divObj.children(".draggable").addClass("cached");
+						doClipping( 
+							doMasking(image, maskImg, divObj, ox, oy), 
+							divObj, 
+							cirClipper);
+					},
+					error: function(xhr, text_status){
+						console.log("Fail to get image:"+imgSrc);
+					}
+				});
+			}
 			
 			$(this).children(".draggable").css('z-index','');
 			$(this).removeClass("removed");	

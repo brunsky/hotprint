@@ -67,6 +67,16 @@ section {
   border-bottom-left-radius: 5px;
 }
 
+.modalOverlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    background-color: rgba(0,0,0,0.8); /* black semi-transparent */
+	z-index: 1000;
+}
+
 #result {
   display: none;
   padding: 5px 10px;

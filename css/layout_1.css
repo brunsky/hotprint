@@ -5,7 +5,7 @@
     top: 10px;
     left: 4px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner2 {
     position: absolute;
@@ -14,7 +14,7 @@
     top: 10px;
     left: 145px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner3 {
     position: absolute;
@@ -23,7 +23,7 @@
     top: 10px;
     left: 286px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner4 {
     position: absolute;
@@ -32,7 +32,7 @@
     top: 78px;
     left: 74px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner5 {
     position: absolute;
@@ -41,7 +41,7 @@
     top: 78px;
     left: 215px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner6 {
     position: absolute;
@@ -50,7 +50,7 @@
     top: 146px;
     left: 4px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner7 {
     position: absolute;
@@ -59,7 +59,7 @@
     top: 146px;
     left: 145px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner8 {
     position: absolute;
@@ -68,7 +68,7 @@
     top: 146px;
     left: 286px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner9 {
     position: absolute;
@@ -77,7 +77,7 @@
     top: 214px;
     left: 74px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner10 {
     position: absolute;
@@ -86,7 +86,7 @@
     top: 214px;
     left: 215px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner11 {
     position: absolute;
@@ -95,7 +95,7 @@
     top: 282px;
     left: 4px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner12 {
     position: absolute;
@@ -104,7 +104,7 @@
     top: 282px;
     left: 145px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner13 {
     position: absolute;
@@ -113,7 +113,7 @@
     top: 282px;
     left: 286px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner14 {
     position: absolute;
@@ -122,7 +122,7 @@
     top: 350px;
     left: 74px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner15 {
     position: absolute;
@@ -131,7 +131,7 @@
     top: 350px;
     left: 215px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner16 {
     position: absolute;
@@ -140,7 +140,7 @@
     top: 418px;
     left: 4px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner17 {
     position: absolute;
@@ -149,7 +149,7 @@
     top: 418px;
     left: 145px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner18 {
     position: absolute;
@@ -158,7 +158,7 @@
     top: 418px;
     left: 286px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner19 {
     position: absolute;
@@ -167,7 +167,7 @@
     top: 486px;
     left: 74px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner20 {
     position: absolute;
@@ -176,7 +176,7 @@
     top: 486px;
     left: 215px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner21 {
     position: absolute;
@@ -185,7 +185,7 @@
     top: 554px;
     left: 4px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner22 {
     position: absolute;
@@ -194,7 +194,7 @@
     top: 554px;
     left: 145px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }
 #corner23 {
     position: absolute;
@@ -203,5 +203,5 @@
     top: 554px;
     left: 286px;
     border: 1px solid silver;
-    z-index: 999;
+    z-index: 998;
 }

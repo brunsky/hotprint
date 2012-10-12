@@ -13,4 +13,12 @@ for (var i=1; i<=23; i++) {
 	_x = parseFloat($destDiv.css('left'), 10);
 	$destDiv.css('top', _y+layout_oy+'px');
 	$destDiv.css('left', _x+layout_ox+'px');
+	$destDiv.css('z-index', '998');
+	
+	$('#corner'+i).dblclick(function(e) {
+        //alert($(this).attr('id'));
+		if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
+			realClipper($(this), $(this).next());
+		}
+    });
 }
