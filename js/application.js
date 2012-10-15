@@ -112,16 +112,16 @@
 
 //////////////////////////////////////////////////
 // realClipper
-
 function realClipper(cornerDiv, srcImg) {
-	var theSelection;
-	var canvas;
-	var ctx;
-	var iMouseX, iMouseY = 1;
-	var cornerX = parseFloat(cornerDiv.css('left'), 10);
-	var cornerY = parseFloat(cornerDiv.css('top'), 10);
-	var cornerW = parseFloat(cornerDiv.css('width'), 10);
-	var cornerH = parseFloat(cornerDiv.css('height'), 10);
+var theSelection;
+var canvas;
+var ctx;
+var iMouseX, iMouseY = 1;
+var cornerX = parseFloat(cornerDiv.css('left'), 10);
+var cornerY = parseFloat(cornerDiv.css('top'), 10);
+var cornerW = parseFloat(cornerDiv.css('width'), 10);
+var cornerH = parseFloat(cornerDiv.css('height'), 10);	
+
 	
 	function Selection(x, y, w, h){
 		this.x = x; // initial positions
@@ -140,14 +140,14 @@ function realClipper(cornerDiv, srcImg) {
 	}
 
 	Selection.prototype.draw = function(){
-		ctx.drawImage(srcImg, 0, 0, 150, 150, 
+		ctx.drawImage(srcImg, 0, 0, srcImg.width, srcImg.height, 
 					  theSelection.x,theSelection.y, 
-					  theSelection.w, theSelection.h);  
+					  theSelection.w,theSelection.h); 		  
 		theSelection.oImg = ctx.getImageData(cornerX, cornerY, cornerW, cornerH);   
 		ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
 		ctx.fillRect(theSelection.x,theSelection.y, 
 					 theSelection.w, theSelection.h);   
-		// draw origuanl bright zone
+		// draw original bright zone
 		ctx.putImageData(theSelection.oImg, cornerX, cornerY);       
 		ctx.strokeStyle = '#fff';
 		ctx.lineWidth = 1;
@@ -173,24 +173,36 @@ function realClipper(cornerDiv, srcImg) {
 					 theSelection.y + theSelection.h, 
 					 theSelection.iCSize[3] * 2, theSelection.iCSize[3] * 2);
 	}
+			
+	function drawScene(){ 
 	
-	$wDiv = $(document.createElement('div'));
-	// creating canvas and context objects
-    canvas = document.createElement('canvas');
-    ctx = canvas.getContext('2d');
-	$wDiv.attr('class', 'modalOverlay');
-	$wDiv.append(canvas);
-	$("body").append($wDiv);
+		ctx.clearRect(-theSelection.csize/2, -theSelection.csize/2,
+						ctx.canvas.width+theSelection.csize,
+						ctx.canvas.height+theSelection.csize);
 	
-	/*
-	mCanvas = document.createElement('canvas');
-	var mCtx = mCanvas .getContext('2d');
-	mCtx.drawImage(dstCanvas, 0, 0, dstCanvas.width, dstCanvas.height);
-	*/
+		// draw selection
+		theSelection.draw();
+	}
+	
+	//$wDiv = $(document.createElement('div'));
+	//$wDiv.attr('class', 'modalOverlay');
+	$("body").append('<div class="modalOverlay"></div>');
+	$wDiv = $('.modalOverlay');
+	
+	canvas = $('<canvas>');
+	canvas[0].width =parseFloat($wDiv.css('width'), 10); 
+	canvas[0].height =parseFloat($(document).height(), 10);
+	canvas.css('position', 'absolute');
+	canvas.css('left', '0px');
+	canvas.css('top', '0px');
+	canvas.css('z-index', '1001');
+	$("body").append(canvas);
+	
+	ctx = canvas[0].getContext('2d');
 	theSelection = new Selection(cornerX, cornerY, cornerW, cornerH);                
 	drawScene();
 
-    $('#canvasOne').mousemove(function(e) { // binding mouse move event
+    canvas.mousemove(function(e) { // binding mouse move event
         var canvasOffset = $(canvas).offset();
         iMouseX = Math.floor(e.pageX - canvasOffset.left);
         iMouseY = Math.floor(e.pageY - canvasOffset.top);
@@ -290,7 +302,7 @@ function realClipper(cornerDiv, srcImg) {
         drawScene();            
     });
 
-	wCanvas.dblclick(function(e) {
+	canvas.dblclick(function(e) {
         var canvasOffset = $(canvas).offset();
         iMouseX = Math.floor(e.pageX - canvasOffset.left);
         iMouseY = Math.floor(e.pageY - canvasOffset.top);
@@ -299,13 +311,16 @@ function realClipper(cornerDiv, srcImg) {
             iMouseX > theSelection.x+theSelection.w+theSelection.csize ||
             iMouseY < theSelection.y-theSelection.csize || 
             iMouseY > theSelection.y+theSelection.h+theSelection.csize ) {
-                
+            /*
             var dstCtx = dstCanvas.getContext('2d');
             dstCtx.putImageData(theSelection.oImg, 0, 0);
+            */
+            canvas.remove();
+            $wDiv.remove();
         }
     });
 
-    wCanvas.mousedown(function(e) { // binding mousedown event
+    canvas.mousedown(function(e) { // binding mousedown event
         var canvasOffset = $(canvas).offset();
         iMouseX = Math.floor(e.pageX - canvasOffset.left);
         iMouseY = Math.floor(e.pageY - canvasOffset.top);
@@ -344,7 +359,7 @@ function realClipper(cornerDiv, srcImg) {
         }
     });
 
-    wCanvas.mouseup(function(e) { // binding mouseup event
+    canvas.mouseup(function(e) { // binding mouseup event
         theSelection.bDragAll = false;
 
         for (i = 0; i < 4; i++) {
@@ -353,14 +368,6 @@ function realClipper(cornerDiv, srcImg) {
         theSelection.px = 0;
         theSelection.py = 0;
     });
-		
-	function drawScene(){ 
-		ctx.clearRect(-theSelection.csize/2, -theSelection.csize/2,
-						ctx.canvas.width+theSelection.csize,
-						ctx.canvas.height+theSelection.csize);
-		// draw selection
-		theSelection.draw();
-	}
 }
 
 //////////////////////////////////////////////////
@@ -471,6 +478,7 @@ function setDnD(maskImg, ox, oy) {
 			var divObj = $(this);
 			
 			if ($(this).children(".draggable").attr("class").indexOf("cached") >= 0) {
+				// get image from cached
 				var _img = new Image();
 				_img.src = imgSrc;
 				doClipping( 
@@ -478,7 +486,7 @@ function setDnD(maskImg, ox, oy) {
 					divObj, 
 					cirClipper);
 			}
-			else {		
+			else {		// get image from original URL
 				$.getImageData({
 					url: imgSrc,
 					server: "http://insta.camangiwebstation.com/proxy/getImageData.php",
@@ -561,7 +569,7 @@ function setCanvas() {
 
 	var winH=$(window).height();
     $("#mCanvas").css('top', winH * 0.1);
-    $("#mCanvas").css('left', winH/2);  
+    $("#mCanvas").css('left', winH/2);     // 需要調整!!
 
     var canvas = document.getElementById('mCanvas');
     var context = canvas.getContext('2d');

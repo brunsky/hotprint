@@ -17,8 +17,10 @@ for (var i=1; i<=23; i++) {
 	
 	$('#corner'+i).dblclick(function(e) {
         //alert($(this).attr('id'));
-		if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
-			realClipper($(this), $(this).next());
+		if ($(this).children(".draggable").attr("class").indexOf("cached") >= 0) {
+			var _img = new Image();
+			_img.src = $(this).children(".draggable").attr('src');
+			realClipper($(this), _img);   
 		}
     });
 }
