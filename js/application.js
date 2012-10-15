@@ -121,8 +121,8 @@ var cornerX = parseFloat(cornerDiv.css('left'), 10);
 var cornerY = parseFloat(cornerDiv.css('top'), 10);
 var cornerW = parseFloat(cornerDiv.css('width'), 10);
 var cornerH = parseFloat(cornerDiv.css('height'), 10);	
+var $cDiv;
 
-	
 	function Selection(x, y, w, h){
 		this.x = x; // initial positions
 		this.y = y;
@@ -142,13 +142,15 @@ var cornerH = parseFloat(cornerDiv.css('height'), 10);
 	Selection.prototype.draw = function(){
 		ctx.drawImage(srcImg, 0, 0, srcImg.width, srcImg.height, 
 					  theSelection.x,theSelection.y, 
-					  theSelection.w,theSelection.h); 		  
+					  theSelection.w,theSelection.h); 	
+		// storing bright region
 		theSelection.oImg = ctx.getImageData(cornerX, cornerY, cornerW, cornerH);   
+		// covering dark region
 		ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
 		ctx.fillRect(theSelection.x,theSelection.y, 
 					 theSelection.w, theSelection.h);   
-		// draw original bright zone
-		ctx.putImageData(theSelection.oImg, cornerX, cornerY);       
+		  
+		// drawing stroke rect of whole image
 		ctx.strokeStyle = '#fff';
 		ctx.lineWidth = 1;
 		ctx.strokeRect(theSelection.x-theSelection.iCSize[0],
@@ -156,9 +158,30 @@ var cornerH = parseFloat(cornerDiv.css('height'), 10);
 					   theSelection.w+theSelection.iCSize[0]*2,
 					   theSelection.h+theSelection.iCSize[0]*2);
 		
-		ctx.strokeRect(cornerX, cornerY, cornerW, cornerH);
+		// resoring bright zone 
+		var c1 = $('<canvas>');
+		var c2 = $('<canvas>');
+		c2[0].width = cornerW;
+		c2[0].height = cornerH;
+		c2.css('position', 'absolute');
+		c2.css('z-index', '1002');
+		c2.css('left', '0px');
+		c2.css('top', '0px');
+		var _ctx1 = c1[0].getContext('2d');
+		var _ctx2 = c2[0].getContext('2d');
+		_ctx1.putImageData(theSelection.oImg, 0, 0);
+		if ($cDiv.attr("class").indexOf("layout_circle") >= 0) {
+			cirClipper(_ctx2, c1[0], cornerW);	
+		}
+		else if ($cDiv.attr("class").indexOf("layout_squal") >= 0) {
+			boxClipper(_ctx2, c1[0], cornerW);
+		}
+		$cDiv.html('');
+		$cDiv.append(c2);
+		
+		//ctx.strokeRect(cornerX, cornerY, cornerW, cornerH);
 			
-		// draw resize cubes
+		// drawing resize cubes
 		ctx.fillStyle = '#fff';
 		ctx.fillRect(theSelection.x - theSelection.iCSize[0]*2, 
 					 theSelection.y - theSelection.iCSize[0]*2, 
@@ -184,8 +207,6 @@ var cornerH = parseFloat(cornerDiv.css('height'), 10);
 		theSelection.draw();
 	}
 	
-	//$wDiv = $(document.createElement('div'));
-	//$wDiv.attr('class', 'modalOverlay');
 	$("body").append('<div class="modalOverlay"></div>');
 	$wDiv = $('.modalOverlay');
 	
@@ -198,11 +219,58 @@ var cornerH = parseFloat(cornerDiv.css('height'), 10);
 	canvas.css('z-index', '1001');
 	$("body").append(canvas);
 	
+	$cDiv = cornerDiv.clone();
+	$cDiv.css('z-index', '1003');
+	$("body").append($cDiv);
+	
+	$cDiv.mousemove(eventMousemove);
+    $cDiv.mousedown(eventMousedown);
+    $cDiv.mouseup(eventMouseup);
+	
 	ctx = canvas[0].getContext('2d');
 	theSelection = new Selection(cornerX, cornerY, cornerW, cornerH);                
 	drawScene();
 
-    canvas.mousemove(function(e) { // binding mouse move event
+    canvas.mousemove(eventMousemove);
+    canvas.mousedown(eventMousedown);
+    canvas.mouseup(eventMouseup);
+	canvas.dblclick(eventDbclick);
+	
+	function eventDbclick(e) {
+        var canvasOffset = $(canvas).offset();
+        iMouseX = Math.floor(e.pageX - canvasOffset.left);
+        iMouseY = Math.floor(e.pageY - canvasOffset.top);
+
+        if (iMouseX < theSelection.x-theSelection.csize  || 
+            iMouseX > theSelection.x+theSelection.w+theSelection.csize ||
+            iMouseY < theSelection.y-theSelection.csize || 
+            iMouseY > theSelection.y+theSelection.h+theSelection.csize ) {
+
+			if (cornerDiv.next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
+					cornerDiv.next().remove();
+			}
+			if (cornerDiv.attr("class").indexOf("layout_circle") >= 0) {
+				var c = $('<canvas>');
+				c[0].width = cornerW;
+				c[0].height = cornerH;
+				var ctx = c[0].getContext('2d');
+				ctx.putImageData(theSelection.oImg, 0, 0);
+				doClipping( 
+					doMasking(c[0], maskImg, cornerDiv, layout_ox, layout_oy), 
+					cornerDiv, 
+					cirClipper);
+			}
+			cornerDiv.children(".draggable").data('zdx', cornerX - theSelection.x);
+			cornerDiv.children(".draggable").data('zdy', cornerY - theSelection.y);
+			cornerDiv.children(".draggable").data('zw', theSelection.w);
+			cornerDiv.children(".draggable").data('zh', theSelection.h);
+            canvas.remove(); // remove main canvas
+            $wDiv.remove(); // remove block div
+			$cDiv.remove(); // remove div cloned from layout
+        }
+    }
+	
+	function eventMousemove(e) { // binding mouse move event
         var canvasOffset = $(canvas).offset();
         iMouseX = Math.floor(e.pageX - canvasOffset.left);
         iMouseY = Math.floor(e.pageY - canvasOffset.top);
@@ -300,27 +368,9 @@ var cornerH = parseFloat(cornerDiv.css('height'), 10);
             theSelection.y = iFY;
         }
         drawScene();            
-    });
-
-	canvas.dblclick(function(e) {
-        var canvasOffset = $(canvas).offset();
-        iMouseX = Math.floor(e.pageX - canvasOffset.left);
-        iMouseY = Math.floor(e.pageY - canvasOffset.top);
-
-        if (iMouseX < theSelection.x-theSelection.csize  || 
-            iMouseX > theSelection.x+theSelection.w+theSelection.csize ||
-            iMouseY < theSelection.y-theSelection.csize || 
-            iMouseY > theSelection.y+theSelection.h+theSelection.csize ) {
-            /*
-            var dstCtx = dstCanvas.getContext('2d');
-            dstCtx.putImageData(theSelection.oImg, 0, 0);
-            */
-            canvas.remove();
-            $wDiv.remove();
-        }
-    });
-
-    canvas.mousedown(function(e) { // binding mousedown event
+    }
+	
+	function eventMousedown(e) { // binding mousedown event
         var canvasOffset = $(canvas).offset();
         iMouseX = Math.floor(e.pageX - canvasOffset.left);
         iMouseY = Math.floor(e.pageY - canvasOffset.top);
@@ -357,9 +407,9 @@ var cornerH = parseFloat(cornerDiv.css('height'), 10);
                 theSelection.bDrag[i] = true;
             }
         }
-    });
-
-    canvas.mouseup(function(e) { // binding mouseup event
+    }
+	
+	function eventMouseup(e) { // binding mouseup event
         theSelection.bDragAll = false;
 
         for (i = 0; i < 4; i++) {
@@ -367,7 +417,7 @@ var cornerH = parseFloat(cornerDiv.css('height'), 10);
         }
         theSelection.px = 0;
         theSelection.py = 0;
-    });
+    }
 }
 
 //////////////////////////////////////////////////
@@ -411,21 +461,19 @@ function doClipping(srcImg, destDiv, clipper) {
 // return value: Canvas Object
 // (ox, oy) is the position of case image
 function doMasking(oriImg, maskImg, destDiv, ox, oy) {
-	console.log("m.width:"+maskImg.width);
+/* 	console.log("m.width:"+maskImg.width);
 	console.log("m.height:"+maskImg.height);
 	console.log("ox:"+ox);
-	console.log("oy:"+oy);
+	console.log("oy:"+oy); */
     var b = parseFloat(destDiv.css('border-left-width'), 10);
     var x = parseFloat(destDiv.css('left'), 10) + b - ox;
     var y = parseFloat(destDiv.css('top'), 10) + b - oy;
     var w = parseFloat(destDiv.css('width'), 10);
     var h = parseFloat(destDiv.css('height'), 10);
-    console.log("before adjust, x:"+x+", before y:"+y);
     
     // adjust over position
     if (x+w > maskImg.width) w = maskImg.width - x;
     if (y+h > maskImg.height) y = maskImg.height - y;
-    console.log("x:"+x+", y:"+y+", w:"+w+", h:"+h);
     
     // reposition mask image
     var adjustMaskCanvas = document.createElement('canvas');
@@ -450,12 +498,18 @@ function setDnD(maskImg, ox, oy) {
 	$( ".layout_circle" ).droppable({
 		accept: ".draggable",
 		drop: function( event, ui ) {
-			console.log("drag drop:"+$(this).attr('id'));
 			if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
 				$(this).next().remove();
 			}
 			$(this).html('');
 			$(this).append($(ui.draggable).clone());
+			// copy zoomer value
+			$(this).children(".draggable").data('zdx', $(ui.draggable).data('zdx'));
+			$(this).children(".draggable").data('zdy', $(ui.draggable).data('zdy'));
+			$(this).children(".draggable").data('zw', $(ui.draggable).data('zw'));
+			$(this).children(".draggable").data('zh', $(ui.draggable).data('zh'));
+			if ($(ui.draggable).parent().attr('class').indexOf("layout") >= 0)
+				$(ui.draggable).remove();
 			$(this).children(".draggable").css({
 				"position": "relative",
 				"top": "0px",
@@ -468,8 +522,8 @@ function setDnD(maskImg, ox, oy) {
 				revert:"invalid",
 				drag: function(event, ui) {
 					if ($(this).attr("class").indexOf("ui-draggable-dragging") >= 0) {
-						$(".ui-draggable-dragging").css('z-index','1000');
-						$(".ui-draggable-dragging").css("opacity", "0.9");
+						$(this).parent().css('z-index','1000');
+						$(this).css("opacity", "0.9");
 					}
 				}
 			});
@@ -478,6 +532,7 @@ function setDnD(maskImg, ox, oy) {
 			var divObj = $(this);
 			
 			if ($(this).children(".draggable").attr("class").indexOf("cached") >= 0) {
+				console.log(divObj.children(".draggable").data('zdx')+', '+divObj.children(".draggable").data('zdy')+', '+divObj.children(".draggable").data('zw')+', '+divObj.children(".draggable").data('zh'));
 				// get image from cached
 				var _img = new Image();
 				_img.src = imgSrc;
@@ -510,29 +565,29 @@ function setDnD(maskImg, ox, oy) {
 			$(this).css('cursor', 'move');
 		},
 		out: function(event, ui) {
-			console.log("drag out:"+$(this).attr('id'));
 			if ($(this).children(".draggable").length > 0 ) { 
 				if ($(this).children(".draggable").attr("class").indexOf("ui-draggable-dragging") >= 0)
 					$(this).addClass("removed");
 			}
 		},
 		deactivate: function(event, ui) {
-			console.log("drag deactivate:"+$(this).attr('id'));
 			if ($(this).attr("class").indexOf("removed") >= 0) {
-				$(this).children(".draggable").remove();
+				//$(this).children(".draggable").remove();  --> Let children decide themselves!
 				$(this).css('cursor', 'default');
 				if ($(this).next().attr('class') == '')
 				if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
 					$(this).next().remove();
 				}
 				$(this).removeClass("removed");
+				$(this).css('z-index','998');
 			}
 		}
 	});
 }
 
 // (ox, oy) is the position of case image
-function loadLayout(maskImg, ox , oy){ 
+function loadLayout(_maskImg, ox , oy){ 
+	maskImg = _maskImg
     //Import CSS
 	var cssLocation = "css/layout_1.css";
 	$.get(cssLocation, function(css) {
