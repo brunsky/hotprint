@@ -134,7 +134,8 @@ var iMouseX, iMouseY = 1;
 var cornerX = parseFloat(cornerDiv.css('left'), 10);
 var cornerY = parseFloat(cornerDiv.css('top'), 10);
 var cornerW = parseFloat(cornerDiv.css('width'), 10);
-var cornerH = parseFloat(cornerDiv.css('height'), 10);	
+var cornerH = parseFloat(cornerDiv.css('height'), 10);
+
 var $cDiv;
 
 	function Selection(x, y, w, h){
@@ -242,7 +243,15 @@ var $cDiv;
     $cDiv.mouseup(eventMouseup);
 	
 	ctx = canvas[0].getContext('2d');
-	theSelection = new Selection(cornerX, cornerY, cornerW, cornerH);                
+	if (typeof cornerDiv.children(".draggable").data('zdx') != 'undefined') {
+		theSelection = new Selection(parseFloat(cornerDiv.css('left'), 10) - cornerDiv.children(".draggable").data('zdx'), 
+									parseFloat(cornerDiv.css('top'), 10) - cornerDiv.children(".draggable").data('zdy'), 
+									cornerDiv.children(".draggable").data('zw'), 
+									cornerDiv.children(".draggable").data('zh')); 
+	}	
+	else {
+		theSelection = new Selection(cornerX, cornerY, cornerW, cornerH); 
+	}
 	drawScene();
 
     canvas.mousemove(eventMousemove);
@@ -553,31 +562,24 @@ function setDnD(maskImg, ox, oy) {
 				var _img = new Image();
 				
 				if (typeof divObj.children(".draggable").data('zdx') != 'undefined') { // if image has been scaled
-					console.log(divObj.children(".draggable").data('zdx')+', '+divObj.children(".draggable").data('zdy')+', '+divObj.children(".draggable").data('zw')+', '+divObj.children(".draggable").data('zh'));
 					var $dstCanvas = $('<canvas>');
 					$dstCanvas[0].width = parseFloat(divObj.css('width'), 10);
 					$dstCanvas[0].height = parseFloat(divObj.css('height'), 10);
 					autoClipper(divObj.children(".draggable")[0], $dstCanvas);
 					_img.src = $dstCanvas[0].toDataURL();
+					_img.width = $dstCanvas[0].width;
+					_img.height = $dstCanvas[0].height;
 				}
 				else
 					_img.src = imgSrc;
-				/*	
-				doClipping( 
+				
+				_img.onload = function() { // very important here. you need to wait for loading
+					doClipping( 
 					doMasking(_img, maskImg, divObj, ox, oy), 
 					divObj, 
 					cirClipper);
-				*/
-				var $c = $('<canvas>'); // debugging！！！ (Why it is not work in first time drag&drop afetr clipper?)
-				$c[0].width = '1024';
-				$c[0].height = '800';
-				$c.css('position', 'absolute');
-				$c.css('z-index', '997');
-				$c.css('left', divObj.css('left'));
-				$c.css('top', divObj.css('top'));
-				var $ctx = $c[0].getContext('2d');
-				$ctx.drawImage(_img, 0, 0);
-				divObj.after($c);
+				}
+				
 			}
 			else {		// get image from original URL
 				$.getImageData({

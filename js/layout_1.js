@@ -16,11 +16,15 @@ for (var i=1; i<=23; i++) {
 	$destDiv.css('z-index', '998');
 	
 	$('#corner'+i).dblclick(function(e) {
-        //alert($(this).attr('id'));
 		if ($(this).children(".draggable").attr("class").indexOf("cached") >= 0) {
 			var _img = new Image();
 			_img.src = $(this).children(".draggable").attr('src');
-			realClipper($(this), _img);   
+			realClipper($(this), _img);
+			/*
+			_img.onload = function() {
+				realClipper($(this), _img);   
+			}
+			*/
 		}
     });
 }
