@@ -111,6 +111,20 @@
 })(jQuery);
 
 //////////////////////////////////////////////////
+// autoClipper
+function autoClipper(srcImgDom, dstCanvas) {
+	var $canvas = $('<canvas>');
+	var ctx = $canvas[0].getContext('2d'); 
+	$canvas[0].width = $(srcImgDom).data('zw');
+	$canvas[0].height = $(srcImgDom).data('zh');
+	ctx.drawImage(srcImgDom, 0, 0, $(srcImgDom).data('zw'), $(srcImgDom).data('zh')); 	
+	var dstCtx = dstCanvas[0].getContext('2d');
+	dstCtx.putImageData(
+				ctx.getImageData($(srcImgDom).data('zdx'), $(srcImgDom).data('zdy'), dstCanvas[0].width, dstCanvas[0].height),
+				0, 0);
+}
+
+//////////////////////////////////////////////////
 // realClipper
 function realClipper(cornerDiv, srcImg) {
 var theSelection;
@@ -249,7 +263,7 @@ var $cDiv;
 			if (cornerDiv.next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
 					cornerDiv.next().remove();
 			}
-			if (cornerDiv.attr("class").indexOf("layout_circle") >= 0) {
+			if (cornerDiv.attr("class").indexOf("layout_circle") >= 0) { // for circle corner
 				var c = $('<canvas>');
 				c[0].width = cornerW;
 				c[0].height = cornerH;
@@ -504,12 +518,15 @@ function setDnD(maskImg, ox, oy) {
 			$(this).html('');
 			$(this).append($(ui.draggable).clone());
 			// copy zoomer value
-			$(this).children(".draggable").data('zdx', $(ui.draggable).data('zdx'));
-			$(this).children(".draggable").data('zdy', $(ui.draggable).data('zdy'));
-			$(this).children(".draggable").data('zw', $(ui.draggable).data('zw'));
-			$(this).children(".draggable").data('zh', $(ui.draggable).data('zh'));
-			if ($(ui.draggable).parent().attr('class').indexOf("layout") >= 0)
-				$(ui.draggable).remove();
+			$(this).children(".draggable").data('zdx', $(this).data('zdx'));
+			$(this).removeData('zdx');
+			$(this).children(".draggable").data('zdy', $(this).data('zdy'));
+			$(this).removeData('zdy');
+			$(this).children(".draggable").data('zw', $(this).data('zw'));
+			$(this).removeData('zw');
+			$(this).children(".draggable").data('zh', $(this).data('zh'));
+			$(this).removeData('zh');
+
 			$(this).children(".draggable").css({
 				"position": "relative",
 				"top": "0px",
@@ -532,14 +549,35 @@ function setDnD(maskImg, ox, oy) {
 			var divObj = $(this);
 			
 			if ($(this).children(".draggable").attr("class").indexOf("cached") >= 0) {
-				console.log(divObj.children(".draggable").data('zdx')+', '+divObj.children(".draggable").data('zdy')+', '+divObj.children(".draggable").data('zw')+', '+divObj.children(".draggable").data('zh'));
 				// get image from cached
 				var _img = new Image();
-				_img.src = imgSrc;
+				
+				if (typeof divObj.children(".draggable").data('zdx') != 'undefined') { // if image has been scaled
+					console.log(divObj.children(".draggable").data('zdx')+', '+divObj.children(".draggable").data('zdy')+', '+divObj.children(".draggable").data('zw')+', '+divObj.children(".draggable").data('zh'));
+					var $dstCanvas = $('<canvas>');
+					$dstCanvas[0].width = parseFloat(divObj.css('width'), 10);
+					$dstCanvas[0].height = parseFloat(divObj.css('height'), 10);
+					autoClipper(divObj.children(".draggable")[0], $dstCanvas);
+					_img.src = $dstCanvas[0].toDataURL();
+				}
+				else
+					_img.src = imgSrc;
+				/*	
 				doClipping( 
 					doMasking(_img, maskImg, divObj, ox, oy), 
 					divObj, 
 					cirClipper);
+				*/
+				var $c = $('<canvas>'); // debugging！！！ (Why it is not work in first time drag&drop afetr clipper?)
+				$c[0].width = '1024';
+				$c[0].height = '800';
+				$c.css('position', 'absolute');
+				$c.css('z-index', '997');
+				$c.css('left', divObj.css('left'));
+				$c.css('top', divObj.css('top'));
+				var $ctx = $c[0].getContext('2d');
+				$ctx.drawImage(_img, 0, 0);
+				divObj.after($c);
 			}
 			else {		// get image from original URL
 				$.getImageData({
@@ -570,9 +608,20 @@ function setDnD(maskImg, ox, oy) {
 					$(this).addClass("removed");
 			}
 		},
+		over: function(event, ui) {
+			// copy zoomer value
+			$(this).data('zdx', $(ui.draggable).data('zdx'));
+			$(this).data('zdy', $(ui.draggable).data('zdy'));
+			$(this).data('zw', $(ui.draggable).data('zw'));
+			$(this).data('zh', $(ui.draggable).data('zh'));
+		},
 		deactivate: function(event, ui) {
 			if ($(this).attr("class").indexOf("removed") >= 0) {
-				//$(this).children(".draggable").remove();  --> Let children decide themselves!
+				$(this).children(".draggable").remove();
+				$(this).removeData('zdx');
+				$(this).removeData('zdy');
+				$(this).removeData('zw');
+				$(this).removeData('zh');
 				$(this).css('cursor', 'default');
 				if ($(this).next().attr('class') == '')
 				if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
