@@ -81,7 +81,7 @@
 	var res = "";
 
 	for(var i=0; i<json.data.length; i++) {
-		res += "<li><a href='"+json.data[i].images.standard_resolution.url+"'><img src=\""+json.data[i].images.thumbnail.url+"\" class='draggable'/></a></li>";
+		res += "<li><a href='"+json.data[i].images.standard_resolution.url+"'><img src=\""+json.data[i].images.standard_resolution.url+"\" class='draggable'/></a></li>";
 	}
 
 	$(".ad-thumb-list").html("")
@@ -94,6 +94,13 @@
 		"margin": '0 auto',
 	});
 	
+	/* 選取動畫待研究 */
+	/*
+	$('.draggable').mouseenter(function(){
+		$(this).animate({ top: $('#recent').css('top') }, 'fast');
+	}).mouseleave(function(){
+	});*/
+	
 	$('.draggable').draggable({
 		cursor: 'move', 
 		helper: "clone", 
@@ -101,6 +108,7 @@
 		revert: "invalid",
 		drag: function(event, ui) {
 			ui.helper.css('z-index','1000');
+			ui.helper.css('opacity','0.7');
 			if ($(this).attr("class").indexOf("ui-draggable-dragging") >= 0) {
 				$(".ui-draggable-dragging").css('z-index','1000');
 			}
@@ -135,7 +143,6 @@ var cornerX = parseFloat(cornerDiv.css('left'), 10);
 var cornerY = parseFloat(cornerDiv.css('top'), 10);
 var cornerW = parseFloat(cornerDiv.css('width'), 10);
 var cornerH = parseFloat(cornerDiv.css('height'), 10);
-
 var $cDiv;
 
 	function Selection(x, y, w, h){
@@ -549,7 +556,7 @@ function setDnD(maskImg, ox, oy) {
 				drag: function(event, ui) {
 					if ($(this).attr("class").indexOf("ui-draggable-dragging") >= 0) {
 						$(this).parent().css('z-index','1000');
-						$(this).css("opacity", "0.9");
+						$(this).css("opacity", "0.7");
 					}
 				}
 			});
@@ -582,10 +589,32 @@ function setDnD(maskImg, ox, oy) {
 				
 			}
 			else {		// get image from original URL
+			
+				var opts = {
+				  lines: 13, // The number of lines to draw
+				  length: 7, // The length of each line
+				  width: 4, // The line thickness
+				  radius: 10, // The radius of the inner circle
+				  corners: 1, // Corner roundness (0..1)
+				  rotate: 0, // The rotation offset
+				  color: '#000', // #rgb or #rrggbb
+				  speed: 1, // Rounds per second
+				  trail: 60, // Afterglow percentage
+				  shadow: false, // Whether to render a shadow
+				  hwaccel: false, // Whether to use hardware acceleration
+				  className: 'spinner', // The CSS class to assign to the spinner
+				  zIndex: 2e9, // The z-index (defaults to 2000000000)
+				  top: 'auto', // Top position relative to parent in px
+				  left: 'auto' // Left position relative to parent in px
+				};
+
+				var spinner = new Spinner(opts).spin($(this)[0]);
+			
 				$.getImageData({
 					url: imgSrc,
 					server: "http://insta.camangiwebstation.com/proxy/getImageData.php",
 					success: function(image){
+						spinner.stop();
 						divObj.children(".draggable").attr('src', image.src);
 						divObj.children(".draggable").addClass("cached");
 						doClipping( 
@@ -603,12 +632,14 @@ function setDnD(maskImg, ox, oy) {
 			$(this).removeClass("removed");	
 			$(this).children(".draggable").removeClass("ui-draggable-dragging");		
 			$(this).css('cursor', 'move');
+			$(this).animate({ borderColor: $(this).data('borderColor') }, 'fast');
 		},
 		out: function(event, ui) {
 			if ($(this).children(".draggable").length > 0 ) { 
 				if ($(this).children(".draggable").attr("class").indexOf("ui-draggable-dragging") >= 0)
 					$(this).addClass("removed");
 			}
+			$(this).animate({ borderColor: $(this).data('borderColor') }, 'fast');
 		},
 		over: function(event, ui) {
 			// copy zoomer value
@@ -616,6 +647,7 @@ function setDnD(maskImg, ox, oy) {
 			$(this).data('zdy', $(ui.draggable).data('zdy'));
 			$(this).data('zw', $(ui.draggable).data('zw'));
 			$(this).data('zh', $(ui.draggable).data('zh'));
+			$(this).animate({ borderColor: $(this).data('borderColor2') }, 'fast');
 		},
 		deactivate: function(event, ui) {
 			if ($(this).attr("class").indexOf("removed") >= 0) {
@@ -674,11 +706,12 @@ function setFooterTop(){
 function setCanvas() {
 
 	var winH=$(window).height();
+	var winW=$(window).width();
     $("#mCanvas").css('top', winH * 0.1);
-    $("#mCanvas").css('left', winH/2);     // 需要調整!!
+    $("#mCanvas").css('left', '410px');  
 
     var canvas = document.getElementById('mCanvas');
-    var context = canvas.getContext('2d');
+    var context = canvas.getContext('2d'); // 似乎不相容 IE8 
     var a = new Image();
 	a.src = "images/iphone4.png";
 	a.onload = function(){
@@ -744,7 +777,7 @@ $(function(){
   $.instagramr();
 });
 
-$(window).resize(function() { setContainer();setFooterTop(); }); 
+$(window).resize(function() { setContainer();setFooterTop()}); 
 $(window).scroll(function() { setFooterTop(); });
 
 // If browser didn't support console, then set it empty !
