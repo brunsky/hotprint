@@ -144,6 +144,7 @@ var cornerY = parseFloat(cornerDiv.css('top'), 10);
 var cornerW = parseFloat(cornerDiv.css('width'), 10);
 var cornerH = parseFloat(cornerDiv.css('height'), 10);
 var $cDiv;
+var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 
 	function Selection(x, y, w, h){
 		this.x = x; // initial positions
@@ -166,7 +167,7 @@ var $cDiv;
 					  theSelection.x,theSelection.y, 
 					  theSelection.w,theSelection.h); 	
 		// storing bright region
-		theSelection.oImg = ctx.getImageData(cornerX, cornerY, cornerW, cornerH);   
+		theSelection.oImg = ctx.getImageData(cornerX + bdr, cornerY + bdr, cornerW, cornerH);   
 		// covering dark region
 		ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
 		ctx.fillRect(theSelection.x,theSelection.y, 
@@ -174,7 +175,7 @@ var $cDiv;
 		  
 		// drawing stroke rect of whole image
 		ctx.strokeStyle = '#fff';
-		ctx.lineWidth = 1;
+		ctx.lineWidth = bdr;
 		ctx.strokeRect(theSelection.x-theSelection.iCSize[0],
 					   theSelection.y-theSelection.iCSize[0], 
 					   theSelection.w+theSelection.iCSize[0]*2,
@@ -195,27 +196,25 @@ var $cDiv;
 		if ($cDiv.attr("class").indexOf("layout_circle") >= 0) {
 			cirClipper(_ctx2, c1[0], cornerW);	
 		}
-		else if ($cDiv.attr("class").indexOf("layout_squal") >= 0) {
-			boxClipper(_ctx2, c1[0], cornerW);
+		else if ($cDiv.attr("class").indexOf("layout_square") >= 0) {
+			boxClipper(_ctx2, c1[0], cornerW, cornerH);
 		}
 		$cDiv.html('');
 		$cDiv.append(c2);
-		
-		//ctx.strokeRect(cornerX, cornerY, cornerW, cornerH);
 			
 		// drawing resize cubes
 		ctx.fillStyle = '#fff';
 		ctx.fillRect(theSelection.x - theSelection.iCSize[0]*2, 
 					 theSelection.y - theSelection.iCSize[0]*2, 
 					 theSelection.iCSize[0] * 2, theSelection.iCSize[0] * 2);
-		ctx.fillRect(theSelection.x + theSelection.w, 
+		ctx.fillRect(theSelection.x + theSelection.w + bdr*2, 
 					 theSelection.y - theSelection.iCSize[1]*2, 
 					 theSelection.iCSize[1] * 2, theSelection.iCSize[1] * 2);
-		ctx.fillRect(theSelection.x + theSelection.w, 
-					 theSelection.y + theSelection.h, 
+		ctx.fillRect(theSelection.x + theSelection.w+ bdr*2, 
+					 theSelection.y + theSelection.h+ bdr*2, 
 					 theSelection.iCSize[2] * 2, theSelection.iCSize[2] * 2);
 		ctx.fillRect(theSelection.x - theSelection.iCSize[3]*2, 
-					 theSelection.y + theSelection.h, 
+					 theSelection.y + theSelection.h+ bdr*2, 
 					 theSelection.iCSize[3] * 2, theSelection.iCSize[3] * 2);
 	}
 			
@@ -290,6 +289,17 @@ var $cDiv;
 					cornerDiv, 
 					cirClipper);
 			}
+			else if (cornerDiv.attr("class").indexOf("layout_square") >= 0) {
+				var c = $('<canvas>');
+				c[0].width = cornerW;
+				c[0].height = cornerH;
+				var ctx = c[0].getContext('2d');
+				ctx.putImageData(theSelection.oImg, 0, 0);
+				doClipping( 
+					doMasking(c[0], maskImg, cornerDiv, layout_ox, layout_oy), 
+					cornerDiv, 
+					boxClipper);
+			}
 			cornerDiv.children(".draggable").data('zdx', cornerX - theSelection.x);
 			cornerDiv.children(".draggable").data('zdy', cornerY - theSelection.y);
 			cornerDiv.children(".draggable").data('zw', theSelection.w);
@@ -309,12 +319,12 @@ var $cDiv;
         if (theSelection.bDragAll) {
             theSelection.x = iMouseX - theSelection.px;
             if (theSelection.x >= cornerX) theSelection.x = cornerX;
-            if (theSelection.x+theSelection.w <= cornerX+cornerW) 
-                theSelection.x = cornerX+cornerW-theSelection.w;
+            if (theSelection.x+theSelection.w <= cornerX+cornerW+bdr*2) 
+                theSelection.x = cornerX+cornerW+bdr*2-theSelection.w;
             theSelection.y = iMouseY - theSelection.py;
             if (theSelection.y >= cornerY) theSelection.y = cornerY;
-            if (theSelection.y+theSelection.h <= cornerY+cornerH) 
-                theSelection.y = cornerY+cornerH-theSelection.h;   
+            if (theSelection.y+theSelection.h <= cornerY+cornerH+bdr*2) 
+                theSelection.y = cornerY+cornerH+bdr*2-theSelection.h;   
         }
 
         for (i = 0; i < 4; i++) {
@@ -452,7 +462,7 @@ var $cDiv;
 
 //////////////////////////////////////////////////
 
-function cirClipper(ctx, img, diameter) {
+function cirClipper(ctx, img, diameter, reserved) {
     ctx.save(); 
     ctx.beginPath();
     ctx.arc(diameter/2, diameter/2, diameter/2+1, 0, Math.PI * 2, true);      
@@ -462,10 +472,10 @@ function cirClipper(ctx, img, diameter) {
     ctx.restore();
 }
 
-function boxClipper(ctx, img, length) {
+function boxClipper(ctx, img, width, height) {
     ctx.save(); 
     ctx.beginPath();
-    ctx.rect(0, 0, length, length);      
+    ctx.rect(0, 0, width, height);      
     ctx.clip();  
     ctx.globalAlpha = 0.9;       
     ctx.drawImage(img, 0, 0);
@@ -476,7 +486,8 @@ function boxClipper(ctx, img, length) {
 // clipper is the function for clipping
 // support circle and square box
 function doClipping(srcImg, destDiv, clipper) {
-    var len = parseFloat(destDiv.css('width'), 10);
+    var width = parseFloat(destDiv.css('width'), 10);
+	var height = parseFloat(destDiv.css('height'), 10);
 	var bdr = parseFloat(destDiv.css('border-left-width'), 10);
     var destCanvas = document.createElement('canvas');
     var destCtx = destCanvas.getContext('2d');
@@ -485,7 +496,7 @@ function doClipping(srcImg, destDiv, clipper) {
 	destCanvas.style.top = parseFloat(destDiv.css('top'), 10) + bdr + 'px';
 	destCanvas.style.left = parseFloat(destDiv.css('left'), 10) + bdr + 'px';
 	destDiv.after(destCanvas);
-    clipper(destCtx, srcImg, len);  
+    clipper(destCtx, srcImg, width, height);  
 }
 
 // return value: Canvas Object
@@ -525,7 +536,7 @@ function doMasking(oriImg, maskImg, destDiv, ox, oy) {
 
 // Define Drag&Drop
 function setDnD(maskImg, ox, oy) {
-	$( ".layout_circle" ).droppable({
+	$( ".layout_corner" ).droppable({
 		accept: ".draggable",
 		drop: function( event, ui ) {
 			if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
@@ -581,10 +592,18 @@ function setDnD(maskImg, ox, oy) {
 					_img.src = imgSrc;
 				
 				_img.onload = function() { // very important here. you need to wait for loading
-					doClipping( 
-					doMasking(_img, maskImg, divObj, ox, oy), 
-					divObj, 
-					cirClipper);
+					if (divObj.attr("class").indexOf("layout_circle") >= 0) {
+						doClipping( 
+							doMasking(_img, maskImg, divObj, ox, oy), 
+							divObj, 
+							cirClipper);	
+					}
+					else if (divObj.attr("class").indexOf("layout_square") >= 0) {
+						doClipping( 
+							doMasking(_img, maskImg, divObj, ox, oy), 
+							divObj, 
+							boxClipper);
+					}
 				}
 				
 			}
@@ -617,10 +636,18 @@ function setDnD(maskImg, ox, oy) {
 						spinner.stop();
 						divObj.children(".draggable").attr('src', image.src);
 						divObj.children(".draggable").addClass("cached");
-						doClipping( 
-							doMasking(image, maskImg, divObj, ox, oy), 
-							divObj, 
-							cirClipper);
+						if (divObj.attr("class").indexOf("layout_circle") >= 0) {
+							doClipping( 
+								doMasking(image, maskImg, divObj, ox, oy), 
+								divObj, 
+								cirClipper);	
+						}
+						else if (divObj.attr("class").indexOf("layout_square") >= 0) {
+							doClipping( 
+								doMasking(image, maskImg, divObj, ox, oy), 
+								divObj, 
+								boxClipper);
+						}
 					},
 					error: function(xhr, text_status){
 						console.log("Fail to get image:"+imgSrc);
@@ -632,14 +659,18 @@ function setDnD(maskImg, ox, oy) {
 			$(this).removeClass("removed");	
 			$(this).children(".draggable").removeClass("ui-draggable-dragging");		
 			$(this).css('cursor', 'move');
-			$(this).animate({ borderColor: $(this).data('borderColor') }, 'fast');
+			$(this).animate({ 
+				borderColor: $(this).data('borderColor'), 
+			}, 'fast');
 		},
 		out: function(event, ui) {
 			if ($(this).children(".draggable").length > 0 ) { 
 				if ($(this).children(".draggable").attr("class").indexOf("ui-draggable-dragging") >= 0)
 					$(this).addClass("removed");
 			}
-			$(this).animate({ borderColor: $(this).data('borderColor') }, 'fast');
+			$(this).animate({ 
+				borderColor: $(this).data('borderColor'), 
+			}, 'fast');
 		},
 		over: function(event, ui) {
 			// copy zoomer value
@@ -647,7 +678,9 @@ function setDnD(maskImg, ox, oy) {
 			$(this).data('zdy', $(ui.draggable).data('zdy'));
 			$(this).data('zw', $(ui.draggable).data('zw'));
 			$(this).data('zh', $(ui.draggable).data('zh'));
-			$(this).animate({ borderColor: $(this).data('borderColor2') }, 'fast');
+			$(this).animate({ 
+				borderColor: $(this).data('borderColor2'), 
+			}, 'fast');
 		},
 		deactivate: function(event, ui) {
 			if ($(this).attr("class").indexOf("removed") >= 0) {
@@ -672,13 +705,13 @@ function setDnD(maskImg, ox, oy) {
 function loadLayout(_maskImg, ox , oy){ 
 	maskImg = _maskImg
     //Import CSS
-	var cssLocation = "css/layout_1.css";
+	var cssLocation = "css/layout_2.css";
 	$.get(cssLocation, function(css) {
    		$('<style type="text/css"></style>').html(css).appendTo("head");	
 		//Import layout js
 		layout_oy = oy;
 		layout_ox = ox;
-		var layoutLocation = "js/layout_1.js";
+		var layoutLocation = "js/layout_2.js";
 		$.getScript(layoutLocation)
 			.done(function(data, textStatus, jqxhr) {
 				setDnD(maskImg, ox, oy); // Define Drag&Drop

@@ -6,6 +6,7 @@ for (var i=1; i<=23; i++) {
 	$destDiv = $(document.createElement('div'));
 	$destDiv.attr('id', 'corner'+i);
 	$destDiv.attr('class', 'layout_circle');
+	$destDiv.addClass('layout_corner');
 	$("#mCanvas").after($destDiv);    
 	$destDiv.corner("999px");
 	// Adjust position according to mCanvas
