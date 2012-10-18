@@ -134,6 +134,17 @@ function autoClipper(srcImgDom, dstCanvas) {
 
 //////////////////////////////////////////////////
 // realClipper
+
+// preload images
+var bMove = new Image();
+bMove.src = 'css/images/move.png';
+var bZoom = new Image();
+bZoom.src = 'css/images/zoom.png';
+var bSave = new Image();
+bSave.src = 'css/images/ok.png';
+var bRemove = new Image();
+bRemove.src = 'css/images/del.png';
+
 function realClipper(cornerDiv, srcImg) {
 var theSelection;
 var canvas;
@@ -153,8 +164,7 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 		this.h = h;
 		this.px = x; // extra variables to dragging calculations
 		this.py = y;
-		this.csize = 10; // resize cubes size
-		this.csizeh = 15; // resize cubes size (on hover)
+		this.csize = 15; // resize cubes size
 		this.bHow = [false, false, false, false]; // hover statuses
 		this.iCSize = [this.csize, this.csize, this.csize, this.csize]; // resize cubes sizes
 		this.bDrag = [false, false, false, false]; // drag statuses
@@ -164,7 +174,7 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 
 	Selection.prototype.draw = function(){
 		ctx.drawImage(srcImg, 0, 0, srcImg.width, srcImg.height, 
-					  theSelection.x+bdr,theSelection.y+bdr, 
+					  theSelection.x + bdr,theSelection.y + bdr, 
 					  theSelection.w + bdr,theSelection.h + bdr); 	
 		// storing bright region
 		theSelection.oImg = ctx.getImageData(cornerX + bdr, cornerY + bdr, cornerW + bdr, cornerH + bdr);   
@@ -178,8 +188,8 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 		ctx.lineWidth = bdr;
 		ctx.strokeRect(theSelection.x-theSelection.iCSize[0],
 					   theSelection.y-theSelection.iCSize[0], 
-					   theSelection.w+theSelection.iCSize[0]*2,
-					   theSelection.h+theSelection.iCSize[0]*2);
+					   theSelection.w+bdr*2+theSelection.iCSize[0]*2,
+					   theSelection.h+bdr*2+theSelection.iCSize[0]*2);
 		
 		// resoring bright zone 
 		var c1 = $('<canvas>');
@@ -204,16 +214,20 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 			
 		// drawing function cubes
 		ctx.fillStyle = '#fff';
-		ctx.fillRect(theSelection.x - theSelection.iCSize[0]*2, 
+
+		ctx.drawImage(bMove, theSelection.x - theSelection.iCSize[0]*2, 
 					 theSelection.y - theSelection.iCSize[0]*2, 
 					 theSelection.iCSize[0] * 2, theSelection.iCSize[0] * 2);
-		ctx.fillRect(theSelection.x + theSelection.w + bdr*2, 
+
+		ctx.drawImage(bZoom, theSelection.x + theSelection.w + bdr*2, 
 					 theSelection.y - theSelection.iCSize[1]*2, 
 					 theSelection.iCSize[1] * 2, theSelection.iCSize[1] * 2);
-		ctx.fillRect(theSelection.x + theSelection.w+ bdr*2, 
+					 
+		ctx.drawImage(bSave, theSelection.x + theSelection.w+ bdr*2, 
 					 theSelection.y + theSelection.h+ bdr*2, 
 					 theSelection.iCSize[2] * 2, theSelection.iCSize[2] * 2);
-		ctx.fillRect(theSelection.x - theSelection.iCSize[3]*2, 
+					 
+		ctx.drawImage(bRemove, theSelection.x - theSelection.iCSize[3]*2, 
 					 theSelection.y + theSelection.h+ bdr*2, 
 					 theSelection.iCSize[3] * 2, theSelection.iCSize[3] * 2);
 	}
@@ -334,29 +348,25 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
         }
 
         // hovering over resize cubes
-        if (iMouseX > theSelection.x - theSelection.csizeh && iMouseX < theSelection.x + theSelection.csizeh &&
-            iMouseY > theSelection.y - theSelection.csizeh && iMouseY < theSelection.y + theSelection.csizeh) {
+        if (iMouseX > theSelection.x - theSelection.csize*2 && iMouseX < theSelection.x + theSelection.csize*2 &&
+            iMouseY > theSelection.y - theSelection.csize*2 && iMouseY < theSelection.y + theSelection.csize*2) {
 
             theSelection.bHow[0] = true;
-            //theSelection.iCSize[0] = theSelection.csizeh;
         }
-        if (iMouseX > theSelection.x + theSelection.w-theSelection.csizeh && iMouseX < theSelection.x + theSelection.w + theSelection.csizeh &&
-            iMouseY > theSelection.y - theSelection.csizeh && iMouseY < theSelection.y + theSelection.csizeh) {
+        if (iMouseX > theSelection.x + theSelection.w-theSelection.csize*2 && iMouseX < theSelection.x + theSelection.w + theSelection.csize*2 &&
+            iMouseY > theSelection.y - theSelection.csize*2 && iMouseY < theSelection.y + theSelection.csize*2) {
 
             theSelection.bHow[1] = true;
-            //theSelection.iCSize[1] = theSelection.csizeh;
         }
-        if (iMouseX > theSelection.x + theSelection.w-theSelection.csizeh && iMouseX < theSelection.x + theSelection.w + theSelection.csizeh &&
-            iMouseY > theSelection.y + theSelection.h-theSelection.csizeh && iMouseY < theSelection.y + theSelection.h + theSelection.csizeh) {
+        if (iMouseX > theSelection.x + theSelection.w-theSelection.csize*2 && iMouseX < theSelection.x + theSelection.w + theSelection.csize*2 &&
+            iMouseY > theSelection.y + theSelection.h-theSelection.csize*2 && iMouseY < theSelection.y + theSelection.h + theSelection.csize*2) {
 
             theSelection.bHow[2] = true;
-            //theSelection.iCSize[2] = theSelection.csizeh;
         }
-        if (iMouseX > theSelection.x - theSelection.csizeh && iMouseX < theSelection.x + theSelection.csizeh &&
-            iMouseY > theSelection.y + theSelection.h-theSelection.csizeh && iMouseY < theSelection.y + theSelection.h + theSelection.csizeh) {
+        if (iMouseX > theSelection.x - theSelection.csize*2 && iMouseX < theSelection.x + theSelection.csize*2 &&
+            iMouseY > theSelection.y + theSelection.h-theSelection.csize*2 && iMouseY < theSelection.y + theSelection.h + theSelection.csize*2) {
 
             theSelection.bHow[3] = true;
-            //theSelection.iCSize[3] = theSelection.csizeh;
         }
 
         // in case of dragging of resize cubes
@@ -390,7 +400,7 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
             iFH = iMouseY - theSelection.py - iFY;
         }
 
-        if (iFW > theSelection.csizeh * 2 && iFH > theSelection.csizeh * 2) {
+        if (iFW > theSelection.csize * 2 && iFH > theSelection.csize * 2) {
             
             if (iFX+iFW >= cornerX+cornerW && iFY+iFH >= cornerY+cornerH) {
             
@@ -433,30 +443,26 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
             theSelection.iCSize[i] = theSelection.csize;
         }
 
-        // hovering over function cubes
-        if (iMouseX > theSelection.x - theSelection.csizeh && iMouseX < theSelection.x + theSelection.csizeh &&
-            iMouseY > theSelection.y - theSelection.csizeh && iMouseY < theSelection.y + theSelection.csizeh) {
+        // hovering over resize cubes
+        if (iMouseX > theSelection.x - theSelection.csize*2 && iMouseX < theSelection.x + theSelection.csize*2 &&
+            iMouseY > theSelection.y - theSelection.csize*2 && iMouseY < theSelection.y + theSelection.csize*2) {
 
             theSelection.bHow[0] = true;
-            //theSelection.iCSize[0] = theSelection.csizeh;
         }
-        if (iMouseX > theSelection.x + theSelection.w-theSelection.csizeh && iMouseX < theSelection.x + theSelection.w + theSelection.csizeh &&
-            iMouseY > theSelection.y - theSelection.csizeh && iMouseY < theSelection.y + theSelection.csizeh) {
+        if (iMouseX > theSelection.x + theSelection.w-theSelection.csize*2 && iMouseX < theSelection.x + theSelection.w + theSelection.csize*2 &&
+            iMouseY > theSelection.y - theSelection.csize*2 && iMouseY < theSelection.y + theSelection.csize*2) {
 
             theSelection.bHow[1] = true;
-            //theSelection.iCSize[1] = theSelection.csizeh;
         }
-        if (iMouseX > theSelection.x + theSelection.w-theSelection.csizeh && iMouseX < theSelection.x + theSelection.w + theSelection.csizeh &&
-            iMouseY > theSelection.y + theSelection.h-theSelection.csizeh && iMouseY < theSelection.y + theSelection.h + theSelection.csizeh) {
+        if (iMouseX > theSelection.x + theSelection.w-theSelection.csize*2 && iMouseX < theSelection.x + theSelection.w + theSelection.csize*2 &&
+            iMouseY > theSelection.y + theSelection.h-theSelection.csize*2 && iMouseY < theSelection.y + theSelection.h + theSelection.csize*2) {
 
             theSelection.bHow[2] = true;
-            //theSelection.iCSize[2] = theSelection.csizeh;
         }
-        if (iMouseX > theSelection.x - theSelection.csizeh && iMouseX < theSelection.x + theSelection.csizeh &&
-            iMouseY > theSelection.y + theSelection.h-theSelection.csizeh && iMouseY < theSelection.y + theSelection.h + theSelection.csizeh) {
+        if (iMouseX > theSelection.x - theSelection.csize*2 && iMouseX < theSelection.x + theSelection.csize*2 &&
+            iMouseY > theSelection.y + theSelection.h-theSelection.csize*2 && iMouseY < theSelection.y + theSelection.h + theSelection.csize*2) {
 
             theSelection.bHow[3] = true;
-            //theSelection.iCSize[3] = theSelection.csizeh;
         }
 
         
@@ -478,7 +484,7 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 
         }
 
-        if (iFW > theSelection.csizeh * 2 && iFH > theSelection.csizeh * 2) {
+        if (iFW > theSelection.csize * 2 && iFH > theSelection.csize * 2) {
             
             if (iFX+iFW >= cornerX+cornerW && iFY+iFH >= cornerY+cornerH) {
             
@@ -546,6 +552,7 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
         }
         theSelection.px = 0;
         theSelection.py = 0;
+
     }
 }
 
