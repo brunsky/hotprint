@@ -164,7 +164,7 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 
 	Selection.prototype.draw = function(){
 		ctx.drawImage(srcImg, 0, 0, srcImg.width, srcImg.height, 
-					  theSelection.x,theSelection.y, 
+					  theSelection.x+bdr,theSelection.y+bdr, 
 					  theSelection.w + bdr,theSelection.h + bdr); 	
 		// storing bright region
 		theSelection.oImg = ctx.getImageData(cornerX + bdr, cornerY + bdr, cornerW + bdr, cornerH + bdr);   
@@ -281,8 +281,8 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 			}
 			if (cornerDiv.attr("class").indexOf("layout_circle") >= 0) { // for circle corner
 				var c = $('<canvas>');
-				c[0].width = cornerW;
-				c[0].height = cornerH;
+				c[0].width = cornerW + bdr;
+				c[0].height = cornerH + bdr;
 				var ctx = c[0].getContext('2d');
 				ctx.putImageData(theSelection.oImg, 0, 0);
 				doClipping( 
@@ -553,11 +553,23 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 
 function cirClipper(ctx, img, diameter, reserved) {
     ctx.save(); 
-    ctx.beginPath();
-    ctx.arc(diameter/2, diameter/2, diameter/2+1, 0, Math.PI * 2, true);      
-    ctx.clip();  
-    //ctx.globalAlpha = 0.9;        
-    ctx.drawImage(img, 0, 0);
+    ctx.beginPath(); 
+	$.browser.chrome = /chrome/.test(navigator.userAgent.toLowerCase()); 
+	if ($.browser.chrome) { // Considering Chrome for aliasing issue
+		ctx.drawImage(img, 0, 0);
+		ctx.restore();
+		ctx.save(); 
+		ctx.beginPath();
+		ctx.globalCompositeOperation = 'destination-in';
+		ctx.arc(diameter/2, diameter/2, diameter/2, 0, Math.PI * 2, true); 
+		ctx.fillStyle = "rgb(0, 0, 0)";
+		ctx.fill();
+	}   
+	else {
+		ctx.arc(diameter/2, diameter/2, diameter/2, 0, Math.PI * 2, true); 
+		ctx.clip();      
+		ctx.drawImage(img, 0, 0);		
+	}
     ctx.restore();
 }
 
@@ -565,8 +577,7 @@ function boxClipper(ctx, img, width, height) {
     ctx.save(); 
     ctx.beginPath();
     ctx.rect(0, 0, width, height);      
-    ctx.clip();  
-    //ctx.globalAlpha = 0.9;       
+    ctx.clip();        
     ctx.drawImage(img, 0, 0);
     ctx.restore();
 }
@@ -580,10 +591,11 @@ function doClipping(srcImg, destDiv, clipper) {
 	var height = parseFloat(destDiv.css('height'), 10) + bdr;
     var destCanvas = document.createElement('canvas');
     var destCtx = destCanvas.getContext('2d');
-    //destCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; opacity:0.9; -webkit-backface-visibility:hidden; z-index: 1');
     destCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; z-index:997;');
 	destCanvas.style.top = parseFloat(destDiv.css('top'), 10) + bdr + 'px';
 	destCanvas.style.left = parseFloat(destDiv.css('left'), 10) + bdr + 'px';
+	destCanvas.width = width;
+	destCanvas.height = height;
 	destDiv.after(destCanvas);
     clipper(destCtx, srcImg, width, height);  
 }
@@ -750,6 +762,7 @@ function setDnD(maskImg, ox, oy) {
 			$(this).css('cursor', 'move');
 			$(this).css('z-index', '998');
 			$(this).fadeTo('fast', 0.1);
+			$(this).css('opacity', 0);
 		},
 		out: function(event, ui) {
 			if ($(this).children(".draggable").length > 0 ) { 
@@ -791,13 +804,13 @@ function setDnD(maskImg, ox, oy) {
 function loadLayout(_maskImg, ox , oy){ 
 	maskImg = _maskImg
     //Import CSS
-	var cssLocation = "css/layout_2.css";
+	var cssLocation = "css/layout_1.css";
 	$.get(cssLocation, function(css) {
    		$('<style type="text/css"></style>').html(css).appendTo("head");	
 		//Import layout js
 		layout_oy = oy;
 		layout_ox = ox;
-		var layoutLocation = "js/layout_2.js";
+		var layoutLocation = "js/layout_1.js";
 		$.getScript(layoutLocation)
 			.done(function(data, textStatus, jqxhr) {
 				setDnD(maskImg, ox, oy); // Define Drag&Drop
