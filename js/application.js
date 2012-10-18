@@ -38,7 +38,8 @@
       dataType: "jsonp",
       url: "https://api.instagram.com/v1/users/"+user_id+"/media/recent",
       data: {
-        access_token: access_token
+        access_token: access_token,
+		count: 50
       }
     });
     request.success(_displayUserRecent);
@@ -79,7 +80,6 @@
   _displayUserRecent = function(json){
 	
 	var res = "";
-
 	for(var i=0; i<json.data.length; i++) {
 		res += "<li><a href='"+json.data[i].images.standard_resolution.url+"'><img src=\""+json.data[i].images.standard_resolution.url+"\" class='draggable'/></a></li>";
 	}
