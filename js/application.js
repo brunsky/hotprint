@@ -165,13 +165,13 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 	Selection.prototype.draw = function(){
 		ctx.drawImage(srcImg, 0, 0, srcImg.width, srcImg.height, 
 					  theSelection.x,theSelection.y, 
-					  theSelection.w,theSelection.h); 	
+					  theSelection.w + bdr,theSelection.h + bdr); 	
 		// storing bright region
-		theSelection.oImg = ctx.getImageData(cornerX + bdr, cornerY + bdr, cornerW, cornerH);   
+		theSelection.oImg = ctx.getImageData(cornerX + bdr, cornerY + bdr, cornerW + bdr, cornerH + bdr);   
 		// covering dark region
 		ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
 		ctx.fillRect(theSelection.x,theSelection.y, 
-					 theSelection.w, theSelection.h);   
+					 theSelection.w + bdr, theSelection.h + bdr);   
 		  
 		// drawing stroke rect of whole image
 		ctx.strokeStyle = '#fff';
@@ -184,8 +184,8 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 		// resoring bright zone 
 		var c1 = $('<canvas>');
 		var c2 = $('<canvas>');
-		c2[0].width = cornerW;
-		c2[0].height = cornerH;
+		c2[0].width = cornerW + bdr;
+		c2[0].height = cornerH + bdr;
 		c2.css('position', 'absolute');
 		c2.css('z-index', '1002');
 		c2.css('left', '0px');
@@ -202,7 +202,7 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 		$cDiv.html('');
 		$cDiv.append(c2);
 			
-		// drawing resize cubes
+		// drawing function cubes
 		ctx.fillStyle = '#fff';
 		ctx.fillRect(theSelection.x - theSelection.iCSize[0]*2, 
 					 theSelection.y - theSelection.iCSize[0]*2, 
@@ -242,9 +242,10 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 	
 	$cDiv = cornerDiv.clone();
 	$cDiv.css('z-index', '1003');
+	$cDiv.css('opacity', 1);
 	$("body").append($cDiv);
 	
-	$cDiv.mousemove(eventMousemove);
+	$cDiv.mousemove(eventMousemove2);
     $cDiv.mousedown(eventMousedown);
     $cDiv.mouseup(eventMouseup);
 	
@@ -260,7 +261,7 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 	}
 	drawScene();
 
-    canvas.mousemove(eventMousemove);
+    canvas.mousemove(eventMousemove2);
     canvas.mousedown(eventMousedown);
     canvas.mouseup(eventMouseup);
 	canvas.dblclick(eventDbclick);
@@ -291,8 +292,8 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 			}
 			else if (cornerDiv.attr("class").indexOf("layout_square") >= 0) {
 				var c = $('<canvas>');
-				c[0].width = cornerW;
-				c[0].height = cornerH;
+				c[0].width = cornerW + bdr;
+				c[0].height = cornerH + bdr;
 				var ctx = c[0].getContext('2d');
 				ctx.putImageData(theSelection.oImg, 0, 0);
 				doClipping( 
@@ -410,6 +411,94 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
         drawScene();            
     }
 	
+	function eventMousemove2(e) { // binding mouse move event
+        var canvasOffset = $(canvas).offset();
+        iMouseX = Math.floor(e.pageX - canvasOffset.left);
+        iMouseY = Math.floor(e.pageY - canvasOffset.top);
+
+        // in case of drag of whole selector
+        if (theSelection.bDragAll || theSelection.bDrag[0]) {
+            theSelection.x = iMouseX - theSelection.px;
+            if (theSelection.x >= cornerX) theSelection.x = cornerX;
+            if (theSelection.x+theSelection.w <= cornerX+cornerW) 
+                theSelection.x = cornerX+cornerW+bdr*2-theSelection.w;
+            theSelection.y = iMouseY - theSelection.py;
+            if (theSelection.y >= cornerY) theSelection.y = cornerY;
+            if (theSelection.y+theSelection.h <= cornerY+cornerH) 
+                theSelection.y = cornerY+cornerH+bdr*2-theSelection.h;   
+        }
+
+        for (i = 0; i < 4; i++) {
+            theSelection.bHow[i] = false;
+            theSelection.iCSize[i] = theSelection.csize;
+        }
+
+        // hovering over function cubes
+        if (iMouseX > theSelection.x - theSelection.csizeh && iMouseX < theSelection.x + theSelection.csizeh &&
+            iMouseY > theSelection.y - theSelection.csizeh && iMouseY < theSelection.y + theSelection.csizeh) {
+
+            theSelection.bHow[0] = true;
+            //theSelection.iCSize[0] = theSelection.csizeh;
+        }
+        if (iMouseX > theSelection.x + theSelection.w-theSelection.csizeh && iMouseX < theSelection.x + theSelection.w + theSelection.csizeh &&
+            iMouseY > theSelection.y - theSelection.csizeh && iMouseY < theSelection.y + theSelection.csizeh) {
+
+            theSelection.bHow[1] = true;
+            //theSelection.iCSize[1] = theSelection.csizeh;
+        }
+        if (iMouseX > theSelection.x + theSelection.w-theSelection.csizeh && iMouseX < theSelection.x + theSelection.w + theSelection.csizeh &&
+            iMouseY > theSelection.y + theSelection.h-theSelection.csizeh && iMouseY < theSelection.y + theSelection.h + theSelection.csizeh) {
+
+            theSelection.bHow[2] = true;
+            //theSelection.iCSize[2] = theSelection.csizeh;
+        }
+        if (iMouseX > theSelection.x - theSelection.csizeh && iMouseX < theSelection.x + theSelection.csizeh &&
+            iMouseY > theSelection.y + theSelection.h-theSelection.csizeh && iMouseY < theSelection.y + theSelection.h + theSelection.csizeh) {
+
+            theSelection.bHow[3] = true;
+            //theSelection.iCSize[3] = theSelection.csizeh;
+        }
+
+        
+        var iFW, iFH;
+        if (theSelection.bDrag[0]) {
+
+        }
+        if (theSelection.bDrag[1]) { // in case of dragging of resize cubes
+            var iFX = theSelection.x;
+            var iFY = iMouseY - theSelection.py;
+            if (iFY > cornerY) iFY = cornerY;
+            iFW = iMouseX - theSelection.px - iFX;
+            iFH = theSelection.h + theSelection.y - iFY;
+        }
+        if (theSelection.bDrag[2]) {
+
+        }
+        if (theSelection.bDrag[3]) {
+
+        }
+
+        if (iFW > theSelection.csizeh * 2 && iFH > theSelection.csizeh * 2) {
+            
+            if (iFX+iFW >= cornerX+cornerW && iFY+iFH >= cornerY+cornerH) {
+            
+                if (iFW >= iFH) {
+                    var r = iFW / theSelection.w;
+                    theSelection.w = iFW;
+                    theSelection.h = r * theSelection.h;
+                }
+                else {
+                    var r = iFH / theSelection.h;
+                    theSelection.w = r * theSelection.w;
+                    theSelection.h = iFH;
+                }
+            }
+            theSelection.x = iFX;
+            theSelection.y = iFY;
+        }
+        drawScene();            
+    }
+	
 	function eventMousedown(e) { // binding mousedown event
         var canvasOffset = $(canvas).offset();
         iMouseX = Math.floor(e.pageX - canvasOffset.left);
@@ -467,7 +556,7 @@ function cirClipper(ctx, img, diameter, reserved) {
     ctx.beginPath();
     ctx.arc(diameter/2, diameter/2, diameter/2+1, 0, Math.PI * 2, true);      
     ctx.clip();  
-    ctx.globalAlpha = 0.9;        
+    //ctx.globalAlpha = 0.9;        
     ctx.drawImage(img, 0, 0);
     ctx.restore();
 }
@@ -477,7 +566,7 @@ function boxClipper(ctx, img, width, height) {
     ctx.beginPath();
     ctx.rect(0, 0, width, height);      
     ctx.clip();  
-    ctx.globalAlpha = 0.9;       
+    //ctx.globalAlpha = 0.9;       
     ctx.drawImage(img, 0, 0);
     ctx.restore();
 }
@@ -486,13 +575,13 @@ function boxClipper(ctx, img, width, height) {
 // clipper is the function for clipping
 // support circle and square box
 function doClipping(srcImg, destDiv, clipper) {
-    var width = parseFloat(destDiv.css('width'), 10);
-	var height = parseFloat(destDiv.css('height'), 10);
 	var bdr = parseFloat(destDiv.css('border-left-width'), 10);
+	var width = parseFloat(destDiv.css('width'), 10) + bdr;
+	var height = parseFloat(destDiv.css('height'), 10) + bdr;
     var destCanvas = document.createElement('canvas');
     var destCtx = destCanvas.getContext('2d');
     //destCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; opacity:0.9; -webkit-backface-visibility:hidden; z-index: 1');
-    destCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; opacity:0.9; z-index:997;');
+    destCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; z-index:997;');
 	destCanvas.style.top = parseFloat(destDiv.css('top'), 10) + bdr + 'px';
 	destCanvas.style.left = parseFloat(destDiv.css('left'), 10) + bdr + 'px';
 	destDiv.after(destCanvas);
@@ -509,8 +598,8 @@ function doMasking(oriImg, maskImg, destDiv, ox, oy) {
     var b = parseFloat(destDiv.css('border-left-width'), 10);
     var x = parseFloat(destDiv.css('left'), 10) + b - ox;
     var y = parseFloat(destDiv.css('top'), 10) + b - oy;
-    var w = parseFloat(destDiv.css('width'), 10);
-    var h = parseFloat(destDiv.css('height'), 10);
+    var w = parseFloat(destDiv.css('width'), 10) + b;
+    var h = parseFloat(destDiv.css('height'), 10) + b;
     
     // adjust over position
     if (x+w > maskImg.width) w = maskImg.width - x;
@@ -581,8 +670,8 @@ function setDnD(maskImg, ox, oy) {
 				
 				if (typeof divObj.children(".draggable").data('zdx') != 'undefined') { // if image has been scaled
 					var $dstCanvas = $('<canvas>');
-					$dstCanvas[0].width = parseFloat(divObj.css('width'), 10);
-					$dstCanvas[0].height = parseFloat(divObj.css('height'), 10);
+					$dstCanvas[0].width = parseFloat(divObj.css('width'), 10) + parseFloat(divObj.css('border-left-width'), 10);
+					$dstCanvas[0].height = parseFloat(divObj.css('height'), 10) + parseFloat(divObj.css('border-left-width'), 10);
 					autoClipper(divObj.children(".draggable")[0], $dstCanvas);
 					_img.src = $dstCanvas[0].toDataURL();
 					_img.width = $dstCanvas[0].width;
@@ -659,18 +748,16 @@ function setDnD(maskImg, ox, oy) {
 			$(this).removeClass("removed");	
 			$(this).children(".draggable").removeClass("ui-draggable-dragging");		
 			$(this).css('cursor', 'move');
-			$(this).animate({ 
-				borderColor: $(this).data('borderColor'), 
-			}, 'fast');
+			$(this).css('z-index', '998');
+			$(this).fadeTo('fast', 0.1);
 		},
 		out: function(event, ui) {
 			if ($(this).children(".draggable").length > 0 ) { 
 				if ($(this).children(".draggable").attr("class").indexOf("ui-draggable-dragging") >= 0)
 					$(this).addClass("removed");
 			}
-			$(this).animate({ 
-				borderColor: $(this).data('borderColor'), 
-			}, 'fast');
+			$(this).css('z-index', '998');
+			$(this).fadeTo('fast', 0.1);
 		},
 		over: function(event, ui) {
 			// copy zoomer value
@@ -678,9 +765,8 @@ function setDnD(maskImg, ox, oy) {
 			$(this).data('zdy', $(ui.draggable).data('zdy'));
 			$(this).data('zw', $(ui.draggable).data('zw'));
 			$(this).data('zh', $(ui.draggable).data('zh'));
-			$(this).animate({ 
-				borderColor: $(this).data('borderColor2'), 
-			}, 'fast');
+			$(this).css('z-index', '999');
+			$(this).fadeTo('fast', 1);
 		},
 		deactivate: function(event, ui) {
 			if ($(this).attr("class").indexOf("removed") >= 0) {
