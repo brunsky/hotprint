@@ -181,7 +181,7 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 		// covering dark region
 		ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
 		ctx.fillRect(theSelection.x,theSelection.y, 
-					 theSelection.w + bdr, theSelection.h + bdr);   
+					 theSelection.w + bdr*2, theSelection.h + bdr*2);   
 		  
 		// drawing stroke rect of whole image
 		ctx.strokeStyle = '#fff';
