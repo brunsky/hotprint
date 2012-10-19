@@ -9,8 +9,8 @@ for (var i=1; i<=23; i++) {
 	$destDiv.addClass('layout_corner');
 	$("#mCanvas").after($destDiv);    
 	// Adjust position according to mCanvas
-	_y = parseFloat($destDiv.css('top'), 10);
-	_x = parseFloat($destDiv.css('left'), 10);
+	_y = parseInt($destDiv.css('top'), 10);
+	_x = parseInt($destDiv.css('left'), 10);
 	$destDiv.css('top', _y+layout_oy+'px');
 	$destDiv.css('left', _x+layout_ox+'px');
 	$destDiv.css('z-index', 998);

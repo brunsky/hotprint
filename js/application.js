@@ -167,8 +167,8 @@ function setDnD(maskImg, ox, oy) {
 				
 				if (typeof divObj.children(".draggable").data('zdx') != 'undefined') { // if image has been scaled
 					var $dstCanvas = $('<canvas>');
-					$dstCanvas[0].width = parseFloat(divObj.css('width'), 10) + parseFloat(divObj.css('border-left-width'), 10);
-					$dstCanvas[0].height = parseFloat(divObj.css('height'), 10) + parseFloat(divObj.css('border-left-width'), 10);
+					$dstCanvas[0].width = parseInt(divObj.css('width'), 10) + parseInt(divObj.css('border-left-width'), 10);
+					$dstCanvas[0].height = parseInt(divObj.css('height'), 10) + parseInt(divObj.css('border-left-width'), 10);
 					autoClipper(divObj.children(".draggable")[0], $dstCanvas);
 					_img.src = $dstCanvas[0].toDataURL();
 					_img.width = $dstCanvas[0].width;
@@ -236,6 +236,7 @@ function setDnD(maskImg, ox, oy) {
 						}
 					},
 					error: function(xhr, text_status){
+						spinner.stop();
 						console.log("Fail to get image:"+imgSrc);
 					}
 				});
@@ -289,13 +290,13 @@ function setDnD(maskImg, ox, oy) {
 function loadLayout(_maskImg, ox , oy){ 
 	maskImg = _maskImg
     //Import CSS
-	var cssLocation = "css/layout_1.css";
+	var cssLocation = "css/layout_2.css";
 	$.get(cssLocation, function(css) {
    		$('<style type="text/css"></style>').html(css).appendTo("head");	
 		//Import layout js
 		layout_oy = oy;
 		layout_ox = ox;
-		var layoutLocation = "js/layout_1.js";
+		var layoutLocation = "js/layout_2.js";
 		$.getScript(layoutLocation)
 			.done(function(data, textStatus, jqxhr) {
 				setDnD(maskImg, ox, oy); // Define Drag&Drop
@@ -341,8 +342,8 @@ function setCanvas() {
         server: "http://insta.camangiwebstation.com/proxy/getImageData.php",
         success: function(image){
         	// Load Layout
-        	var oy = parseFloat($("#mCanvas").css('top'), 10);
-        	var ox = parseFloat($("#mCanvas").css('left'), 10);
+        	var oy = parseInt($("#mCanvas").css('top'), 10);
+        	var ox = parseInt($("#mCanvas").css('left'), 10);
             loadLayout(image, ox, oy);
             console.log("Get iphone4_mask.png");
         },

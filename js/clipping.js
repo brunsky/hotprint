@@ -30,12 +30,14 @@ var theSelection;
 var canvas;
 var ctx;
 var iMouseX, iMouseY = 1;
-var cornerX = parseFloat(cornerDiv.css('left'), 10);
-var cornerY = parseFloat(cornerDiv.css('top'), 10);
-var cornerW = parseFloat(cornerDiv.css('width'), 10);
-var cornerH = parseFloat(cornerDiv.css('height'), 10);
+var cornerX = parseInt(cornerDiv.css('left'), 10);
+var cornerY = parseInt(cornerDiv.css('top'), 10);
+var cornerW = parseInt(cornerDiv.css('width'), 10);
+var cornerH = parseInt(cornerDiv.css('height'), 10);
 var $cDiv;
-var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
+var bdr = parseInt(cornerDiv.css('border-left-width'), 10);
+var draw_w;
+var draw_h;
 
 	function Selection(x, y, w, h){
 		this.x = x; // initial positions
@@ -53,15 +55,23 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 	}
 
 	Selection.prototype.draw = function(){
+		if (theSelection.w >= theSelection.h) {
+			draw_w = theSelection.w + bdr;
+			draw_h = srcImg.height * (theSelection.w / srcImg.width) + bdr;
+		}
+		else {
+			draw_w = srcImg.width * (theSelection.h / srcImg.height) + bdr;
+			draw_h = theSelection.h + bdr;
+		}
 		ctx.drawImage(srcImg, 0, 0, srcImg.width, srcImg.height, 
-					  theSelection.x + bdr,theSelection.y + bdr, 
-					  theSelection.w + bdr,theSelection.h + bdr); 	
+						theSelection.x + bdr, theSelection.y + bdr, 
+						draw_w, draw_h);
 		// storing bright region
 		theSelection.oImg = ctx.getImageData(cornerX + bdr, cornerY + bdr, cornerW + bdr, cornerH + bdr);   
 		// covering dark region
 		ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-		ctx.fillRect(theSelection.x,theSelection.y, 
-					 theSelection.w + bdr*2, theSelection.h + bdr*2);   
+		ctx.fillRect(theSelection.x + bdr, theSelection.y + bdr, 
+					 draw_w, draw_h);   
 		  
 		// drawing stroke rect of whole image
 		ctx.strokeStyle = '#fff';
@@ -74,12 +84,14 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 		// resoring bright zone 
 		var c1 = $('<canvas>');
 		var c2 = $('<canvas>');
+
+		c2.attr('id', 'clipper.temp');
+		c2[0].setAttribute('style', 'position: absolute; z-index:1002;');
+		c2[0].style.top = cornerY + bdr + 'px';
+		c2[0].style.left = cornerX + bdr + 'px';
 		c2[0].width = cornerW + bdr;
 		c2[0].height = cornerH + bdr;
-		c2.css('position', 'absolute');
-		c2.css('z-index', '1002');
-		c2.css('left', '0px');
-		c2.css('top', '0px');
+		
 		var _ctx1 = c1[0].getContext('2d');
 		var _ctx2 = c2[0].getContext('2d');
 		_ctx1.putImageData(theSelection.oImg, 0, 0);
@@ -89,8 +101,12 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 		else if ($cDiv.attr("class").indexOf("layout_square") >= 0) {
 			boxClipper(_ctx2, c1[0], cornerW, cornerH);
 		}
-		$cDiv.html('');
-		$cDiv.append(c2);
+		
+		if (typeof $cDiv.next()[0] != 'undefined' && 
+					$cDiv.next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
+			$cDiv.next().remove();
+		}
+		$cDiv.after(c2);
 			
 		// drawing function cubes
 		ctx.fillStyle = '#fff';
@@ -126,8 +142,8 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 	$wDiv = $('.modalOverlay');
 	
 	canvas = $('<canvas>');
-	canvas[0].width =parseFloat($wDiv.css('width'), 10); 
-	canvas[0].height =parseFloat($(document).height(), 10);
+	canvas[0].width =parseInt($wDiv.css('width'), 10); 
+	canvas[0].height =parseInt($(document).height(), 10);
 	canvas.css('position', 'absolute');
 	canvas.css('left', '0px');
 	canvas.css('top', '0px');
@@ -145,10 +161,10 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 	
 	ctx = canvas[0].getContext('2d');
 	if (typeof cornerDiv.children(".draggable").data('zdx') != 'undefined') {
-		theSelection = new Selection(parseFloat(cornerDiv.css('left'), 10) - cornerDiv.children(".draggable").data('zdx'), 
-									parseFloat(cornerDiv.css('top'), 10) - cornerDiv.children(".draggable").data('zdy'), 
-									cornerDiv.children(".draggable").data('zw'), 
-									cornerDiv.children(".draggable").data('zh')); 
+		theSelection = new Selection(parseInt(cornerDiv.css('left'), 10) - cornerDiv.children(".draggable").data('zdx'), 
+									parseInt(cornerDiv.css('top'), 10) - cornerDiv.children(".draggable").data('zdy'), 
+									cornerDiv.children(".draggable").data('zw')-bdr, 
+									cornerDiv.children(".draggable").data('zh')-bdr); 
 	}	
 	else {
 		theSelection = new Selection(cornerX, cornerY, cornerW, cornerH); 
@@ -189,10 +205,11 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
 		}
 		cornerDiv.children(".draggable").data('zdx', cornerX - theSelection.x);
 		cornerDiv.children(".draggable").data('zdy', cornerY - theSelection.y);
-		cornerDiv.children(".draggable").data('zw', theSelection.w);
-		cornerDiv.children(".draggable").data('zh', theSelection.h);
+		cornerDiv.children(".draggable").data('zw', draw_w);
+		cornerDiv.children(".draggable").data('zh', draw_h);
 		canvas.remove(); // remove main canvas
 		$wDiv.remove(); // remove block div
+		$cDiv.next().remove();
 		$cDiv.remove(); // remove div cloned from layout
 	}
 	
@@ -219,12 +236,12 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
         if (theSelection.bDragAll || theSelection.bDrag[0]) {
             theSelection.x = iMouseX - theSelection.px;
             if (theSelection.x >= cornerX) theSelection.x = cornerX;
-            if (theSelection.x+theSelection.w <= cornerX+cornerW) 
-                theSelection.x = cornerX+cornerW+bdr*2-theSelection.w;
+            if (theSelection.x+theSelection.w <= cornerX+cornerW+bdr) 
+                theSelection.x = cornerX+cornerW+bdr-theSelection.w;
             theSelection.y = iMouseY - theSelection.py;
             if (theSelection.y >= cornerY) theSelection.y = cornerY;
-            if (theSelection.y+theSelection.h <= cornerY+cornerH) 
-                theSelection.y = cornerY+cornerH+bdr*2-theSelection.h;   
+            if (theSelection.y+theSelection.h <= cornerY+cornerH+bdr) 
+                theSelection.y = cornerY+cornerH+bdr-theSelection.h;   
         }
 
         for (i = 0; i < 4; i++) {
@@ -298,6 +315,7 @@ var bdr = parseFloat(cornerDiv.css('border-left-width'), 10);
             iMouseY > theSelection.y + theSelection.h-theSelection.csize*2 && iMouseY < theSelection.y + theSelection.h + theSelection.csize*2) {
             canvas.remove(); // remove main canvas
             $wDiv.remove(); // remove block div
+			$cDiv.next().remove();
 			$cDiv.remove(); // remove div cloned from layout
 			
 			cornerDiv.children(".draggable").remove();
