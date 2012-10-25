@@ -130,15 +130,12 @@ function setDnD(maskImg, ox, oy) {
 			}
 			$(this).html('');
 			$(this).append($(ui.draggable).clone());
+			
 			// copy zoomer value
 			$(this).children(".draggable").data('zdx', $(this).data('zdx'));
-			$(this).removeData('zdx');
 			$(this).children(".draggable").data('zdy', $(this).data('zdy'));
-			$(this).removeData('zdy');
 			$(this).children(".draggable").data('zw', $(this).data('zw'));
-			$(this).removeData('zw');
 			$(this).children(".draggable").data('zh', $(this).data('zh'));
-			$(this).removeData('zh');
 
 			$(this).children(".draggable").css({
 				"position": "relative",
@@ -174,8 +171,9 @@ function setDnD(maskImg, ox, oy) {
 					_img.width = $dstCanvas[0].width;
 					_img.height = $dstCanvas[0].height;
 				}
-				else
+				else {
 					_img.src = imgSrc;
+				}
 				
 				_img.onload = function() { // very important here. you need to wait for loading
 					if (divObj.attr("class").indexOf("layout_circle") >= 0) {
@@ -259,29 +257,28 @@ function setDnD(maskImg, ox, oy) {
 			$(this).fadeTo('fast', 0.1);
 		},
 		over: function(event, ui) {
-			// copy zoomer value
+			$(this).css('z-index', '999');
+			$(this).fadeTo('fast', 1);
 			$(this).data('zdx', $(ui.draggable).data('zdx'));
 			$(this).data('zdy', $(ui.draggable).data('zdy'));
 			$(this).data('zw', $(ui.draggable).data('zw'));
 			$(this).data('zh', $(ui.draggable).data('zh'));
-			$(this).css('z-index', '999');
-			$(this).fadeTo('fast', 1);
 		},
 		deactivate: function(event, ui) {
 			if ($(this).attr("class").indexOf("removed") >= 0) {
 				$(this).children(".draggable").remove();
-				$(this).removeData('zdx');
-				$(this).removeData('zdy');
-				$(this).removeData('zw');
-				$(this).removeData('zh');
 				$(this).css('cursor', 'default');
 				if ($(this).next().attr('class') == '')
-				if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
-					$(this).next().remove();
-				}
+					if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
+						$(this).next().remove();
+					}
 				$(this).removeClass("removed");
 				$(this).css('z-index','998');
 			}
+			$(this).removeData('zdx');
+			$(this).removeData('zdy');
+			$(this).removeData('zw');
+			$(this).removeData('zh');
 		}
 	});
 }

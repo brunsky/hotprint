@@ -235,15 +235,22 @@ var draw_h;
         // in case of drag of whole selector
         if (theSelection.bDragAll || theSelection.bDrag[0]) {
             theSelection.x = iMouseX - theSelection.px;
-            if (theSelection.x >= cornerX) theSelection.x = cornerX;
-            if (theSelection.x+theSelection.w <= cornerX+cornerW+bdr) 
-                theSelection.x = cornerX+cornerW+bdr-theSelection.w;
+            if (theSelection.x >= cornerX) {	
+				theSelection.x = cornerX;
+			}
+            if (theSelection.x+draw_w <= cornerX+cornerW+bdr+bdr) {
+                theSelection.x = cornerX+cornerW+bdr-draw_w;
+			}
+				
             theSelection.y = iMouseY - theSelection.py;
-            if (theSelection.y >= cornerY) theSelection.y = cornerY;
-            if (theSelection.y+theSelection.h <= cornerY+cornerH+bdr) 
-                theSelection.y = cornerY+cornerH+bdr-theSelection.h;   
+            if (theSelection.y >= cornerY) {
+				theSelection.y = cornerY;
+			}
+            if (theSelection.y+draw_h <= cornerY+cornerH+bdr+bdr) {
+                theSelection.y = cornerY+cornerH+bdr-draw_h;   
+			}
         }
-
+		
         for (i = 0; i < 4; i++) {
             theSelection.bHow[i] = false;
             theSelection.iCSize[i] = theSelection.csize;
@@ -272,7 +279,7 @@ var draw_h;
         }
 
         
-        var iFW, iFH;
+        var iFW = 0, iFH = 0;
         if (theSelection.bDrag[0]) {
 			// moving process has been mentioned in 'Drag All'
         }
