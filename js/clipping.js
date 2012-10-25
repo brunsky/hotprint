@@ -35,6 +35,7 @@ var cornerY = parseInt(cornerDiv.css('top'), 10);
 var cornerW = parseInt(cornerDiv.css('width'), 10);
 var cornerH = parseInt(cornerDiv.css('height'), 10);
 var $cDiv;
+var $wDiv;
 var bdr = parseInt(cornerDiv.css('border-left-width'), 10);
 var draw_w;
 var draw_h;
@@ -78,8 +79,8 @@ var draw_h;
 		ctx.lineWidth = bdr;
 		ctx.strokeRect(theSelection.x-theSelection.iCSize[0],
 					   theSelection.y-theSelection.iCSize[0], 
-					   theSelection.w+bdr*2+theSelection.iCSize[0]*2,
-					   theSelection.h+bdr*2+theSelection.iCSize[0]*2);
+					   draw_w+bdr*2+theSelection.iCSize[0]*2,
+					   draw_h+bdr*2+theSelection.iCSize[0]*2);
 		
 		// resoring bright zone 
 		var c1 = $('<canvas>');
@@ -142,7 +143,7 @@ var draw_h;
 	$wDiv = $('.modalOverlay');
 	
 	canvas = $('<canvas>');
-	canvas[0].width =parseInt($wDiv.css('width'), 10); 
+	canvas[0].width =parseInt($('body').css('width'), 10); 
 	canvas[0].height =parseInt($(document).height(), 10);
 	canvas.css('position', 'absolute');
 	canvas.css('left', '0px');
@@ -211,6 +212,7 @@ var draw_h;
 		$wDiv.remove(); // remove block div
 		$cDiv.next().remove();
 		$cDiv.remove(); // remove div cloned from layout
+		$('body').css('cursor', 'default');
 	}
 	
 	function eventDbclick(e) {
@@ -234,6 +236,7 @@ var draw_h;
 
         // in case of drag of whole selector
         if (theSelection.bDragAll || theSelection.bDrag[0]) {
+			$('body').css('cursor', 'move');
             theSelection.x = iMouseX - theSelection.px;
             if (theSelection.x >= cornerX) {	
 				theSelection.x = cornerX;
@@ -257,33 +260,51 @@ var draw_h;
         }
 
         // hovering over resize cubes
-        if (iMouseX > theSelection.x - theSelection.csize*2 && iMouseX < theSelection.x + theSelection.csize*2 &&
-            iMouseY > theSelection.y - theSelection.csize*2 && iMouseY < theSelection.y + theSelection.csize*2) {
-
+        if (iMouseX > theSelection.x - theSelection.csize*2 && iMouseX < theSelection.x &&
+            iMouseY > theSelection.y - theSelection.csize*2 && iMouseY < theSelection.y) {
+			
+			$('body').css('cursor', 'move');
             theSelection.bHow[0] = true;
         }
-        if (iMouseX > theSelection.x + theSelection.w-theSelection.csize*2 && iMouseX < theSelection.x + theSelection.w + theSelection.csize*2 &&
-            iMouseY > theSelection.y - theSelection.csize*2 && iMouseY < theSelection.y + theSelection.csize*2) {
-
+        else if (iMouseX > theSelection.x + theSelection.w && iMouseX < theSelection.x + theSelection.w + theSelection.csize*2 &&
+            iMouseY > theSelection.y - theSelection.csize*2 && iMouseY < theSelection.y) {
+			
+			$('body').css('cursor', 'sw-resize');
             theSelection.bHow[1] = true;
         }
-        if (iMouseX > theSelection.x + theSelection.w-theSelection.csize*2 && iMouseX < theSelection.x + theSelection.w + theSelection.csize*2 &&
-            iMouseY > theSelection.y + theSelection.h-theSelection.csize*2 && iMouseY < theSelection.y + theSelection.h + theSelection.csize*2) {
+        else if (iMouseX > theSelection.x + theSelection.w && iMouseX < theSelection.x + theSelection.w + theSelection.csize*2 &&
+            iMouseY > theSelection.y + theSelection.h && iMouseY < theSelection.y + theSelection.h + theSelection.csize*2) {
 
+			$('body').css('cursor', 'pointer');
             theSelection.bHow[2] = true;
         }
-        if (iMouseX > theSelection.x - theSelection.csize*2 && iMouseX < theSelection.x + theSelection.csize*2 &&
-            iMouseY > theSelection.y + theSelection.h-theSelection.csize*2 && iMouseY < theSelection.y + theSelection.h + theSelection.csize*2) {
+        else if (iMouseX > theSelection.x - theSelection.csize*2 && iMouseX < theSelection.x &&
+            iMouseY > theSelection.y + theSelection.h&& iMouseY < theSelection.y + theSelection.h + theSelection.csize*2) {
 
+			$('body').css('cursor', 'pointer');
             theSelection.bHow[3] = true;
         }
-
+		else {
+			$('body').css('cursor', 'default');
+		}
+		
+		/* 以中心點調整大小 - 施工中
+		if (theSelection.bDrag[1]) { // in case of dragging of resize cubes
+			var cx = (theSelection.x + draw_w) / 2;
+			var cy = (theSelection.y + draw_h) / 2;
+			var dist = theSelection.px*theSelection.px+theSelection.py*theSelection.py;
+			var ratio = dist / draw_w;
+			var iFW = 
+		}
+		*/
         
         var iFW = 0, iFH = 0;
         if (theSelection.bDrag[0]) {
 			// moving process has been mentioned in 'Drag All'
         }
+		
         if (theSelection.bDrag[1]) { // in case of dragging of resize cubes
+			$('body').css('cursor', 'sw-resize');
             var iFX = theSelection.x;
             var iFY = iMouseY - theSelection.py;
             if (iFY > cornerY) iFY = cornerY;
@@ -309,6 +330,7 @@ var draw_h;
             theSelection.x = iFX;
             theSelection.y = iFY;
         }
+		
         drawScene();            
     }
 	
@@ -387,7 +409,7 @@ var draw_h;
 	
 	function eventMouseup(e) { // binding mouseup event
         theSelection.bDragAll = false;
-
+		$('body').css('cursor', 'default');
         for (i = 0; i < 4; i++) {
             theSelection.bDrag[i] = false;
         }
