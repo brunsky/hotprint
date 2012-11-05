@@ -42,6 +42,7 @@ function doClipping(srcImg, destDiv, clipper) {
     var destCanvas = document.createElement('canvas');
     var destCtx = destCanvas.getContext('2d');
     destCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; z-index:997;');
+    destCanvas.setAttribute('class', 'canvas_appended');
 	destCanvas.style.top = parseInt(destDiv.css('top'), 10) + bdr + 'px';
 	destCanvas.style.left = parseInt(destDiv.css('left'), 10) + bdr + 'px';
 	destCanvas.width = srcImg.width;

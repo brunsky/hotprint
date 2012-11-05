@@ -141,7 +141,6 @@ var draw_h;
 	
 	$("body").append('<div class="modalOverlay"></div>');
 	$wDiv = $('.modalOverlay');
-	
 	canvas = $('<canvas>');
 	canvas[0].width =parseInt($('body').css('width'), 10); 
 	canvas[0].height =parseInt($(document).height(), 10);
@@ -288,11 +287,15 @@ var draw_h;
 			$('body').css('cursor', 'default');
 		}
 		
-		/* 以中心點調整大小 - 施工中
+		/* resize in circle way
 		if (theSelection.bDrag[1]) { // in case of dragging of resize cubes
 			var cx = (theSelection.x + draw_w) / 2;
 			var cy = (theSelection.y + draw_h) / 2;
-			var dist = theSelection.px*theSelection.px+theSelection.py*theSelection.py;
+			var dx = iMouseX - cx;
+			var dy = iMouseY - cy;
+			if (dx < 0)	dx = -dx;
+			if (dy < 0) dy = -dy;
+			var dist = dx+dy;
 			var ratio = dist / draw_w;
 			var iFW = 
 		}

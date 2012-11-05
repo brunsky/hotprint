@@ -94,7 +94,7 @@
 		"margin": '0 auto',
 	});
 	
-	/* 選取動畫待研究 */
+	/*選取動畫代研究*/
 	/*
 	$('.draggable').mouseenter(function(){
 		$(this).animate({ top: $('#recent').css('top') }, 'fast');
@@ -212,7 +212,6 @@ function setDnD(maskImg, ox, oy) {
 				};
 
 				var spinner = new Spinner(opts).spin($(this)[0]);
-			
 				$.getImageData({
 					url: imgSrc,
 					server: "http://insta.camangiwebstation.com/proxy/getImageData.php",
@@ -245,7 +244,7 @@ function setDnD(maskImg, ox, oy) {
 			$(this).children(".draggable").removeClass("ui-draggable-dragging");		
 			$(this).css('cursor', 'move');
 			$(this).css('z-index', '998');
-			$(this).fadeTo('fast', 0.1);
+			$(this).fadeTo('fast', 0.2);
 			$(this).css('opacity', 0);
 		},
 		out: function(event, ui) {
@@ -254,7 +253,7 @@ function setDnD(maskImg, ox, oy) {
 					$(this).addClass("removed");
 			}
 			$(this).css('z-index', '998');
-			$(this).fadeTo('fast', 0.1);
+			$(this).fadeTo('fast', 0.2);
 		},
 		over: function(event, ui) {
 			$(this).css('z-index', '999');
@@ -268,7 +267,7 @@ function setDnD(maskImg, ox, oy) {
 			if ($(this).attr("class").indexOf("removed") >= 0) {
 				$(this).children(".draggable").remove();
 				$(this).css('cursor', 'default');
-				if ($(this).next().attr('class') == '')
+				if ($(this).next().attr('class') == 'canvas_appended')
 					if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
 						$(this).next().remove();
 					}
@@ -283,17 +282,47 @@ function setDnD(maskImg, ox, oy) {
 	});
 }
 
+// load layout in menu
+function menuLoadLayout(_layoutName) {
+	loadLayout(maskImg, layout_ox, layout_oy, _layoutName);
+}
+
 // (ox, oy) is the position of case image
-function loadLayout(_maskImg, ox , oy){ 
+function loadLayout(_maskImg, ox , oy, _layoutName){ 
 	maskImg = _maskImg
+	// Cleanup
+	$('.layout_corner').remove();
+	$('.canvas_appended').remove();
     //Import CSS
-	var cssLocation = "css/layout_2.css";
+    $("link[type='text/css']").each( function(i){
+			if ($(this).attr('id') == 'layout_css') {
+				$(this).attr({href : "css/"+_layoutName+".css"});
+			}
+		});
+	// Import layout
+	layout_oy = oy;
+	layout_ox = ox;
+	var layoutLocation = "js/"+_layoutName+".js";
+	$.getScript(layoutLocation)
+		.done(function(data, textStatus, jqxhr) {
+			setDnD(maskImg, ox, oy); // Define Drag&Drop
+		})
+		.fail(function(data, textStatus, jqxhr) {
+			console.log('load layout.js failed');
+		})
+    /*
+	var cssLocation = "css/"+_layoutName+".css";
 	$.get(cssLocation, function(css) {
-   		$('<style type="text/css"></style>').html(css).appendTo("head");	
-		//Import layout js
+   		//$('<style type="text/css"></style>').html(css).appendTo("head");
+   		$("link[type='text/css']").each( function(i){
+			if ($(this).attr('id') == 'layout_css') {
+				$(this).attr({href : "css/"+_layoutName+".css"});
+			}
+		});
+		// Import layout
 		layout_oy = oy;
 		layout_ox = ox;
-		var layoutLocation = "js/layout_2.js";
+		var layoutLocation = "js/"+_layoutName+".js";
 		$.getScript(layoutLocation)
 			.done(function(data, textStatus, jqxhr) {
 				setDnD(maskImg, ox, oy); // Define Drag&Drop
@@ -302,6 +331,7 @@ function loadLayout(_maskImg, ox , oy){
 				console.log('load layout.js failed');
 			})
 	});
+	*/
 }
 
 function setContainer(){  
@@ -326,7 +356,7 @@ function setCanvas() {
     $("#mCanvas").css('left', '410px');  
 
     var canvas = document.getElementById('mCanvas');
-    var context = canvas.getContext('2d'); // 似乎不相容 IE8 
+    var context = canvas.getContext('2d'); // 隡潔�銝摰�IE8 
     var a = new Image();
 	a.src = "images/iphone4.png";
 	a.onload = function(){
@@ -341,7 +371,7 @@ function setCanvas() {
         	// Load Layout
         	var oy = parseInt($("#mCanvas").css('top'), 10);
         	var ox = parseInt($("#mCanvas").css('left'), 10);
-            loadLayout(image, ox, oy);
+            loadLayout(image, ox, oy, "layout_1");
             console.log("Get iphone4_mask.png");
         },
         error: function(xhr, text_status){

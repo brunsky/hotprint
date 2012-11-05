@@ -15,7 +15,7 @@ for (var i=1; i<=23; i++) {
 	$destDiv.css('top', _y+layout_oy+'px');
 	$destDiv.css('left', _x+layout_ox+'px');
 	$destDiv.css('z-index', '998');
-	$destDiv.css('opacity', 0.1);
+	$destDiv.css('opacity', 0.2);
 	$destDiv.css('border', '2px solid #C0C0C0');
 	
 	$('#corner'+i).dblclick(function(e) {

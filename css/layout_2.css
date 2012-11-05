@@ -4,7 +4,7 @@
     height: 115px;
     top: 39px;
     left: 30px;
-    border: 1px solid #C0C0C0
+    border: 1px solid #C0C0C0;
     z-index: 998;
 }
 #corner2 {
@@ -13,7 +13,7 @@
     height: 115px;
     top: 39px;
     left: 141px;
-    border: 1px solid #C0C0C0
+    border: 1px solid #C0C0C0;
     z-index: 998;
 }
 #corner3 {
@@ -22,7 +22,7 @@
     height: 115px;
     top: 39px;
     left: 252px;
-    border: 1px solid #C0C0C0
+    border: 1px solid #C0C0C0;
     z-index: 998;
 }
 #corner4 {
@@ -31,7 +31,7 @@
     height: 115px;
     top: 155px;
     left: 30px;
-    border: 1px solid #C0C0C0
+    border: 1px solid #C0C0C0;
     z-index: 998;
 }
 #corner5 {
@@ -40,7 +40,7 @@
     height: 115px;
     top: 155px;
     left: 141px;
-    border: 1px solid #C0C0C0
+    border: 1px solid #C0C0C0;
     z-index: 998;
 }
 #corner6 {
@@ -49,7 +49,7 @@
     height: 115px;
     top: 155px;
     left: 252px;
-    border: 1px solid #C0C0C0
+    border: 1px solid #C0C0C0;
     z-index: 998;
 }
 #corner7 {
@@ -58,7 +58,7 @@
     height: 115px;
     top: 271px;
     left: 30px;
-    border: 1px solid #C0C0C0
+    border: 1px solid #C0C0C0;
     z-index: 998;
 }
 #corner8 {
@@ -67,7 +67,7 @@
     height: 115px;
     top: 271px;
     left: 141px;
-    border: 1px solid #C0C0C0
+    border: 1px solid #C0C0C0;
     z-index: 998;
 }
 #corner9 {
@@ -76,7 +76,7 @@
     height: 115px;
     top: 271px;
     left: 252px;
-    border: 1px solid #C0C0C0
+    border: 1px solid #C0C0C0;
     z-index: 998;
 }
 #corner10 {
@@ -85,7 +85,7 @@
     height: 115px;
     top: 387px;
     left: 30px;
-    border: 1px solid #C0C0C0
+    border: 1px solid #C0C0C0;
     z-index: 998;
 }
 #corner11 {
@@ -94,7 +94,7 @@
     height: 115px;
     top: 387px;
     left: 141px;
-    border: 1px solid #C0C0C0
+    border: 1px solid #C0C0C0;
     z-index: 998;
 }
 #corner12 {
@@ -103,7 +103,7 @@
     height: 115px;
     top: 387px;
     left: 252px;
-    border: 1px solid #C0C0C0
+    border: 1px solid #C0C0C0;
     z-index: 998;
 }
 #corner13 {
@@ -112,7 +112,7 @@
     height: 115px;
     top: 503px;
     left: 30px;
-    border: 1px solid #C0C0C0
+    border: 1px solid #C0C0C0;
     z-index: 998;
 }
 #corner14 {
@@ -121,7 +121,7 @@
     height: 115px;
     top: 503px;
     left: 141px;
-    border: 1px solid #C0C0C0
+    border: 1px solid #C0C0C0;
     z-index: 998;
 }
 #corner15 {
@@ -130,8 +130,6 @@
     height: 115px;
     top: 503px;
     left: 252px;
-    border: 1px solid #C0C0C0
+    border: 1px solid #C0C0C0;
     z-index: 998;
 }
-
-?

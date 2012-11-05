@@ -10,7 +10,7 @@
    <script src="js/excanvas.js"></script>
   <![endif]-->
   <link rel="stylesheet" href="css/screen.css" type="text/css" media="screen" charset="utf-8">
-
+  <link rel="stylesheet" href="css/layout_1.css" type="text/css" id="layout_css">
   <script src="http://www.google.com/jsapi?key="></script>
   <script>
     google.load("jquery", "1.5");
@@ -47,17 +47,18 @@
 <ul class="accordion">			
 	<li id="one" class="device">
 		<a href="#one">手機型號<span>iPhone 4/4S</span></a>
-		<ul class="sub-menu">				
+		<ul class="sub-menu">	
+			<li><a href="#"><em>01</em>iPhone 5</a></li>				
 			<li><a href="#"><em>01</em>iPhone 4/4S</a></li>				
 			<li><a href="#"><em>02</em>Galaxy S III</a></li>
 			<li><a href="#"><em>03</em>HTC One</a></li>
 		</ul>
 	</li>			
 	<li id="two" class="layout">
-		<a href="#two">版型設計<span>菱格紋</span></a>
+		<a href="#two">版型設計<span>Polka Dots</span></a>
 		<ul class="sub-menu">					
-			<li><a href="#"><em>01</em>菱格紋</a></li>					
-			<li><a href="#"><em>02</em>水滴狀</a></li>
+			<li><a href="#" onclick="javascript:menuLoadLayout('layout_1')"><em>01</em>Polka Dots</a></li>					
+			<li><a href="#" onclick="javascript:menuLoadLayout('layout_2')"><em>02</em>Brockmann</a></li>
 		</ul>
 	</li>			
 	<li id="three" class="color">
