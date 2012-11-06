@@ -5,6 +5,8 @@
  // Global settings
  var PHONE_NAME = 'iphone4';
  var LAYOUT_NAME = 'layout_1';
+ var layout_x = 0;
+ var layout_y = 0;
  
 (function(){
   
@@ -304,45 +306,20 @@ function loadLayout(_maskImg, ox , oy, _layoutName){
 	// Cleanup
 	$('.layout_corner').remove();
 	$('.canvas_appended').remove();
+    $("link[type='text/css']#layout_css").attr('href', '');
     //Import CSS
-    $("link[type='text/css']").each( function(i){
-			if ($(this).attr('id') == 'layout_css') {
-				$(this).attr({href : "css/"+_layoutName+".css?v="+(new Date()).getTime()});
-			}
-		});
+    $("link[type='text/css']#layout_css").attr({href : "css/"+_layoutName+".css?v="+(new Date()).getTime()});
 	// Import layout
-	layout_oy = oy;
-	layout_ox = ox;
-	var layoutLocation = "js/"+_layoutName+".js?v="+(new Date()).getTime();
-	$.getScript(layoutLocation)
-		.done(function(data, textStatus, jqxhr) {
-			setDnD(maskImg, ox, oy); // Define Drag&Drop
-		})
-		.fail(function(data, textStatus, jqxhr) {
-			console.log('load layout.js failed');
-		})
-    /*
-	var cssLocation = "css/"+_layoutName+".css";
-	$.get(cssLocation, function(css) {
-   		//$('<style type="text/css"></style>').html(css).appendTo("head");
-   		$("link[type='text/css']").each( function(i){
-			if ($(this).attr('id') == 'layout_css') {
-				$(this).attr({href : "css/"+_layoutName+".css"});
-			}
-		});
-		// Import layout
-		layout_oy = oy;
-		layout_ox = ox;
-		var layoutLocation = "js/"+_layoutName+".js";
+	$('#layout_css').ready(function() {
+		var layoutLocation = "js/"+_layoutName+".js?v="+(new Date()).getTime();
 		$.getScript(layoutLocation)
 			.done(function(data, textStatus, jqxhr) {
 				setDnD(maskImg, ox, oy); // Define Drag&Drop
 			})
 			.fail(function(data, textStatus, jqxhr) {
 				console.log('load layout.js failed');
-			})
+			});
 	});
-	*/
 }
 
 function setContainer(){  
@@ -372,7 +349,6 @@ function setCanvas(_phoneName) {
     var a = new Image();
 	a.src = "images/"+_phoneName+".png";
 	a.onload = function(){
-        //context.drawImage(a, 0, 0, 391, 657);
         context.drawImage(a, 0, 0, a.width, a.height);
     };
 
@@ -382,13 +358,13 @@ function setCanvas(_phoneName) {
         server: "http://insta.camangiwebstation.com/proxy/getImageData.php",
         success: function(image){
         	// Load Layout
-        	var oy = parseInt($("#mCanvas").css('top'), 10);
-        	var ox = parseInt($("#mCanvas").css('left'), 10);
-            loadLayout(image, ox, oy, _phoneName+'_'+LAYOUT_NAME);
-            console.log("Get iphone4_mask.png");
+        	layout_oy = parseInt($("#mCanvas").css('top'), 10);
+        	layout_ox = parseInt($("#mCanvas").css('left'), 10);
+        	console.log("Get "+_phoneName+", "+layout_ox+', '+layout_oy);
+            loadLayout(image, layout_ox, layout_oy, _phoneName+'_'+LAYOUT_NAME);
         },
         error: function(xhr, text_status){
-            console.log("Failed to get iphone4_mask.png:"+text_status);
+            console.log("Failed to get "+_phoneName+": "+text_status);
         }
     });
 }
