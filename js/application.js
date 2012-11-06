@@ -2,6 +2,10 @@
  * Get instagram user ID
  */
  
+ // Global settings
+ var PHONE_NAME = 'iphone4';
+ var LAYOUT_NAME = 'layout_1';
+ 
 (function(){
   
   var _init
@@ -94,7 +98,7 @@
 		"margin": '0 auto',
 	});
 	
-	/*選取動畫代研究*/
+	/*選取動畫待研究*/
 	/*
 	$('.draggable').mouseenter(function(){
 		$(this).animate({ top: $('#recent').css('top') }, 'fast');
@@ -282,9 +286,16 @@ function setDnD(maskImg, ox, oy) {
 	});
 }
 
+// load phone canvas in menu
+function menuLoadPhone(_phoneName) {
+	PHONE_NAME = _phoneName;
+	setCanvas(_phoneName);
+}
+
 // load layout in menu
 function menuLoadLayout(_layoutName) {
-	loadLayout(maskImg, layout_ox, layout_oy, _layoutName);
+	LAYOUT_NAME = _layoutName;
+	loadLayout(maskImg, layout_ox, layout_oy, PHONE_NAME+'_'+LAYOUT_NAME);
 }
 
 // (ox, oy) is the position of case image
@@ -296,13 +307,13 @@ function loadLayout(_maskImg, ox , oy, _layoutName){
     //Import CSS
     $("link[type='text/css']").each( function(i){
 			if ($(this).attr('id') == 'layout_css') {
-				$(this).attr({href : "css/"+_layoutName+".css"});
+				$(this).attr({href : "css/"+_layoutName+".css?v="+(new Date()).getTime()});
 			}
 		});
 	// Import layout
 	layout_oy = oy;
 	layout_ox = ox;
-	var layoutLocation = "js/"+_layoutName+".js";
+	var layoutLocation = "js/"+_layoutName+".js?v="+(new Date()).getTime();
 	$.getScript(layoutLocation)
 		.done(function(data, textStatus, jqxhr) {
 			setDnD(maskImg, ox, oy); // Define Drag&Drop
@@ -348,7 +359,7 @@ function setFooterTop(){
 	$('.ad-gallery').css('width',($(window).width()-50)+'px');
 }
 
-function setCanvas() {
+function setCanvas(_phoneName) {
 
 	var winH=$(window).height();
 	var winW=$(window).width();
@@ -356,22 +367,24 @@ function setCanvas() {
     $("#mCanvas").css('left', '410px');  
 
     var canvas = document.getElementById('mCanvas');
-    var context = canvas.getContext('2d'); // 隡潔�銝摰�IE8 
+    var context = canvas.getContext('2d'); // IE8 還要再處理
+    context.clearRect(0, 0, canvas.width, canvas.height);
     var a = new Image();
-	a.src = "images/iphone4.png";
+	a.src = "images/"+_phoneName+".png";
 	a.onload = function(){
-        context.drawImage(a, 0, 0, 391, 657);
+        //context.drawImage(a, 0, 0, 391, 657);
+        context.drawImage(a, 0, 0, a.width, a.height);
     };
 
 	// Get mask image    
     $.getImageData({
-        url: "http://insta.camangiwebstation.com/images/iphone4_mask.png",
+        url: "http://insta.camangiwebstation.com/images/"+_phoneName+"_mask.png",
         server: "http://insta.camangiwebstation.com/proxy/getImageData.php",
         success: function(image){
         	// Load Layout
         	var oy = parseInt($("#mCanvas").css('top'), 10);
         	var ox = parseInt($("#mCanvas").css('left'), 10);
-            loadLayout(image, ox, oy, "layout_1");
+            loadLayout(image, ox, oy, _phoneName+'_'+LAYOUT_NAME);
             console.log("Get iphone4_mask.png");
         },
         error: function(xhr, text_status){
@@ -427,14 +440,14 @@ function loadLib(path) {
  */ 
 $(function(){
 
-	loadLib('js/mapping.js');
-	loadLib('js/clipping.js');
+	loadLib('js/mapping.js?v='+(new Date()).getTime());
+	loadLib('js/clipping.js?v='+(new Date()).getTime());
 
 	setAccordionMenu();
 	setContainer();
 	setFooterTop();
 	// Create phone case canvas and layout
-	setCanvas();
+	setCanvas(PHONE_NAME);
 		
   $.instagramr();
 });

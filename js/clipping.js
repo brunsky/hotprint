@@ -356,10 +356,10 @@ var draw_h;
 			cornerDiv.removeData('zw');
 			cornerDiv.removeData('zh');
 			cornerDiv.css('cursor', 'default');
-			if (cornerDiv.next().attr('class') == '')
-			if (cornerDiv.next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
-				cornerDiv.next().remove();
-			}
+			if (cornerDiv.next().attr('class') == 'canvas_appended')
+				if (cornerDiv.next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
+					cornerDiv.next().remove();
+				}
 			cornerDiv.removeClass("removed");
 			cornerDiv.css('z-index','998');
         }

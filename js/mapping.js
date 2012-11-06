@@ -66,10 +66,12 @@ function doMasking(oriImg, maskImg, destDiv, ox, oy) {
     
     // adjust over position
     if (x+w > maskImg.width) w = maskImg.width - x;
-    if (y+h > maskImg.height) y = maskImg.height - y;
+    if (y+h > maskImg.height) h = maskImg.height - y;
     
     // reposition mask image
     var adjustMaskCanvas = document.createElement('canvas');
+    adjustMaskCanvas.width = w;
+    adjustMaskCanvas.height = h;
     var adjustMaskCtx = adjustMaskCanvas.getContext('2d');                        
     adjustMaskCtx.drawImage(maskImg, x, y, w, h, 0, 0, w, h); 
     
@@ -82,7 +84,7 @@ function doMasking(oriImg, maskImg, destDiv, ox, oy) {
 	var _h;
 	if (w > h) {
 		_w = w;
-		_h = oriImg.height * (w / oriImg.width);;
+		_h = oriImg.height * (w / oriImg.width);
 	}
 	else if(w < h) {
 		_w = oriImg.width * (h / oriImg.height);
@@ -92,12 +94,12 @@ function doMasking(oriImg, maskImg, destDiv, ox, oy) {
 		_w = w;
 		_h = h;
 	}
-		
+
     resizeCtx.drawImage(oriImg, 0, 0, _w, _h);
 	
     var resCanvas = document.createElement('canvas');
-	resCanvas.width = w;
-	resCanvas.height = h;
+	resCanvas.width = _w;
+	resCanvas.height = _h;
     var resCtx = resCanvas.getContext('2d');
     resCtx.putImageData(applyCanvasMask(resizeCanvas, adjustMaskCanvas, maskImg.width, maskImg.height), 0, 0);
     return resCanvas;

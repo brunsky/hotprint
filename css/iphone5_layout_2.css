@@ -1,0 +1,135 @@
+#corner1 {
+    position: absolute;
+    width: 110px;
+    height: 120px;
+    top: 39px;
+    left: 30px;
+    border: 1px solid silver;
+    z-index: 999;
+}
+#corner2 {
+    position: absolute;
+    width: 110px;
+    height: 120px;
+    top: 39px;
+    left: 141px;
+    border: 1px solid silver;
+    z-index: 999;
+}
+#corner3 {
+    position: absolute;
+    width: 110px;
+    height: 120px;
+    top: 39px;
+    left: 252px;
+    border: 1px solid silver;
+    z-index: 999;
+}
+#corner4 {
+    position: absolute;
+    width: 110px;
+    height: 120px;
+    top: 160px;
+    left: 30px;
+    border: 1px solid silver;
+    z-index: 999;
+}
+#corner5 {
+    position: absolute;
+    width: 110px;
+    height: 120px;
+    top: 160px;
+    left: 141px;
+    border: 1px solid silver;
+    z-index: 999;
+}
+#corner6 {
+    position: absolute;
+    width: 110px;
+    height: 120px;
+    top: 160px;
+    left: 252px;
+    border: 1px solid silver;
+    z-index: 999;
+}
+#corner7 {
+    position: absolute;
+    width: 110px;
+    height: 120px;
+    top: 281px;
+    left: 30px;
+    border: 1px solid silver;
+    z-index: 999;
+}
+#corner8 {
+    position: absolute;
+    width: 110px;
+    height: 120px;
+    top: 281px;
+    left: 141px;
+    border: 1px solid silver;
+    z-index: 999;
+}
+#corner9 {
+    position: absolute;
+    width: 110px;
+    height: 120px;
+    top: 281px;
+    left: 252px;
+    border: 1px solid silver;
+    z-index: 999;
+}
+#corner10 {
+    position: absolute;
+    width: 110px;
+    height: 120px;
+    top: 402px;
+    left: 30px;
+    border: 1px solid silver;
+    z-index: 999;
+}
+#corner11 {
+    position: absolute;
+    width: 110px;
+    height: 120px;
+    top: 402px;
+    left: 141px;
+    border: 1px solid silver;
+    z-index: 999;
+}
+#corner12 {
+    position: absolute;
+    width: 110px;
+    height: 120px;
+    top: 402px;
+    left: 252px;
+    border: 1px solid silver;
+    z-index: 999;
+}
+#corner13 {
+    position: absolute;
+    width: 110px;
+    height: 120px;
+    top: 523px;
+    left: 30px;
+    border: 1px solid silver;
+    z-index: 999;
+}
+#corner14 {
+    position: absolute;
+    width: 110px;
+    height: 120px;
+    top: 523px;
+    left: 141px;
+    border: 1px solid silver;
+    z-index: 999;
+}
+#corner15 {
+    position: absolute;
+    width: 110px;
+    height: 120px;
+    top: 523px;
+    left: 252px;
+    border: 1px solid silver;
+    z-index: 999;
+}
