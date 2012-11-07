@@ -5,8 +5,8 @@
  // Global settings
  var PHONE_NAME = 'iphone5';
  var LAYOUT_NAME = 'layout_3';
- var layout_x = 0;
- var layout_y = 0;
+ var layout_x = 410;
+ var layout_y =  Math.floor($(window).height() * 0.1);
  
 (function(){
   
@@ -97,7 +97,7 @@
 	$('.ad-gallery').adGallery({thumb_opacity: 1});
 	$('.ad-gallery').css('width',($(window).width()-50)+'px');
 	$('.ad-gallery').css({
-		"margin": '0 auto',
+		"margin": '0 auto'
 	});
 	
 	/*選取動畫待研究*/
@@ -306,15 +306,25 @@ function menuLoadLayout(_layoutName) {
 
 // (ox, oy) is the position of case image
 function loadLayout(_maskImg, ox , oy, _layoutName){ 
+	console.log('layout:'+layout_x+','+layout_y);
 	maskImg = _maskImg
 	// Cleanup
 	$('.layout_corner').remove();
 	$('.canvas_appended').remove();
-    $("link[type='text/css']#layout_css").attr('href', '');
+    $("link[type='text/css']#layout_css").remove();
     //Import CSS
-    $("link[type='text/css']#layout_css").attr({href : "css/"+_layoutName+".css?v="+(new Date()).getTime()});
+    //var cssFile = $('<link rel="stylesheet" href="" type="text/css" id="layout_css">');
+    //cssFile.attr({href : "css/"+_layoutName+".css?v="+(new Date()).getTime()});
+    var cssFile = jQuery("<link>");
+    cssFile.attr({
+      rel:  "stylesheet",
+      type: "text/css",
+      href: "css/"+_layoutName+".css?v="+(new Date()).getTime(),
+      id: "layout_css"
+    });   
+    $("head").append(cssFile);
 	// Import layout
-	$('#layout_css').ready(function() {
+	$('#layout_css').load(function() {
 		var layoutLocation = "js/"+_layoutName+".js?v="+(new Date()).getTime();
 		$.getScript(layoutLocation)
 			.done(function(data, textStatus, jqxhr) {
@@ -346,6 +356,8 @@ function setCanvas(_phoneName) {
 	var winW=$(window).width();
     $("#mCanvas").css('top', winH * 0.1);
     $("#mCanvas").css('left', '410px');  
+    layout_oy = Math.floor($(window).height() * 0.1);
+    layout_ox = 410;
 
     var canvas = document.getElementById('mCanvas');
     var context = canvas.getContext('2d'); // IE8 還要再處理
@@ -362,8 +374,8 @@ function setCanvas(_phoneName) {
         server: "http://insta.camangiwebstation.com/proxy/getImageData.php",
         success: function(image){
         	// Load Layout
-        	layout_oy = parseInt($("#mCanvas").css('top'), 10);
-        	layout_ox = parseInt($("#mCanvas").css('left'), 10);
+        	//layout_oy = parseInt($("#mCanvas").css('top'), 10);
+        	//layout_ox = parseInt($("#mCanvas").css('left'), 10);
         	console.log("Get "+_phoneName+", "+layout_ox+', '+layout_oy);
             loadLayout(image, layout_ox, layout_oy, _phoneName+'_'+LAYOUT_NAME);
         },
