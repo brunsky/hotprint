@@ -3,8 +3,8 @@
  */
  
  // Global settings
- var PHONE_NAME = 'iphone4';
- var LAYOUT_NAME = 'layout_1';
+ var PHONE_NAME = 'iphone5';
+ var LAYOUT_NAME = 'layout_3';
  var layout_x = 0;
  var layout_y = 0;
  
@@ -147,6 +147,8 @@ function setDnD(maskImg, ox, oy) {
 				"position": "relative",
 				"top": "0px",
 				"left": "0px",
+				"width": $(this).css('width'),
+				"height": $(this).css('height'),
 				"opacity": "0"
 			});
 			$(this).children(".draggable").draggable({
@@ -156,6 +158,8 @@ function setDnD(maskImg, ox, oy) {
 				drag: function(event, ui) {
 					if ($(this).attr("class").indexOf("ui-draggable-dragging") >= 0) {
 						$(this).parent().css('z-index','1000');
+						//ui.helper.css('width', '100px');
+						//ui.helper.css('height', '100px');
 						$(this).css("opacity", "0.7");
 					}
 				}
