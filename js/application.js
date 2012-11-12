@@ -353,11 +353,11 @@ function setFooterTop(){
 function setCanvas(_phoneName) {
 
 	var winH=$(window).height();
-	var winW=$(window).width();
-    $("#mCanvas").css('top', winH * 0.1);
-    $("#mCanvas").css('left', '410px');  
-    layout_oy = Math.floor($(window).height() * 0.1);
+	var winW=$(window).width(); 
+    layout_oy = Math.floor(winH * 0.1);
     layout_ox = 410;
+    $("#mCanvas").css('top', layout_oy+'px');
+    $("#mCanvas").css('left', layout_ox+'px'); 
 
     var canvas = document.getElementById('mCanvas');
     var context = canvas.getContext('2d'); // IE8 還要再處理
@@ -365,6 +365,8 @@ function setCanvas(_phoneName) {
     var a = new Image();
 	a.src = "images/"+_phoneName+".png";
 	a.onload = function(){
+		$("#mCanvas")[0].width = a.width;
+        $("#mCanvas")[0].height = a.height;
         context.drawImage(a, 0, 0, a.width, a.height);
     };
 
@@ -425,6 +427,21 @@ function loadLib(path) {
 		.fail(function(data, textStatus, jqxhr) {
 			console.log('load '+path+' failed');
 		})
+}
+
+/*
+ * Save to a image
+ */
+function saveImg() {
+	var resCanvas = document.createElement('canvas');
+    var resCtx = resCanvas.getContext('2d');
+    resCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; z-index:997;');
+    resCanvas.setAttribute('class', 'canvas_result');
+	resCanvas.style.top = '0px';
+	resCanvas.style.left = '0px';
+	resCanvas.width = $("#mCanvas").css('width');
+	resCanvas.height = $("#mCanvas").css('height');
+	//destDiv.after(destCanvas);
 }
 
 /*
