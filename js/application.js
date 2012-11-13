@@ -7,6 +7,7 @@
  var LAYOUT_NAME = 'layout_3';
  var layout_x = 410;
  var layout_y =  Math.floor($(window).height() * 0.1);
+ var CORNER_OPT = 0.1;
  
 (function(){
   
@@ -118,6 +119,12 @@
 			if ($(this).attr("class").indexOf("ui-draggable-dragging") >= 0) {
 				$(".ui-draggable-dragging").css('z-index','1000');
 			}
+		},
+		start: function(event, ui) {
+			$('.layout_corner').animate({ opacity: 1 });
+		},
+		stop: function(event, ui) {
+			$('.layout_corner').animate({ opacity: CORNER_OPT });
 		}
 	});
   };
@@ -134,6 +141,7 @@ function setDnD(maskImg, ox, oy) {
 			if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
 				$(this).next().remove();
 			}
+			$('.layout_corner').animate({ opacity: CORNER_OPT });
 			$(this).html('');
 			$(this).append($(ui.draggable).clone());
 			
@@ -162,6 +170,9 @@ function setDnD(maskImg, ox, oy) {
 						//ui.helper.css('height', '100px');
 						$(this).css("opacity", "0.7");
 					}
+				},
+				start: function(event, ui) {
+					$('.layout_corner').animate({ opacity: 1 });
 				}
 			});
 			
@@ -254,8 +265,9 @@ function setDnD(maskImg, ox, oy) {
 			$(this).children(".draggable").removeClass("ui-draggable-dragging");		
 			$(this).css('cursor', 'move');
 			$(this).css('z-index', '998');
-			$(this).fadeTo('fast', 0.2);
-			$(this).css('opacity', 0);
+			//$(this).fadeTo('fast', CORNER_OPT);
+			//$('.layout_corner').animate({ opacity: CORNER_OPT });
+			//$(this).css('opacity', CORNER_OPT);
 		},
 		out: function(event, ui) {
 			if ($(this).children(".draggable").length > 0 ) { 
@@ -263,11 +275,14 @@ function setDnD(maskImg, ox, oy) {
 					$(this).addClass("removed");
 			}
 			$(this).css('z-index', '998');
-			$(this).fadeTo('fast', 0.2);
+			//$(this).fadeTo('fast', CORNER_OPT);
+			//$('.layout_corner').animate({ opacity: CORNER_OPT });
+			//$(this).css('opacity', CORNER_OPT);
 		},
 		over: function(event, ui) {
 			$(this).css('z-index', '999');
-			$(this).fadeTo('fast', 1);
+			//$('.layout_corner').animate({ opacity: 1 });
+			//$(this).fadeTo('fast', 1);
 			$(this).data('zdx', $(ui.draggable).data('zdx'));
 			$(this).data('zdy', $(ui.draggable).data('zdy'));
 			$(this).data('zw', $(ui.draggable).data('zw'));
@@ -283,6 +298,7 @@ function setDnD(maskImg, ox, oy) {
 					}
 				$(this).removeClass("removed");
 				$(this).css('z-index','998');
+				$('.layout_corner').animate({ opacity: CORNER_OPT });
 			}
 			$(this).removeData('zdx');
 			$(this).removeData('zdy');

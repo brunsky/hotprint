@@ -1,6 +1,6 @@
 var _x;
 var _y;
-
+var CORNER_OPT = 0.1;
 for (var i=1; i<=23; i++) {
 	//Create DIV 
 	$destDiv = $(document.createElement('div'));
@@ -15,7 +15,7 @@ for (var i=1; i<=23; i++) {
 	$destDiv.css('top', _y+layout_oy+'px');
 	$destDiv.css('left', _x+layout_ox+'px');
 	$destDiv.css('z-index', '998');
-	$destDiv.css('opacity', 0.2);
+	$destDiv.css('opacity', CORNER_OPT);
 	$destDiv.css('border', '2px solid #C0C0C0');
 	
 	$('#corner'+i).dblclick(function(e) {

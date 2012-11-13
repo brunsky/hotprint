@@ -24,7 +24,7 @@ html {
 	height: 1024px;
 	overflow-y: scroll;
 }
-html.no-js .js-alert {
+html .no-js .js-alert {
   display: block;
 }
 
@@ -167,6 +167,14 @@ section {
   color: #fdfdfd;
   font: bold 14px/32px Arial, sans-serif;
   float: right;
+}
+
+#random-design {
+  display: block;
+  text-decoration:none;
+  color: #fdfdfd;
+  font: bold 14px/32px Arial, sans-serif;
+  float: left;
 }
 
 #maintable  > a:hover ,
