@@ -160,11 +160,13 @@ section {
 }
 
 #get-user-data,
+#save-design,
 #login {
   display: block;
   text-decoration:none;
   color: #fdfdfd;
   font: bold 14px/32px Arial, sans-serif;
+  float: right;
 }
 
 #maintable  > a:hover ,
@@ -180,15 +182,15 @@ section {
 	position:absolute;
 	top:0px;
 	left:0px;  
-	width:391px;
-	height:657px;
 }
 
 
 body.not-logged-in #get-user-data { display: none; }
+body.not-logged-in #save-design { display: none; }
 body.not-logged-in #login { display: block; }
 
 body.logged-in #get-user-data { display: block; }
+body.logged-in #save-design { display: block; }
 body.logged-in #login { display: none; }
 
 #menubar {

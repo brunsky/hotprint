@@ -24,8 +24,6 @@
   <script src="js/application.js"></script>
 </head>
 <body ONDRAGSTART="window.event.returnValue=false">
-<canvas id="mCanvas"></canvas>
-
 <div class="mainmenu">
 <table id="maintable">
 <tr>
@@ -33,7 +31,8 @@
 <td></td>
 <td>
 <a id="login" href="https://instagram.com/oauth/authorize/?client_id=1e05a75f3b1548bbbdab2072bb0ed6e7&amp;redirect_uri=http://insta.camangiwebstation.com&amp;response_type=token">登入 Instagram</a>
-<a id="get-user-data" href="#">Get my photos</a>
+<div id="get-user-data">Get my photos</div>
+<div id="save-design" title="Save your design into gallery">Save　|　</div>
 </td>
 </tr>
 </table>
@@ -45,7 +44,7 @@
 		<ul class="sub-menu">	
 			<li><a href="#" onclick="javascript:menuLoadPhone('iphone5')"><em>01</em>iPhone 5</a></li>				
 			<li><a href="#" onclick="javascript:menuLoadPhone('iphone4')"><em>01</em>iPhone 4/4S</a></li>				
-			<li><a href="#"><em>02</em>Galaxy S III</a></li>
+			<li><a href="#" onclick="javascript:menuLoadPhone('s3')"><em>02</em>Galaxy S III</a></li>
 			<li><a href="#"><em>03</em>HTC One</a></li>
 		</ul>
 	</li>			

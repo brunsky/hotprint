@@ -72,6 +72,7 @@
     } else {
       $('body').addClass('logged-in');
 	  _getUserData();
+	  $('#save-design').click(saveImg);
     }
   };
   
@@ -84,7 +85,6 @@
   };
     
   _displayUserRecent = function(json){
-	
 	var res = "";
 	for(var i=0; i<json.data.length; i++) {
 		res += "<li><a href='"+json.data[i].images.standard_resolution.url+"'><img src=\""+json.data[i].images.standard_resolution.url+"\" class='draggable'/></a></li>";
@@ -351,6 +351,15 @@ function setFooterTop(){
 }
 
 function setCanvas(_phoneName) {
+	
+	if($('#mCanvas').length > 0) {
+		$('#mCanvas').remove();
+	}
+	
+    var canvas = document.createElement('Canvas');
+    canvas.setAttribute('id', 'mCanvas');
+    var context = canvas.getContext('2d');
+    $('.mainmenu').before(canvas);
 
 	var winH=$(window).height();
 	var winW=$(window).width(); 
@@ -359,12 +368,10 @@ function setCanvas(_phoneName) {
     $("#mCanvas").css('top', layout_oy+'px');
     $("#mCanvas").css('left', layout_ox+'px'); 
 
-    var canvas = document.getElementById('mCanvas');
-    var context = canvas.getContext('2d'); // IE8 還要再處理
-    context.clearRect(0, 0, canvas.width, canvas.height);
     var a = new Image();
 	a.src = "images/"+_phoneName+".png";
 	a.onload = function(){
+		console.log('get image:'+a.width+', '+a.height);
 		$("#mCanvas")[0].width = a.width;
         $("#mCanvas")[0].height = a.height;
         context.drawImage(a, 0, 0, a.width, a.height);
@@ -435,13 +442,23 @@ function loadLib(path) {
 function saveImg() {
 	var resCanvas = document.createElement('canvas');
     var resCtx = resCanvas.getContext('2d');
-    resCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; z-index:997;');
-    resCanvas.setAttribute('class', 'canvas_result');
-	resCanvas.style.top = '0px';
-	resCanvas.style.left = '0px';
-	resCanvas.width = $("#mCanvas").css('width');
-	resCanvas.height = $("#mCanvas").css('height');
-	//destDiv.after(destCanvas);
+	resCanvas.width = $("#mCanvas")[0].width * 0.7;
+	resCanvas.height = $("#mCanvas")[0].height * 0.7;
+	resCtx.drawImage($("#mCanvas")[0], 0, 0, resCanvas.width, resCanvas.height);
+	$('.canvas_appended').each(function(index) {
+    	resCtx.drawImage($(this)[0], 
+    					(parseInt($(this).css('left'), 10)-layout_x) * 0.7, 
+    					(parseInt($(this).css('top'), 10)-layout_y) * 0.7, 
+    					parseInt($(this)[0].width, 10) * 0.7,
+    					parseInt($(this)[0].height, 10) * 0.7);
+	});
+	var img = $('<img>');
+	img.attr('id', 'canvasImg');
+	img.css('position', 'absolute');
+	img.css('top', '80px');
+	img.css('left', '800px');
+	$('body').append(img);
+	$('#canvasImg')[0].src = resCanvas.toDataURL();
 }
 
 /*
