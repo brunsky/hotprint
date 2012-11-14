@@ -74,6 +74,7 @@
       $('body').addClass('logged-in');
 	  _getUserData();
 	  $('#save-design').click(saveImg);
+	  $('#random-design').click(randomDesign);
     }
   };
   
@@ -88,7 +89,7 @@
   _displayUserRecent = function(json){
 	var res = "";
 	for(var i=0; i<json.data.length; i++) {
-		res += "<li><a href='"+json.data[i].images.standard_resolution.url+"'><img src=\""+json.data[i].images.standard_resolution.url+"\" class='draggable'/></a></li>";
+		res += "<li><a href='"+json.data[i].images.standard_resolution.url+"'><img src=\""+json.data[i].images.standard_resolution.url+"\" class='draggable gallery-pool'/></a></li>";
 	}
 
 	$(".ad-thumb-list").html("")
@@ -454,6 +455,7 @@ function loadLib(path) {
 
 /*
  * Save to a image
+ * 注意: 需要調整為高解析的圖檔
  */
 function saveImg() {
 	var resCanvas = document.createElement('canvas');
@@ -475,6 +477,98 @@ function saveImg() {
 	img.css('left', '800px');
 	$('body').append(img);
 	$('#canvasImg')[0].src = resCanvas.toDataURL();
+}
+
+/*
+ * Generize random design
+ */
+function randomDesign() {
+	// clear content
+	$('.layout_corner').html('');
+	$('.canvas_appended').remove();
+	// visit image gallery in randomly
+	$('.layout_corner').each(function(index) {
+
+		var r = Math.floor(Math.random() * $('.layout_corner').length) + 1;
+		// put image into layout
+		$(this).append($($('.gallery-pool')[r]).clone());
+		$(this).children(".draggable").removeClass('gallery-pool'); // remove to prevent getting the same one
+		$(this).children(".draggable").css({
+			"position": "relative",
+			"top": "0px",
+			"left": "0px",
+			"width": $(this).css('width'),
+			"height": $(this).css('height'),
+			"opacity": "0"
+		});
+		$(this).children(".draggable").draggable({
+			cursor: 'auto', 
+			distance: 10, 
+			revert:"invalid",
+			drag: function(event, ui) {
+				if ($(this).attr("class").indexOf("ui-draggable-dragging") >= 0) {
+					$(this).parent().css('z-index','1000');
+					$(this).css("opacity", "0.7");
+				}
+			},
+			start: function(event, ui) {
+				$('.layout_corner').animate({ opacity: 1 });
+			}
+		});
+		
+		var imgSrc = $(this).children(".draggable").attr('src');
+		var divObj = $(this);
+		
+		var opts = {
+		  lines: 13, // The number of lines to draw
+		  length: 7, // The length of each line
+		  width: 4, // The line thickness
+		  radius: 10, // The radius of the inner circle
+		  corners: 1, // Corner roundness (0..1)
+		  rotate: 0, // The rotation offset
+		  color: '#000', // #rgb or #rrggbb
+		  speed: 1, // Rounds per second
+		  trail: 60, // Afterglow percentage
+		  shadow: false, // Whether to render a shadow
+		  hwaccel: false, // Whether to use hardware acceleration
+		  className: 'spinner', // The CSS class to assign to the spinner
+		  zIndex: 2e9, // The z-index (defaults to 2000000000)
+		  top: 'auto', // Top position relative to parent in px
+		  left: 'auto' // Left position relative to parent in px
+		};
+
+		var spinner = new Spinner(opts).spin($(this)[0]);
+		$.getImageData({
+			url: imgSrc,
+			server: "http://insta.camangiwebstation.com/proxy/getImageData.php",
+			success: function(image){
+				spinner.stop();
+				divObj.children(".draggable").attr('src', image.src);
+				divObj.children(".draggable").addClass("cached");
+				if (divObj.attr("class").indexOf("layout_circle") >= 0) {
+					doClipping( 
+						doMasking(image, maskImg, divObj, layout_ox, layout_oy), 
+						divObj, 
+						cirClipper);	
+				}
+				else if (divObj.attr("class").indexOf("layout_square") >= 0) {
+					doClipping( 
+						doMasking(image, maskImg, divObj, layout_ox, layout_oy), 
+						divObj, 
+						boxClipper);
+				}
+			},
+			error: function(xhr, text_status){
+				spinner.stop();
+				console.log("Fail to get image:"+imgSrc);
+			}
+		});
+		
+		$(this).children(".draggable").css('z-index','');		
+		$(this).css('cursor', 'move');
+		$(this).css('z-index', '998');
+		  
+	});
 }
 
 /*
