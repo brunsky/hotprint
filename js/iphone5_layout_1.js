@@ -16,7 +16,7 @@ for (var i=1; i<=12; i++) {
 	$destDiv.css('left', _x+layout_ox+'px');
 	$destDiv.css('z-index', '998');
 	$destDiv.css('opacity', CORNER_OPT);
-	//$destDiv.css('border', '2px solid #C0C0C0');
+	$destDiv.css('border', '2px solid #C0C0C0');
 	
 	$('#corner'+i).dblclick(function(e) {
 		if ($(this).children(".draggable").attr("class").indexOf("cached") >= 0) {

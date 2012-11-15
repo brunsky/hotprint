@@ -462,7 +462,7 @@ function saveImg() {
     var resCtx = resCanvas.getContext('2d');
 	resCanvas.width = $("#mCanvas")[0].width * 0.7;
 	resCanvas.height = $("#mCanvas")[0].height * 0.7;
-	resCtx.drawImage($("#mCanvas")[0], 0, 0, resCanvas.width, resCanvas.height);
+	//resCtx.drawImage($("#mCanvas")[0], 0, 0, resCanvas.width, resCanvas.height);
 	$('.canvas_appended').each(function(index) {
     	resCtx.drawImage($(this)[0], 
     					(parseInt($(this).css('left'), 10)-layout_x) * 0.7, 
