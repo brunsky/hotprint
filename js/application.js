@@ -3,7 +3,7 @@
  */
  
  // Global settings
- var PHONE_NAME = 'iphone5';
+ var PHONE_NAME = 'onex';
  var LAYOUT_NAME = 'layout_3';
  var layout_x = 410;
  var layout_y =  Math.floor($(window).height() * 0.1);
@@ -122,10 +122,13 @@
 			}
 		},
 		start: function(event, ui) {
-			$('.layout_corner').animate({ opacity: 1 });
+			$('.layout_corner').css('z-index', '998');
+			$('.layout_corner').animate({ opacity: 1});
 		},
 		stop: function(event, ui) {
-			$('.layout_corner').animate({ opacity: CORNER_OPT });
+			$('.layout_corner').animate({ opacity: CORNER_OPT},
+				{complete:  function() { $('.layout_corner').css('z-index', '996'); } 
+			});
 		}
 	});
   };
@@ -173,6 +176,7 @@ function setDnD(maskImg, ox, oy) {
 					}
 				},
 				start: function(event, ui) {
+					$('.layout_corner').css('z-index', '998'); 
 					$('.layout_corner').animate({ opacity: 1 });
 				}
 			});
@@ -210,6 +214,11 @@ function setDnD(maskImg, ox, oy) {
 							divObj, 
 							boxClipper);
 					}
+					// oncw mouse enter canvas, lower all the other corner div & higher itself
+					divObj.next().mouseenter(function() {
+						$('.layout_corner').css('z-index', '997');
+						$(this).prev().css('z-index', '998');
+					});
 				}
 				
 			}
@@ -253,6 +262,11 @@ function setDnD(maskImg, ox, oy) {
 								divObj, 
 								boxClipper);
 						}
+						// oncw mouse enter canvas, lower all the other corner div & higher itself
+						divObj.next().mouseenter(function() {
+							$('.layout_corner').css('z-index', '996');
+							$(this).prev().css('z-index', '998');
+						});
 					},
 					error: function(xhr, text_status){
 						spinner.stop();
@@ -265,7 +279,7 @@ function setDnD(maskImg, ox, oy) {
 			$(this).removeClass("removed");	
 			$(this).children(".draggable").removeClass("ui-draggable-dragging");		
 			$(this).css('cursor', 'move');
-			$(this).css('z-index', '998');
+			$(this).css('z-index', '996');
 			//$(this).fadeTo('fast', CORNER_OPT);
 			//$('.layout_corner').animate({ opacity: CORNER_OPT });
 			//$(this).css('opacity', CORNER_OPT);
@@ -275,13 +289,13 @@ function setDnD(maskImg, ox, oy) {
 				if ($(this).children(".draggable").attr("class").indexOf("ui-draggable-dragging") >= 0)
 					$(this).addClass("removed");
 			}
-			$(this).css('z-index', '998');
+			//$(this).css('z-index', '998');
 			//$(this).fadeTo('fast', CORNER_OPT);
 			//$('.layout_corner').animate({ opacity: CORNER_OPT });
 			//$(this).css('opacity', CORNER_OPT);
 		},
 		over: function(event, ui) {
-			$(this).css('z-index', '999');
+			//$(this).css('z-index', '999'); // <-- wired ?
 			//$('.layout_corner').animate({ opacity: 1 });
 			//$(this).fadeTo('fast', 1);
 			$(this).data('zdx', $(ui.draggable).data('zdx'));
@@ -298,13 +312,18 @@ function setDnD(maskImg, ox, oy) {
 						$(this).next().remove();
 					}
 				$(this).removeClass("removed");
-				$(this).css('z-index','998');
-				$('.layout_corner').animate({ opacity: CORNER_OPT });
+				//$(this).css('z-index','998');
+				
+				$('.layout_corner').animate({ opacity: CORNER_OPT },
+					{complete: function() {$('.layout_corner').css('z-index', '996');}
+				});
 			}
 			$(this).removeData('zdx');
 			$(this).removeData('zdy');
 			$(this).removeData('zw');
 			$(this).removeData('zh');
+			
+			
 		}
 	});
 }
@@ -489,7 +508,7 @@ function randomDesign() {
 	// visit image gallery in randomly
 	$('.layout_corner').each(function(index) {
 
-		var r = Math.floor(Math.random() * $('.layout_corner').length) + 1;
+		var r = Math.floor(Math.random() * $('.gallery-pool').length) + 1;
 		// put image into layout
 		$(this).append($($('.gallery-pool')[r]).clone());
 		$(this).children(".draggable").removeClass('gallery-pool'); // remove to prevent getting the same one
@@ -512,6 +531,7 @@ function randomDesign() {
 				}
 			},
 			start: function(event, ui) {
+				$('.layout_corner').css('z-index', '998'); 
 				$('.layout_corner').animate({ opacity: 1 });
 			}
 		});
@@ -557,6 +577,11 @@ function randomDesign() {
 						divObj, 
 						boxClipper);
 				}
+				// oncw mouse enter canvas, lower all the other corner div & higher itself
+				divObj.next().mouseenter(function() {
+					$('.layout_corner').css('z-index', '996');
+					$(this).prev().css('z-index', '998');
+				});
 			},
 			error: function(xhr, text_status){
 				spinner.stop();
@@ -566,9 +591,10 @@ function randomDesign() {
 		
 		$(this).children(".draggable").css('z-index','');		
 		$(this).css('cursor', 'move');
-		$(this).css('z-index', '998');
+		$(this).css('z-index', '996');
 		  
 	});
+	
 }
 
 /*

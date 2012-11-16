@@ -13,7 +13,7 @@ for (var i=1; i<=15; i++) {
 	_x = parseInt($destDiv.css('left'), 10);
 	$destDiv.css('top', _y+layout_oy+'px');
 	$destDiv.css('left', _x+layout_ox+'px');
-	$destDiv.css('z-index', 998);
+	$destDiv.css('z-index', '997');
 	$destDiv.css('opacity', CORNER_OPT);
 	$destDiv.css('border', '2px solid #C0C0C0');
 	
