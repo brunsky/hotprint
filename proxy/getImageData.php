@@ -29,6 +29,15 @@ try {
 		// Get the URL and decode to remove any %20, etc
 		$url = urldecode($_GET["url"]);
 		
+		// Fix timeout
+		$opts = array(  
+		    'http'=>array(  
+		        'method'=>"GET",  
+		        'timeout'=>60,  
+		    )  
+		);     
+		$context = stream_context_create($opts);
+		
 		// Get the contents of the URL
 		$file = file_get_contents($url);
 	

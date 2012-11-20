@@ -127,7 +127,10 @@
 		},
 		stop: function(event, ui) {
 			$('.layout_corner').animate({ opacity: CORNER_OPT},
-				{complete:  function() { $('.layout_corner').css('z-index', '996'); } 
+				{complete:  function() { 
+					$('.layout_corner').css('z-index', '996'); 
+					$('.layout_corner > .draggable').parent().css('opacity', '0');
+				} 
 			});
 		}
 	});
@@ -145,7 +148,12 @@ function setDnD(maskImg, ox, oy) {
 			if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
 				$(this).next().remove();
 			}
-			$('.layout_corner').animate({ opacity: CORNER_OPT });
+			$('.layout_corner').animate({ opacity: CORNER_OPT},
+				{complete:  function() { 
+					$('.layout_corner').css('z-index', '996'); 
+					$('.layout_corner > .draggable').parent().css('opacity', '0');
+				} 
+			});
 			$(this).html('');
 			$(this).append($(ui.draggable).clone());
 			
@@ -214,9 +222,9 @@ function setDnD(maskImg, ox, oy) {
 							divObj, 
 							boxClipper);
 					}
-					// oncw mouse enter canvas, lower all the other corner div & higher itself
+					// oncw mouse enter canvas, lower all the other corner div & raise itself
 					divObj.next().mouseenter(function() {
-						$('.layout_corner').css('z-index', '997');
+						$('.layout_corner').css('z-index', '996');
 						$(this).prev().css('z-index', '998');
 					});
 				}
@@ -247,7 +255,6 @@ function setDnD(maskImg, ox, oy) {
 					url: imgSrc,
 					server: "http://insta.camangiwebstation.com/proxy/getImageData.php",
 					success: function(image){
-						spinner.stop();
 						divObj.children(".draggable").attr('src', image.src);
 						divObj.children(".draggable").addClass("cached");
 						if (divObj.attr("class").indexOf("layout_circle") >= 0) {
@@ -262,11 +269,12 @@ function setDnD(maskImg, ox, oy) {
 								divObj, 
 								boxClipper);
 						}
-						// oncw mouse enter canvas, lower all the other corner div & higher itself
+						// oncw mouse enter canvas, lower all the other corner div & raise itself
 						divObj.next().mouseenter(function() {
 							$('.layout_corner').css('z-index', '996');
 							$(this).prev().css('z-index', '998');
 						});
+						spinner.stop();
 					},
 					error: function(xhr, text_status){
 						spinner.stop();
@@ -280,24 +288,14 @@ function setDnD(maskImg, ox, oy) {
 			$(this).children(".draggable").removeClass("ui-draggable-dragging");		
 			$(this).css('cursor', 'move');
 			$(this).css('z-index', '996');
-			//$(this).fadeTo('fast', CORNER_OPT);
-			//$('.layout_corner').animate({ opacity: CORNER_OPT });
-			//$(this).css('opacity', CORNER_OPT);
 		},
 		out: function(event, ui) {
 			if ($(this).children(".draggable").length > 0 ) { 
 				if ($(this).children(".draggable").attr("class").indexOf("ui-draggable-dragging") >= 0)
 					$(this).addClass("removed");
 			}
-			//$(this).css('z-index', '998');
-			//$(this).fadeTo('fast', CORNER_OPT);
-			//$('.layout_corner').animate({ opacity: CORNER_OPT });
-			//$(this).css('opacity', CORNER_OPT);
 		},
 		over: function(event, ui) {
-			//$(this).css('z-index', '999'); // <-- wired ?
-			//$('.layout_corner').animate({ opacity: 1 });
-			//$(this).fadeTo('fast', 1);
 			$(this).data('zdx', $(ui.draggable).data('zdx'));
 			$(this).data('zdy', $(ui.draggable).data('zdy'));
 			$(this).data('zw', $(ui.draggable).data('zw'));
@@ -312,18 +310,18 @@ function setDnD(maskImg, ox, oy) {
 						$(this).next().remove();
 					}
 				$(this).removeClass("removed");
-				//$(this).css('z-index','998');
 				
 				$('.layout_corner').animate({ opacity: CORNER_OPT },
-					{complete: function() {$('.layout_corner').css('z-index', '996');}
+					{complete: function() {
+						$('.layout_corner').css('z-index', '996');
+						$('.layout_corner > .draggable').parent().css('opacity', '0');
+					}
 				});
 			}
 			$(this).removeData('zdx');
 			$(this).removeData('zdy');
 			$(this).removeData('zw');
 			$(this).removeData('zh');
-			
-			
 		}
 	});
 }
@@ -503,12 +501,13 @@ function saveImg() {
  */
 function randomDesign() {
 	// clear content
+	$('.layout_corner').css('opacity', CORNER_OPT);
 	$('.layout_corner').html('');
 	$('.canvas_appended').remove();
 	// visit image gallery in randomly
 	$('.layout_corner').each(function(index) {
 
-		var r = Math.floor(Math.random() * $('.gallery-pool').length) + 1;
+		var r = Math.floor(Math.random() * $('.gallery-pool').length);
 		// put image into layout
 		$(this).append($($('.gallery-pool')[r]).clone());
 		$(this).children(".draggable").removeClass('gallery-pool'); // remove to prevent getting the same one
@@ -562,7 +561,6 @@ function randomDesign() {
 			url: imgSrc,
 			server: "http://insta.camangiwebstation.com/proxy/getImageData.php",
 			success: function(image){
-				spinner.stop();
 				divObj.children(".draggable").attr('src', image.src);
 				divObj.children(".draggable").addClass("cached");
 				if (divObj.attr("class").indexOf("layout_circle") >= 0) {
@@ -582,6 +580,9 @@ function randomDesign() {
 					$('.layout_corner').css('z-index', '996');
 					$(this).prev().css('z-index', '998');
 				});
+				// set corner div to invisible
+				divObj.css('opacity','0');
+				spinner.stop();
 			},
 			error: function(xhr, text_status){
 				spinner.stop();
@@ -591,10 +592,8 @@ function randomDesign() {
 		
 		$(this).children(".draggable").css('z-index','');		
 		$(this).css('cursor', 'move');
-		$(this).css('z-index', '996');
-		  
+		$(this).css('z-index', '996');  
 	});
-	
 }
 
 /*
