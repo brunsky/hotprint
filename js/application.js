@@ -150,12 +150,7 @@ function setDnD(maskImg, ox, oy) {
 			if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
 				$(this).next().remove();
 			}
-			$('.layout_corner').animate({ opacity: CORNER_OPT},
-				{complete:  function() { 
-					$('.layout_corner').css('z-index', '996'); 
-					$('.layout_corner > .draggable').parent().css('opacity', '0');
-				} 
-			});
+			$('.layout_corner').animate({ opacity: CORNER_OPT});
 			$(this).html('');
 			$(this).append($(ui.draggable).clone());
 			
@@ -164,6 +159,8 @@ function setDnD(maskImg, ox, oy) {
 			$(this).children(".draggable").data('zdy', $(this).data('zdy'));
 			$(this).children(".draggable").data('zw', $(this).data('zw'));
 			$(this).children(".draggable").data('zh', $(this).data('zh'));
+			// copy corner object
+			$(this).children(".draggable").data('corner', $(this).data('corner'));
 
 			$(this).children(".draggable").css({
 				"position": "relative",
@@ -190,6 +187,8 @@ function setDnD(maskImg, ox, oy) {
 					$(this).height(100).width(100);
 					$('.layout_corner').css('z-index', '998'); 
 					$('.layout_corner').animate({ opacity: 1 });
+					// set corner object
+					$(this).data('corner', $(this).parent());
 				}
 			});
 			
@@ -204,7 +203,9 @@ function setDnD(maskImg, ox, oy) {
 					var $dstCanvas = $('<canvas>');
 					$dstCanvas[0].width = parseInt(divObj.css('width'), 10) + parseInt(divObj.css('border-left-width'), 10);
 					$dstCanvas[0].height = parseInt(divObj.css('height'), 10) + parseInt(divObj.css('border-left-width'), 10);
-					autoClipper(divObj.children(".draggable")[0], $dstCanvas);
+					//autoClipper(divObj.children(".draggable")[0], $dstCanvas);
+					autoClipper2(divObj.children(".draggable")[0], $dstCanvas, 
+								divObj.children(".draggable").data('corner'), divObj);
 					_img.src = $dstCanvas[0].toDataURL();
 					_img.width = $dstCanvas[0].width;
 					_img.height = $dstCanvas[0].height;
@@ -226,7 +227,7 @@ function setDnD(maskImg, ox, oy) {
 							divObj, 
 							boxClipper);
 					}
-					// oncw mouse enter canvas, lower all the other corner div & raise itself
+					// once mouse enter canvas, lower all the other corner div & raise itself
 					divObj.next().mouseenter(function() {
 						$('.layout_corner').css('z-index', '996');
 						$(this).prev().css('z-index', '998');
@@ -304,6 +305,7 @@ function setDnD(maskImg, ox, oy) {
 			$(this).data('zdy', $(ui.draggable).data('zdy'));
 			$(this).data('zw', $(ui.draggable).data('zw'));
 			$(this).data('zh', $(ui.draggable).data('zh'));
+			$(this).data('corner', $(ui.draggable).data('corner'));
 		},
 		deactivate: function(event, ui) {
 			if ($(this).attr("class").indexOf("removed") >= 0) {
@@ -326,6 +328,7 @@ function setDnD(maskImg, ox, oy) {
 			$(this).removeData('zdy');
 			$(this).removeData('zw');
 			$(this).removeData('zh');
+			$(this).removeData('corner');
 		}
 	});
 }

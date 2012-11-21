@@ -13,6 +13,28 @@ function autoClipper(srcImgDom, dstCanvas) {
 }
 
 //////////////////////////////////////////////////
+// autoClipper2 : resize canvas according to the ration between corner
+function autoClipper2(srcImgDom, dstCanvas, srcCorner, dstCorner) {
+	// getting ratio from the width/height
+	var r = parseInt(dstCorner.css('width'), 10) / parseInt(srcCorner.css('width'), 10);
+	// store new value
+	$(srcImgDom).data('zw', Math.round($(srcImgDom).data('zw') * r));
+	$(srcImgDom).data('zh', Math.round($(srcImgDom).data('zh') * r));
+	$(srcImgDom).data('zdx', Math.round($(srcImgDom).data('zdx') * r));
+	$(srcImgDom).data('zdy', Math.round($(srcImgDom).data('zdy') * r));
+
+	var $canvas = $('<canvas>');
+	var ctx = $canvas[0].getContext('2d'); 
+	$canvas[0].width = $(srcImgDom).data('zw');
+	$canvas[0].height = $(srcImgDom).data('zh');
+	ctx.drawImage(srcImgDom, 0, 0, $(srcImgDom).data('zw'), $(srcImgDom).data('zh')); 	
+	var dstCtx = dstCanvas[0].getContext('2d');
+	dstCtx.putImageData(
+				ctx.getImageData($(srcImgDom).data('zdx'), $(srcImgDom).data('zdy'), dstCanvas[0].width, dstCanvas[0].height),
+				0, 0);
+}
+
+//////////////////////////////////////////////////
 // realClipper
 
 // preload images
