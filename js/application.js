@@ -112,6 +112,7 @@
 	$('.draggable').draggable({
 		cursor: 'move', 
 		helper: "clone", 
+		cursorAt: { left: 50, top: 50 },
 		distance: 10, 
 		revert: "invalid",
 		drag: function(event, ui) {
@@ -122,6 +123,7 @@
 			}
 		},
 		start: function(event, ui) {
+			$(this).height(100).width(100);
 			$('.layout_corner').css('z-index', '998');
 			$('.layout_corner').animate({ opacity: 1});
 		},
@@ -173,6 +175,7 @@ function setDnD(maskImg, ox, oy) {
 			});
 			$(this).children(".draggable").draggable({
 				cursor: 'auto', 
+				cursorAt: { left: 50, top: 50 },
 				distance: 10, 
 				revert:"invalid",
 				drag: function(event, ui) {
@@ -184,6 +187,7 @@ function setDnD(maskImg, ox, oy) {
 					}
 				},
 				start: function(event, ui) {
+					$(this).height(100).width(100);
 					$('.layout_corner').css('z-index', '998'); 
 					$('.layout_corner').animate({ opacity: 1 });
 				}
@@ -522,6 +526,7 @@ function randomDesign() {
 		$(this).children(".draggable").draggable({
 			cursor: 'auto', 
 			distance: 10, 
+			cursorAt: { left: 50, top: 50 },
 			revert:"invalid",
 			drag: function(event, ui) {
 				if ($(this).attr("class").indexOf("ui-draggable-dragging") >= 0) {
@@ -530,6 +535,7 @@ function randomDesign() {
 				}
 			},
 			start: function(event, ui) {
+				$(this).height(100).width(100);
 				$('.layout_corner').css('z-index', '998'); 
 				$('.layout_corner').animate({ opacity: 1 });
 			}
@@ -575,7 +581,7 @@ function randomDesign() {
 						divObj, 
 						boxClipper);
 				}
-				// oncw mouse enter canvas, lower all the other corner div & higher itself
+				// once mouse enter canvas, lower all the other corner div & higher itself
 				divObj.next().mouseenter(function() {
 					$('.layout_corner').css('z-index', '996');
 					$(this).prev().css('z-index', '998');
@@ -600,6 +606,10 @@ function randomDesign() {
  * Initialize on DOM Ready
  */ 
 $(function(){
+	// For direfox, to dealing with wrong dragging position
+	if (navigator.userAgent.indexOf("Firefox")!=-1) {
+		$('body').css('overflow', 'auto');
+	}
 
 	loadLib('js/mapping.js?v='+(new Date()).getTime());
 	loadLib('js/clipping.js?v='+(new Date()).getTime());

@@ -203,6 +203,11 @@ var draw_h;
 				cornerDiv, 
 				boxClipper);
 		}
+		// once mouse enter canvas, lower all the other corner div & higher itself
+		cornerDiv.next().mouseenter(function() {
+			$('.layout_corner').css('z-index', '996');
+			$(this).prev().css('z-index', '998');
+		});
 		cornerDiv.children(".draggable").data('zdx', cornerX - theSelection.x);
 		cornerDiv.children(".draggable").data('zdy', cornerY - theSelection.y);
 		cornerDiv.children(".draggable").data('zw', draw_w);
