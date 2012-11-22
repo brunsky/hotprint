@@ -8,6 +8,7 @@
  var layout_x = 410;
  var layout_y =  Math.floor($(window).height() * 0.1);
  var CORNER_OPT = 0.1;
+ var isCornerFading = false;
  
 (function(){
   
@@ -128,10 +129,11 @@
 			$('.layout_corner').animate({ opacity: 1});
 		},
 		stop: function(event, ui) {
+			isCornerFading = true;
 			$('.layout_corner').animate({ opacity: CORNER_OPT},
 				{complete:  function() { 
-					$('.layout_corner').css('z-index', '996'); 
 					$('.layout_corner > .draggable').parent().css('opacity', '0');
+					isCornerFading = false;
 				} 
 			});
 		}
@@ -150,9 +152,17 @@ function setDnD(maskImg, ox, oy) {
 			if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
 				$(this).next().remove();
 			}
-			$('.layout_corner').animate({ opacity: CORNER_OPT});
 			$(this).html('');
 			$(this).append($(ui.draggable).clone());
+			
+			// if it is draged from gallery list then don't animate corner
+			if (isCornerFading == false) {
+				$('.layout_corner').animate({ opacity: CORNER_OPT},
+					{complete:  function() { 
+						$('.layout_corner > .draggable').parent().css('opacity', '0');
+					} 
+				});
+			}
 			
 			// copy zoomer value
 			$(this).children(".draggable").data('zdx', $(this).data('zdx'));
@@ -178,8 +188,6 @@ function setDnD(maskImg, ox, oy) {
 				drag: function(event, ui) {
 					if ($(this).attr("class").indexOf("ui-draggable-dragging") >= 0) {
 						$(this).parent().css('z-index','1000');
-						//ui.helper.css('width', '100px');
-						//ui.helper.css('height', '100px');
 						$(this).css("opacity", "0.7");
 					}
 				},
@@ -227,11 +235,7 @@ function setDnD(maskImg, ox, oy) {
 							divObj, 
 							boxClipper);
 					}
-					// once mouse enter canvas, lower all the other corner div & raise itself
-					divObj.next().mouseenter(function() {
-						$('.layout_corner').css('z-index', '996');
-						$(this).prev().css('z-index', '998');
-					});
+					divObj.css('opacity', '0');
 				}
 				
 			}
@@ -274,12 +278,14 @@ function setDnD(maskImg, ox, oy) {
 								divObj, 
 								boxClipper);
 						}
-						// oncw mouse enter canvas, lower all the other corner div & raise itself
-						divObj.next().mouseenter(function() {
-							$('.layout_corner').css('z-index', '996');
-							$(this).prev().css('z-index', '998');
+						//spinner.stop();
+						//divObj.css('opacity', '0');
+						divObj.animate({ opacity: 0},
+							{complete:  function() { 
+								spinner.stop();
+							} 
 						});
-						spinner.stop();
+						
 					},
 					error: function(xhr, text_status){
 						spinner.stop();
@@ -292,7 +298,7 @@ function setDnD(maskImg, ox, oy) {
 			$(this).removeClass("removed");	
 			$(this).children(".draggable").removeClass("ui-draggable-dragging");		
 			$(this).css('cursor', 'move');
-			$(this).css('z-index', '996');
+			$(this).css('z-index','998');
 		},
 		out: function(event, ui) {
 			if ($(this).children(".draggable").length > 0 ) { 
@@ -316,12 +322,11 @@ function setDnD(maskImg, ox, oy) {
 						$(this).next().remove();
 					}
 				$(this).removeClass("removed");
-				
-				$('.layout_corner').animate({ opacity: CORNER_OPT },
-					{complete: function() {
-						$('.layout_corner').css('z-index', '996');
+				$(this).css('z-index','998');
+				$('.layout_corner').animate({ opacity: CORNER_OPT},
+					{complete:  function() { 
 						$('.layout_corner > .draggable').parent().css('opacity', '0');
-					}
+					} 
 				});
 			}
 			$(this).removeData('zdx');
@@ -584,11 +589,6 @@ function randomDesign() {
 						divObj, 
 						boxClipper);
 				}
-				// once mouse enter canvas, lower all the other corner div & higher itself
-				divObj.next().mouseenter(function() {
-					$('.layout_corner').css('z-index', '996');
-					$(this).prev().css('z-index', '998');
-				});
 				// set corner div to invisible
 				divObj.css('opacity','0');
 				spinner.stop();
@@ -601,7 +601,7 @@ function randomDesign() {
 		
 		$(this).children(".draggable").css('z-index','');		
 		$(this).css('cursor', 'move');
-		$(this).css('z-index', '996');  
+		$(this).css('z-index','998');
 	});
 }
 
