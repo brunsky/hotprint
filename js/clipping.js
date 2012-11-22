@@ -115,6 +115,9 @@ var draw_h;
 		c2[0].width = cornerW + bdr;
 		c2[0].height = cornerH + bdr;
 		
+		c1[0].width = cornerW + bdr;
+		c1[0].height = cornerH + bdr;
+		
 		var _ctx1 = c1[0].getContext('2d');
 		var _ctx2 = c2[0].getContext('2d');
 		_ctx1.putImageData(theSelection.oImg, 0, 0);
