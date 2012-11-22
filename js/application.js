@@ -100,7 +100,13 @@
 	$('.ad-gallery').adGallery({thumb_opacity: 1});
 	$('.ad-gallery').css('width',($(window).width()-50)+'px');
 	$('.ad-gallery').css({
-		"margin": '0 auto'
+		"margin": '0 auto',
+		"-webkit-touch-callout": "none",
+		"-webkit-user-select": "none",
+		"-khtml-user-select": "none",
+		"-moz-user-select": "none",
+		"-ms-user-select": "none",
+		"user-select": "none"
 	});
 	
 	/*選取動畫待研究*/
