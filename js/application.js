@@ -314,6 +314,11 @@ function setDnD(maskImg, ox, oy) {
 			$(this).data('corner', $(ui.draggable).data('corner'));
 		},
 		deactivate: function(event, ui) {
+			//
+			// Please considering to remove draggable inside drop: status
+			// For you have got "removed" class. 
+			// That should be more effective :)
+			//
 			if ($(this).attr("class").indexOf("removed") >= 0) {
 				$(this).children(".draggable").remove();
 				$(this).css('cursor', 'default');
@@ -546,6 +551,8 @@ function randomDesign() {
 				$(this).height(100).width(100);
 				$('.layout_corner').css('z-index', '998'); 
 				$('.layout_corner').animate({ opacity: 1 });
+				// set corner object
+				$(this).data('corner', $(this).parent());
 			}
 		});
 		
