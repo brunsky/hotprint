@@ -17,9 +17,14 @@ function autoClipper(srcImgDom, dstCanvas) {
 function autoClipper2(srcImgDom, dstCanvas, srcCorner, dstCorner) {
 	// getting ratio from the width/height
 	var r = parseInt(dstCorner.css('width'), 10) / parseInt(srcCorner.css('width'), 10);
+	// Calculate width & height after scaling
+	var w = Math.round($(srcImgDom).data('zw') * r);
+	var h = Math.round($(srcImgDom).data('zh') * r);
+	if (w < dstCanvas[0].width) w = dstCanvas[0].width;
+	if (h < dstCanvas[0].height) h = dstCanvas[0].height;
 	// store new value
-	$(srcImgDom).data('zw', Math.round($(srcImgDom).data('zw') * r));
-	$(srcImgDom).data('zh', Math.round($(srcImgDom).data('zh') * r));
+	$(srcImgDom).data('zw', w);
+	$(srcImgDom).data('zh', h);
 	$(srcImgDom).data('zdx', Math.round($(srcImgDom).data('zdx') * r));
 	$(srcImgDom).data('zdy', Math.round($(srcImgDom).data('zdy') * r));
 
@@ -27,8 +32,10 @@ function autoClipper2(srcImgDom, dstCanvas, srcCorner, dstCorner) {
 	var ctx = $canvas[0].getContext('2d'); 
 	$canvas[0].width = $(srcImgDom).data('zw');
 	$canvas[0].height = $(srcImgDom).data('zh');
+	// Scale whole image to temp canvas at first.
 	ctx.drawImage(srcImgDom, 0, 0, $(srcImgDom).data('zw'), $(srcImgDom).data('zh')); 	
 	var dstCtx = dstCanvas[0].getContext('2d');
+	// And then draw partial zone into destination canvas.
 	dstCtx.putImageData(
 				ctx.getImageData($(srcImgDom).data('zdx'), $(srcImgDom).data('zdy'), dstCanvas[0].width, dstCanvas[0].height),
 				0, 0);
