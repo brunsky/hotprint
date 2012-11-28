@@ -498,25 +498,91 @@ function loadLib(path) {
  * 注意: 需要調整為高解析的圖檔
  */
 function saveImg() {
-	var resCanvas = document.createElement('canvas');
-    var resCtx = resCanvas.getContext('2d');
-	resCanvas.width = $("#mCanvas")[0].width * 0.7;
-	resCanvas.height = $("#mCanvas")[0].height * 0.7;
-	//resCtx.drawImage($("#mCanvas")[0], 0, 0, resCanvas.width, resCanvas.height);
-	$('.canvas_appended').each(function(index) {
-    	resCtx.drawImage($(this)[0], 
-    					(parseInt($(this).css('left'), 10)-layout_x) * 0.7, 
-    					(parseInt($(this).css('top'), 10)-layout_y) * 0.7, 
-    					parseInt($(this)[0].width, 10) * 0.7,
-    					parseInt($(this)[0].height, 10) * 0.7);
-	});
-	var img = $('<img>');
-	img.attr('id', 'canvasImg');
-	img.css('position', 'absolute');
-	img.css('top', '80px');
-	img.css('left', '800px');
-	$('body').append(img);
-	$('#canvasImg')[0].src = resCanvas.toDataURL();
+	
+	var a = new Image();
+	a.src = "images/"+PHONE_NAME+"_mask2.png";
+	a.onload = function(){
+		var scaling = 3;
+	
+		var resCanvas = document.createElement('canvas');
+	    var resCtx = resCanvas.getContext('2d');
+		resCanvas.width = $("#mCanvas")[0].width * scaling;
+		resCanvas.height = $("#mCanvas")[0].height * scaling;
+		
+		// scaling mask
+		var adjustMaskCanvas = document.createElement('canvas');
+	    adjustMaskCanvas.width = a.width;
+	    adjustMaskCanvas.height = a.height;
+	    var adjustMaskCtx = adjustMaskCanvas.getContext('2d');                       
+	    adjustMaskCtx.drawImage(a, 0, 0); 
+		
+		$('.layout_corner').each(function(index) {
+			/*
+	    	resCtx.drawImage($(this).children(".draggable")[0], 
+	    					(parseInt($(this).css('left'), 10)-layout_x) * 3, 
+	    					(parseInt($(this).css('top'), 10)-layout_y) * 3, 
+	    					parseInt($(this).css('width'), 10) * 3,
+	    					parseInt($(this).css('height'), 10) * 3);
+	    	*/
+	    	if ($(this).next()[0].tagName.toLowerCase() != 'canvas'.toLowerCase()) {
+				return true; // the same as continue in C :)
+			}
+	    	
+			var $c = $('<div></div>');
+			
+			$c.css('position', 'absolute');
+			$c.css('top', parseInt($(this).css('top'), 10) * scaling + 'px');
+			$c.css('left', parseInt($(this).css('left'), 10) * scaling + 'px');
+			$c.css('width', parseInt($(this).css('width'), 10) * scaling + 'px');
+			$c.css('height', parseInt($(this).css('height'), 10) * scaling + 'px');
+			$c.css('border', '6px solid silver'); // setup border in manually
+			//$c.css('border', $(this).css('border'));
+			//$c.css('border-left-width', parseInt($(this).css('border-left-width'), 10) * scaling + 'px');
+			$('body').append($c);
+			
+			var $imgSrc = $(this).children(".draggable");
+			//$imgSrc.css('width', $imgSrc[0].width+'px');
+			//$imgSrc.css('height',$imgSrc[0].height+'px');
+			$imgSrc.css('width', '612px');
+			$imgSrc.css('height','612px');
+	
+	    	if ($(this).attr("class").indexOf("layout_circle") >= 0) {
+				doClipping( 
+					doMasking($imgSrc[0], adjustMaskCanvas, $c, layout_x*scaling, layout_y*scaling), 
+					$c, 
+					cirClipper);	
+			}
+			else if ($(this).attr("class").indexOf("layout_square") >= 0) {
+				doClipping( 
+					doMasking($imgSrc[0], adjustMaskCanvas, $c, layout_x*scaling, layout_y*scaling), 
+					$c, 
+					boxClipper);
+			}
+		
+			resCtx.drawImage($c.next()[0], 
+	    					(parseInt($c.next().css('left'), 10)-layout_x*scaling), 
+	    					(parseInt($c.next().css('top'), 10)-layout_y*scaling), 
+	    					parseInt($c.next().css('width'), 10),
+	    					parseInt($c.next().css('height'), 10));
+	    				
+	    	$c.next().remove();
+	    	$c.remove();
+	    	$imgSrc.css('width', '');
+			$imgSrc.css('height','');
+		});
+		var img = $('<img>');
+		img.attr('id', 'canvasImg');
+		img.css('position', 'absolute');
+		img.css('top', '80px');
+		img.css('left', '800px');
+		img.css('width', $("#mCanvas")[0].width*0.7+'px');
+		img.css('height', $("#mCanvas")[0].height*0.7+'px');
+		$('body').append(img);
+		$('#canvasImg')[0].src = resCanvas.toDataURL();
+		
+	}
+	
+
 }
 
 /*

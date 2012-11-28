@@ -55,7 +55,7 @@ f=d("head")[0]||document.documentElement,q={},S=0,p,C={callback:L,url:location.h
 				url: server_url,
 				data: { url: escape(args.url) },
 				dataType: 'jsonp',
-				timeout: 10000,
+				timeout: 60000,
 				// It worked!
 				success: function(data, status) {
 			

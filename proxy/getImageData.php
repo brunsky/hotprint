@@ -33,7 +33,7 @@ try {
 		$opts = array(  
 		    'http'=>array(  
 		        'method'=>"GET",  
-		        'timeout'=>60,  
+		        'timeout'=>120,  
 		    )  
 		);     
 		$context = stream_context_create($opts);
