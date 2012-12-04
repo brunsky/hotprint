@@ -22,6 +22,15 @@
   <script type="text/javascript" src="../lib/jquery.ad-gallery.js"></script>
   <script src="js/spin.min.js"></script>
   <script src="js/application.js"></script>
+  
+  <!-- CSS for shopping cart-->      
+  <link rel="stylesheet" type="text/css" href="lib/dc.core.1.1.0.min.css" />          
+  <link rel="stylesheet" type="text/css" href="lib/dc.cart.css" />          
+  
+  <!-- Javascript for shopping cart-->      
+  <script src="lib/dc.core.1.1.0.min.js" type="text/javascript"></script>        
+  <script src="lib/dc.cart.free.min.js" type="text/javascript"></script>            
+  <script src="lib/dc.cart.lang.js" type="text/javascript"></script> 
 </head>
 <body ONDRAGSTART="window.event.returnValue=false">
 <div class="mainmenu">
@@ -29,12 +38,12 @@
 <tr>
 <td></td>
 <td>
-<div id="random-design" title="Random generizing">Random</div>
+<div id="random-design" title="Random generizing">隨機設計</div>
 </td>
 <td>
 <a id="login" href="https://instagram.com/oauth/authorize/?client_id=1e05a75f3b1548bbbdab2072bb0ed6e7&amp;redirect_uri=http://insta.camangiwebstation.com&amp;response_type=token">登入 Instagram</a>
-<div id="get-user-data">Get my photos</div>
-<div id="save-design" title="Save your design into gallery">Save　|　</div>
+<div id="get-user-data">正在取得照片...</div>
+<div id="save-design" title="Save your design into gallery">儲存　|　</div>
 </td>
 </tr>
 </table>
@@ -86,5 +95,7 @@
 <div class="ad-nav"><div class="ad-thumbs"><ul class="ad-thumb-list"></ul></div></div>
 </div>
 </div>
+<div id="cart"></div>
+<div class="buybutton" id="buy_onex_case">購買 $34.99</div>
 </body>
 </html>
