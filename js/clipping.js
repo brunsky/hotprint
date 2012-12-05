@@ -137,6 +137,7 @@ var draw_h;
 		
 		if (typeof $cDiv.next()[0] != 'undefined' && 
 					$cDiv.next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
+			$cDiv.next()[0] = null;
 			$cDiv.next().remove();
 		}
 		$cDiv.after(c2);
@@ -211,6 +212,7 @@ var draw_h;
 	
 	function saveImg() {
 		if (cornerDiv.next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
+			cornerDiv.next()[0] = null;
 			cornerDiv.next().remove();
 		}
 		if (cornerDiv.attr("class").indexOf("layout_circle") >= 0) { // for circle corner
@@ -244,10 +246,19 @@ var draw_h;
 		cornerDiv.children(".draggable").data('zdy', cornerY - theSelection.y);
 		cornerDiv.children(".draggable").data('zw', draw_w);
 		cornerDiv.children(".draggable").data('zh', draw_h);
+		
+		canvas.unbind();
+		$cDiv.unbind();
+		
 		canvas.remove(); // remove main canvas
+		canvas[0] = null;
 		$wDiv.remove(); // remove block div
+		$wDiv[0] = null;
 		$cDiv.next().remove();
+		$cDiv.next()[0] = null;
 		$cDiv.remove(); // remove div cloned from layout
+		$cDiv[0] = null;
+		
 		$('body').css('cursor', 'default');
 	}
 	
@@ -382,12 +393,23 @@ var draw_h;
 		// button#3, remove
 		if (iMouseX > theSelection.x - theSelection.csize*2 && iMouseX < theSelection.x + theSelection.csize*2 &&
             iMouseY > theSelection.y + theSelection.h-theSelection.csize*2 && iMouseY < theSelection.y + theSelection.h + theSelection.csize*2) {
+            
+            canvas.unbind();
+			$cDiv.unbind();
+            
             canvas.remove(); // remove main canvas
+            canvas[0] = null;
             $wDiv.remove(); // remove block div
+            $wDiv[0] = null;
 			$cDiv.next().remove();
+			$cDiv.next()[0] = null;
 			$cDiv.remove(); // remove div cloned from layout
+			$cDiv[0] = null;
 			
-			cornerDiv.children(".draggable").remove();
+			cornerDiv.children(".draggable").each(function(index) {
+			  	$(this)[0] = null;
+			  	$(this).remove();
+			});
 			cornerDiv.removeData('zdx');
 			cornerDiv.removeData('zdy');
 			cornerDiv.removeData('zw');
@@ -395,6 +417,7 @@ var draw_h;
 			cornerDiv.css('cursor', 'default');
 			if (cornerDiv.next().attr('class') == 'canvas_appended')
 				if (cornerDiv.next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
+					cornerDiv.next()[0] = null;
 					cornerDiv.next().remove();
 				}
 			cornerDiv.removeClass("removed");

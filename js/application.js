@@ -3,14 +3,13 @@
  */
  
  // Global settings
- var PHONE_NAME = 'onex';
+ var PHONE_NAME = 'iphone5';
  var LAYOUT_NAME = 'layout_3';
  var layout_x = 410;
  var layout_y =  Math.floor($(window).height() * 0.1);
  var CORNER_OPT = 0.1;
  var isCornerFading = false;
- 
-(function(){
+
   
   var _init
   ,   _getUserData
@@ -22,8 +21,9 @@
   var access_token
   ,   user_id
   ;
-
-  
+ 
+(function(){
+ 
   $.extend({
     instagramr: function(){
       _init();
@@ -76,6 +76,7 @@
 	  _getUserData();
 	  $('#save-design').click(saveImg);
 	  $('#random-design').click(randomDesign);
+	  $('#start-design').click(startDesign);
     }
   };
   
@@ -157,6 +158,7 @@ function setDnD(maskImg, ox, oy) {
 		drop: function( event, ui ) {
 			if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
 				$(this).next().remove();
+				$(this).next()[0] = null;
 			}
 			$(this).html('');
 			$(this).append($(ui.draggable).clone());
@@ -326,11 +328,16 @@ function setDnD(maskImg, ox, oy) {
 			// That should be more effective :)
 			//
 			if ($(this).attr("class").indexOf("removed") >= 0) {
-				$(this).children(".draggable").remove();
+				$(this).children(".draggable").each(function(index) {
+				  	$(this).remove();
+				  	$(this)[0] = null;
+				});
+
 				$(this).css('cursor', 'default');
 				if ($(this).next().attr('class') == 'canvas_appended')
 					if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
 						$(this).next().remove();
+						$(this).next()[0] = null;
 					}
 				$(this).removeClass("removed");
 				$(this).css('z-index','998');
@@ -366,8 +373,16 @@ function loadLayout(_maskImg, ox , oy, _layoutName){
 	console.log('layout:'+layout_x+','+layout_y);
 	maskImg = _maskImg
 	// Cleanup
-	$('.layout_corner').remove();
-	$('.canvas_appended').remove();
+	$('.layout_corner').each(function(index) {
+	  	$(this).remove();
+	  	$(this)[0] = null;
+	});
+
+	$('.canvas_appended').each(function(index) {
+	  	$(this).remove();
+	  	$(this)[0] = null;
+	});
+
     $("link[type='text/css']#layout_css").remove();
     //Import CSS
     //var cssFile = $('<link rel="stylesheet" href="" type="text/css" id="layout_css">');
@@ -411,6 +426,7 @@ function setCanvas(_phoneName) {
 	
 	if($('#mCanvas').length > 0) {
 		$('#mCanvas').remove();
+		$('#mCanvas')[0];
 	}
 	
     var canvas = document.createElement('Canvas');
@@ -494,10 +510,14 @@ function loadLib(path) {
 }
 
 /*
- * Save to a image
+ * Store the image for output
  */
 function saveImg() {
-	mod_saving();
+	mod_saving(function() {		
+		releasePage('Design');
+		newPage('Gallery');
+	});
+
 }
 
 /*
@@ -505,6 +525,79 @@ function saveImg() {
  */
 function randomDesign() {
 	mod_randesign();
+}
+
+function startDesign() {
+	releasePage('Gallery');
+	newPage('Design');
+}
+
+
+/*
+ * Create Page from given page name
+ * page: "Design", "Gallery"
+ */
+function newPage(page) {
+	if (page == "Design") {
+		$('#menubar').fadeIn(300);
+		$('.recent').fadeIn(300);
+		setCanvas(PHONE_NAME);
+		_getUserRecent();
+	}
+	else if (page == "Gallery") {
+		$('.buybutton').fadeIn(300);
+		$('#cart').fadeIn(300);
+	}
+}
+
+/*
+ * release Page from given page name
+ * page: "Design", "Gallery"
+ */
+function releasePage(page) {
+	if (page == "Design") {
+		$('#random-design').hide();
+		$('#start-design').fadeIn(300);
+		$('#save-design').hide();
+		$('#menubar').hide();
+		$('#mCanvas').remove();
+		$('#mCanvas')[0] = null;
+		
+		$('.recent').find('.draggable').each(function(index) {
+			$(this).remove();
+		  	$(this)[0] = null;
+		});		
+		$('.recent').hide();
+
+		if ( $('.layout_corner').length ) {
+			
+			$('.layout_corner').children('.draggable').each(function(index) {
+		  		$(this).remove();
+			  	$(this)[0] = null;
+			});
+			
+			$('.layout_corner').each(function(index) {
+			  	$(this).remove();
+			  	$(this)[0] = null;
+			});
+		}
+		if ( $('.canvas_appended').length ) {
+			$('.canvas_appended').each(function(index) {
+			  	$(this).remove();
+			  	$(this)[0] = null;
+			});
+		}
+	}
+	else if (page == "Gallery") {
+		$('#random-design').fadeIn(300);
+		$('#save-design').fadeIn(300);
+		$('#start-design').hide();
+	
+		$('#galleryCanvas').remove();
+		$('#galleryCanvas')[0] = null;
+		$('.buybutton').hide()
+		$('#cart').hide();
+	}
 }
 
 /*
@@ -542,10 +635,12 @@ $(function(){
             name:'One X',                  // Item name appear on the cart
             thumbnail:'css/images/move.png',
             price:'34.99',                // Cost of the item
-            shipping: '0'                    // Shipping cost for the item (Optional)
+            shipping: '0'                 // Shipping cost for the item (Optional)
         });
 		
     $.instagramr();
+    
+    $('#start-design').hide();
 });
 
 $(window).resize(function() { setContainer();setFooterTop()}); 

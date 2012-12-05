@@ -3,7 +3,7 @@
 
 var scaling = 3; // Image saving ratio
  
-function mod_saving() {
+function mod_saving(func_complete) {
 	$("body").append('<div class="modalOverlay"></div>');
 	$wDiv = $('.modalOverlay');
 	$("body").append('<div id="progress-bar"><div id="status"></div></div>');
@@ -87,15 +87,18 @@ function mod_saving() {
 		    					(parseInt($c.next().css('top'), 10)-layout_y*scaling), 
 		    					parseInt($c.next().css('width'), 10),
 		    					parseInt($c.next().css('height'), 10));
-		    				
 		    	$c.next().remove();
+		    	$c.next()[0] = null;			
 		    	$c.remove();
+		    	$c[0] = null;
+		    	
 		    	$imgSrc.css('width', '');
 				$imgSrc.css('height','');
 				
 				setTimeout(process, 10);
 			}
 			else {
+				/*
 				var img = $('<img>');
 				img.attr('id', 'canvasImg');
 				img.css('position', 'absolute');
@@ -105,12 +108,44 @@ function mod_saving() {
 				img.css('height', $("#mCanvas")[0].height*0.7+'px');
 				$('body').append(img);
 				$('#canvasImg')[0].src = resCanvas.toDataURL();
+				*/
+				delete resCanvas;
+				resCanvas = null;
+				mod_gallerysave();
 					
 				$( "#progress-bar" ).remove();
+				$( "#progress-bar" )[0] = null;
 				$wDiv.remove();
+				$wDiv[0] = null;
+				
+				func_complete();
 			}
 		}
 	}
+}
+
+/*
+ * Save to a image from canvas for gallery display
+ * (low resolution)
+ */
+function mod_gallerysave() {
+	var resCanvas = document.createElement('canvas');
+    var resCtx = resCanvas.getContext('2d');
+    $(resCanvas).attr('id', 'galleryCanvas')
+	resCanvas.width = $("#mCanvas")[0].width * 0.7;
+	resCanvas.height = $("#mCanvas")[0].height * 0.7;
+	//resCtx.drawImage($("#mCanvas")[0], 0, 0, resCanvas.width, resCanvas.height);
+	$('.canvas_appended').each(function(index) {
+    	resCtx.drawImage($(this)[0], 
+    					(parseInt($(this).css('left'), 10)-layout_x) * 0.7, 
+    					(parseInt($(this).css('top'), 10)-layout_y) * 0.7, 
+    					parseInt($(this)[0].width, 10) * 0.7,
+    					parseInt($(this)[0].height, 10) * 0.7);
+	});
+	$(resCanvas).css('position', 'absolute');
+	$(resCanvas).css('top', '80px');
+	$(resCanvas).css('left', '100px');
+	$('body').append($(resCanvas));
 }
 
 /*
@@ -120,7 +155,15 @@ function mod_randesign() {
 	// clear content
 	$('.layout_corner').css('opacity', CORNER_OPT);
 	$('.layout_corner').html('');
-	$('.canvas_appended').remove();
+	$('.layout_corner > draggable').each(function(index) {
+	  	$(this).remove();
+	  	$(this)[0] = null;
+	});
+	$('.canvas_appended').each(function(index) {
+	  	$(this).remove();
+	  	$(this)[0] = null;
+	});
+
 	// visit image gallery in randomly
 	$('.layout_corner').each(function(index) {
 

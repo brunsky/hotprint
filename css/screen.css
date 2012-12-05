@@ -7,7 +7,7 @@ body {
 #cart {
 	display: none;
 	position:absolute;
-	top:50px;
+	top:80px;
 	left:850px;
 	width: 170px;
 	height: 60px;
@@ -16,7 +16,7 @@ body {
 .buybutton{
 	display: none;
 	position:absolute;
-	top:400px;
+	top:430px;
 	left:850px;
 	width: 120px;
 	height: 40px;
@@ -211,14 +211,18 @@ section {
 }
 
 #get-user-data,
-#save-design,
 #random-design,
+#start-design,
 #login {
   display: block;
   text-decoration:none;
   color: #fdfdfd;
   font: bold 14px/32px Arial, sans-serif;
   float: right;
+  cursor: pointer;
+}
+
+#save-design {
   cursor: pointer;
 }
 
@@ -244,6 +248,7 @@ section {
 body.not-logged-in #get-user-data { display: none; }
 body.not-logged-in #save-design { display: none; }
 body.not-logged-in #random-design { display: none; }
+body.not-logged-in #start-design { display: none; }
 body.not-logged-in #login { display: block; }
 
 body.logged-in #get-user-data { display: block; }
