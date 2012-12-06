@@ -5,7 +5,7 @@ for (var i=1; i<=32; i++) {
 	//Create DIV 
 	$destDiv = $(document.createElement('div'));
 	$destDiv.attr('id', 'corner'+i);
-	$destDiv.attr('class', 'layout_squal');
+	$destDiv.attr('class', 'layout_square');
 	$destDiv.addClass('layout_corner');
 	$("#mCanvas").after($destDiv);    
 	// Adjust position according to mCanvas

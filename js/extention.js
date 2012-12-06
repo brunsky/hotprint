@@ -140,8 +140,9 @@ function mod_saving(func_complete) {
 				}, 'application/upload');*/
 				
 				delete resCanvas;
+					mod_saveremote(resCanvas);
 					resCanvas = null;
-					mod_gallerysave();
+					//mod_gallerysave();
 					$( "#progress-bar" ).remove();
 					$( "#progress-bar" )[0] = null;
 					$wDiv.remove();
