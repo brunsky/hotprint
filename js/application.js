@@ -219,7 +219,6 @@ function setDnD(maskImg, ox, oy) {
 					var $dstCanvas = $('<canvas>');
 					$dstCanvas[0].width = parseInt(divObj.css('width'), 10) + parseInt(divObj.css('border-left-width'), 10);
 					$dstCanvas[0].height = parseInt(divObj.css('height'), 10) + parseInt(divObj.css('border-left-width'), 10);
-					//autoClipper(divObj.children(".draggable")[0], $dstCanvas);
 					autoClipper2(divObj.children(".draggable")[0], $dstCanvas, 
 								divObj.children(".draggable").data('corner'), divObj);
 					_img.src = $dstCanvas[0].toDataURL();
@@ -360,18 +359,53 @@ function setDnD(maskImg, ox, oy) {
 function menuLoadPhone(_phoneName) {
 	PHONE_NAME = _phoneName;
 	setCanvas(_phoneName);
+	
+	if(_phoneName === 'iphone5') {
+		$('#menu_type').html('iPhone 5').fadeIn(300);
+	}
+	else if(_phoneName === 'iphone4') {
+		$('#menu_type').html('iPhone 4/4S').fadeIn(300);
+	}
+	else if(_phoneName === 's3') {
+		$('#menu_type').html('S3').fadeIn(300);
+	}
+	else if(_phoneName === 'onex') {
+		$('#menu_type').html('HTC One X').fadeIn(300);
+	}
 }
 
 // load layout in menu
 function menuLoadLayout(_layoutName) {
 	LAYOUT_NAME = _layoutName;
 	loadLayout(maskImg, layout_ox, layout_oy, PHONE_NAME+'_'+LAYOUT_NAME);
+	
+	if(_layoutName === 'layout_1') {
+		$('#menu_layout').html('layout 1').fadeIn(300);
+	}
+	else if(_layoutName === 'layout_2') {
+		$('#menu_layout').html('layout 2').fadeIn(300);
+	}
+	else if(_layoutName === 'layout_3') {
+		$('#menu_layout').html('layout 3').fadeIn(300);
+	}
+	else if(_layoutName === 'layout_4') {
+		$('#menu_layout').html('layout 4').fadeIn(300);
+	}
+	else if(_layoutName === 'layout_5') {
+		$('#menu_layout').html('layout 5').fadeIn(300);
+	}
+	else if(_layoutName === 'layout_6') {
+		$('#menu_layout').html('layout 6').fadeIn(300);
+	}
+	else if(_layoutName === 'layout_7') {
+		$('#menu_layout').html('layout 7').fadeIn(300);
+	}
 }
 
 // (ox, oy) is the position of case image
 function loadLayout(_maskImg, ox , oy, _layoutName){ 
 	console.log('layout:'+layout_x+','+layout_y);
-	maskImg = _maskImg
+
 	// Cleanup
 	$('.layout_corner').each(function(index) {
 	  	$(this).remove();
@@ -459,7 +493,8 @@ function setCanvas(_phoneName) {
         	//layout_oy = parseInt($("#mCanvas").css('top'), 10);
         	//layout_ox = parseInt($("#mCanvas").css('left'), 10);
         	console.log("Get "+_phoneName+", "+layout_ox+', '+layout_oy);
-            loadLayout(image, layout_ox, layout_oy, _phoneName+'_'+LAYOUT_NAME);
+        	maskImg = image;
+        	menuLoadLayout(LAYOUT_NAME);
         },
         error: function(xhr, text_status){
             console.log("Failed to get "+_phoneName+": "+text_status);
@@ -527,6 +562,9 @@ function randomDesign() {
 	mod_randesign();
 }
 
+/*
+ * Enter design page
+ */
 function startDesign() {
 	releasePage('Gallery');
 	newPage('Design');
@@ -568,6 +606,8 @@ function releasePage(page) {
 		  	$(this)[0] = null;
 		});		
 		$('.recent').hide();
+		$('.ad-preloads').remove();
+		$('.ad-preloads')[0] = null;
 
 		if ( $('.layout_corner').length ) {
 			
@@ -617,7 +657,7 @@ $(function(){
 	setContainer();
 	setFooterTop();
 	// Create phone case canvas and layout
-	setCanvas(PHONE_NAME);
+	menuLoadPhone(PHONE_NAME);
 	
 	var cart = $('#cart').DCAJAXPaypalCart({  
             width:600,  

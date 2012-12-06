@@ -4,6 +4,13 @@
 var scaling = 3; // Image saving ratio
  
 function mod_saving(func_complete) {
+	// Check if design is completed
+	if (!($('.canvas_appended').length != 0 && 
+		$('.canvas_appended').length == $('.layout_corner').length)) {
+		new Messi('<p>您尚未完成設計哦</p><p>請先將圖片按您的喜好拖拉至所有的區塊後，才能儲存</p>', {title: '提醒您 !', modal: true});
+		return;
+	}
+	
 	$("body").append('<div class="modalOverlay"></div>');
 	$wDiv = $('.modalOverlay');
 	$("body").append('<div id="progress-bar"><div id="status"></div></div>');
@@ -98,27 +105,49 @@ function mod_saving(func_complete) {
 				setTimeout(process, 10);
 			}
 			else {
-				/*
-				var img = $('<img>');
-				img.attr('id', 'canvasImg');
-				img.css('position', 'absolute');
-				img.css('top', '80px');
-				img.css('left', '800px');
-				img.css('width', $("#mCanvas")[0].width*0.7+'px');
-				img.css('height', $("#mCanvas")[0].height*0.7+'px');
-				$('body').append(img);
-				$('#canvasImg')[0].src = resCanvas.toDataURL();
-				*/
-				delete resCanvas;
-				resCanvas = null;
-				mod_gallerysave();
-					
-				$( "#progress-bar" ).remove();
-				$( "#progress-bar" )[0] = null;
-				$wDiv.remove();
-				$wDiv[0] = null;
 				
-				func_complete();
+				/*
+				$.ajax({
+					  url:"db/save_image.php",
+					  type:"POST",
+					  data:resCanvas.toDataURL("image/png"),
+					  contentType:"application/upload",
+					  success: function(){
+							delete resCanvas;
+							resCanvas = null;
+							mod_gallerysave();
+								
+							$( "#progress-bar" ).remove();
+							$( "#progress-bar" )[0] = null;
+							$wDiv.remove();
+							$wDiv[0] = null;
+							
+							func_complete();
+					  }
+				});*/
+				/*
+				$.post("db/save_image.php", resCanvas.toDataURL("image/png"), function(data) {
+					delete resCanvas;
+					resCanvas = null;
+					mod_gallerysave();
+						
+					$( "#progress-bar" ).remove();
+					$( "#progress-bar" )[0] = null;
+					$wDiv.remove();
+					$wDiv[0] = null;
+					
+					func_complete();
+				}, 'application/upload');*/
+				
+				delete resCanvas;
+					resCanvas = null;
+					mod_gallerysave();
+					$( "#progress-bar" ).remove();
+					$( "#progress-bar" )[0] = null;
+					$wDiv.remove();
+					$wDiv[0] = null;
+					
+					func_complete();
 			}
 		}
 	}
@@ -131,10 +160,10 @@ function mod_saving(func_complete) {
 function mod_gallerysave() {
 	var resCanvas = document.createElement('canvas');
     var resCtx = resCanvas.getContext('2d');
-    $(resCanvas).attr('id', 'galleryCanvas')
+    $(resCanvas).attr('id', 'galleryCanvas');
 	resCanvas.width = $("#mCanvas")[0].width * 0.7;
 	resCanvas.height = $("#mCanvas")[0].height * 0.7;
-	//resCtx.drawImage($("#mCanvas")[0], 0, 0, resCanvas.width, resCanvas.height);
+	resCtx.drawImage($("#mCanvas")[0], 0, 0, resCanvas.width, resCanvas.height);
 	$('.canvas_appended').each(function(index) {
     	resCtx.drawImage($(this)[0], 
     					(parseInt($(this).css('left'), 10)-layout_x) * 0.7, 
@@ -146,6 +175,22 @@ function mod_gallerysave() {
 	$(resCanvas).css('top', '80px');
 	$(resCanvas).css('left', '100px');
 	$('body').append($(resCanvas));
+}
+
+/*
+ * Save image remotelly from canvas for gallery display
+ * (high resolution)
+ */
+function mod_saveremote(resCanvas) {
+	var img = $('<img>');
+	img.attr('id', 'galleryCanvas');
+	img.css('position', 'absolute');
+	img.css('top', '80px');
+	img.css('left', '100px');
+	img.css('width', $("#mCanvas")[0].width*0.7+'px');
+	img.css('height', $("#mCanvas")[0].height*0.7+'px');
+	$('body').append(img);
+	$('#galleryCanvas')[0].src = resCanvas.toDataURL();	
 }
 
 /*

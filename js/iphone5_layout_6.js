@@ -1,11 +1,11 @@
 var _x;
 var _y;
 var CORNER_OPT = 0.1;
-for (var i=1; i<=15; i++) {
+for (var i=1; i<=32; i++) {
 	//Create DIV 
 	$destDiv = $(document.createElement('div'));
 	$destDiv.attr('id', 'corner'+i);
-	$destDiv.attr('class', 'layout_square');
+	$destDiv.attr('class', 'layout_squal');
 	$destDiv.addClass('layout_corner');
 	$("#mCanvas").after($destDiv);    
 	// Adjust position according to mCanvas
