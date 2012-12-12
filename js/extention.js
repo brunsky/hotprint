@@ -21,6 +21,93 @@ function mod_saving(func_complete) {
 	$status = $('#status');
 	var a = new Image();
 	a.src = "images/"+PHONE_NAME+"_mask2.png";
+	var jsonObj = []; // json array for storing layout&image information
+	a.onload = function(){
+	
+		var resCanvas = document.createElement('canvas');
+	    var resCtx = resCanvas.getContext('2d');
+		resCanvas.width = $("#mCanvas")[0].width * scaling;
+		resCanvas.height = $("#mCanvas")[0].height * scaling;
+		
+		// scaling mask
+		var adjustMaskCanvas = document.createElement('canvas');
+	    adjustMaskCanvas.width = a.width;
+	    adjustMaskCanvas.height = a.height;
+	    var adjustMaskCtx = adjustMaskCanvas.getContext('2d');                       
+	    adjustMaskCtx.drawImage(a, 0, 0); 
+		
+		var factor = 100 / $('.layout_corner').length; 
+		var inc = 0;
+		
+		var elements = $('body').find('.layout_corner');
+		var index = 0;
+		process();
+		
+		// Using settimeout to let browser update screen.
+		function process() {
+			var e = elements.get(index++);
+			if ($(e).length) {
+
+				$status.css('width', function(){
+					inc += factor;
+					return inc+"%";
+				});
+	
+				
+		    	if (typeof $(e).next()[0] != 'undefined' &&
+		    		$(e).next()[0].tagName.toLowerCase() != 'canvas'.toLowerCase()) {
+					return true; // the same as continue in C :)
+				}
+		    	
+    			jsonObj.push({
+		    		cornerId: $(e).attr('id'), 
+		    		cornerClass: $(e).attr('class'),
+		    		cornerStyle: $(e).attr('style'),
+		    		imgURL: $(e).children(".draggable").data('src'),
+		    		zdx: $(e).children(".draggable").data('zdx'),
+		    		zdy: $(e).children(".draggable").data('zdy'),
+		    		zw: $(e).children(".draggable").data('zw'),
+		    		zh: $(e).children(".draggable").data('zh')});
+				
+				setTimeout(process, 10);
+			}
+			else {
+
+				$.post("db/save_image.php", {userid: user_id, saveimag:JSON.stringify(jsonObj)}, function(data) {
+					delete resCanvas;
+					resCanvas = null;
+					mod_gallerysave();
+						
+					$( "#progress-bar" ).remove();
+					$( "#progress-bar" )[0] = null;
+					$wDiv.remove();
+					$wDiv[0] = null;
+					
+					func_complete();
+				});
+			}
+		}
+	}
+}
+
+function mod_saving_for_host(func_complete) {
+	// Check if design is completed
+	if (!($('.canvas_appended').length != 0 && 
+		$('.canvas_appended').length == $('.layout_corner').length)) {
+		new Messi('<p>您尚未完成設計哦</p><p>請先將圖片按您的喜好拖拉至所有的區塊後，才能儲存</p>', {title: '提醒您 !', modal: true});
+		return;
+	}
+	
+	$("body").append('<div class="modalOverlay"></div>');
+	$wDiv = $('.modalOverlay');
+	$("body").append('<div id="progress-bar"><div id="status"></div></div>');
+	$( "#progress-bar" ).css('position','fixed');
+	$( "#progress-bar" ).css('z-index', '1001');
+	$( "#progress-bar" ).css('top', '300px');
+	$( "#progress-bar" ).css('left', '500px');
+	$status = $('#status');
+	var a = new Image();
+	a.src = "images/"+PHONE_NAME+"_mask2.png";
 	a.onload = function(){
 	
 		var resCanvas = document.createElement('canvas');
@@ -140,22 +227,23 @@ function mod_saving(func_complete) {
 				}, 'application/upload');*/
 				
 				delete resCanvas;
-					mod_saveremote(resCanvas);
-					resCanvas = null;
-					//mod_gallerysave();
-					$( "#progress-bar" ).remove();
-					$( "#progress-bar" )[0] = null;
-					$wDiv.remove();
-					$wDiv[0] = null;
-					
-					func_complete();
+				mod_saveremote(resCanvas);
+				resCanvas = null;
+				//mod_gallerysave();
+				$( "#progress-bar" ).remove();
+				$( "#progress-bar" )[0] = null;
+				$wDiv.remove();
+				$wDiv[0] = null;
+				
+				
+				func_complete();
 			}
 		}
 	}
 }
 
 /*
- * Save to a image from canvas for gallery display
+ * Save to a image from attached canvas for gallery display
  * (low resolution)
  */
 function mod_gallerysave() {
@@ -179,7 +267,7 @@ function mod_gallerysave() {
 }
 
 /*
- * Save image remotelly from canvas for gallery display
+ * Save image remotelly from <img> inside corner for gallery display
  * (high resolution)
  */
 function mod_saveremote(resCanvas) {
@@ -192,6 +280,21 @@ function mod_saveremote(resCanvas) {
 	img.css('height', $("#mCanvas")[0].height*0.7+'px');
 	$('body').append(img);
 	$('#galleryCanvas')[0].src = resCanvas.toDataURL();	
+	
+	// Preparing saving data in JSON formate
+	var jsonObj = [];
+	$('.layout_corner').each(function(index) {
+    	jsonObj.push({
+    		cornerId: $(this).attr('id'), 
+    		cornerClass: $(this).attr('class'),
+    		cornerStyle: $(this).attr('style'),
+    		imgURL: $(this).children(".draggable").data('src'),
+    		zdx: $(this).children(".draggable").data('zdx'),
+    		zdy: $(this).children(".draggable").data('zdy'),
+    		zw: $(this).children(".draggable").data('zw'),
+    		zh: $(this).children(".draggable").data('zh')});
+	});
+	console.log(jsonObj);
 }
 
 /*
@@ -247,6 +350,8 @@ function mod_randesign() {
 		
 		var imgSrc = $(this).children(".draggable").attr('src');
 		var divObj = $(this);
+		// copy img url from gallery-pool object
+		$(this).children(".draggable").data('src', imgSrc);
 		
 		var opts = {
 		  lines: 13, // The number of lines to draw

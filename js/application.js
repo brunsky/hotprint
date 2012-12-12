@@ -179,6 +179,10 @@ function setDnD(maskImg, ox, oy) {
 			$(this).children(".draggable").data('zh', $(this).data('zh'));
 			// copy corner object
 			$(this).children(".draggable").data('corner', $(this).data('corner'));
+			// copy img url from gallery-pool object
+			if ($(this).children(".draggable").attr('src').indexOf('http://') >= 0) {
+				$(this).children(".draggable").data('src', $(this).children(".draggable").attr('src'));
+			}
 
 			$(this).children(".draggable").css({
 				"position": "relative",
