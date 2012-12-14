@@ -314,13 +314,13 @@ var ori_ratio;
 			$('body').css('cursor', 'move');
             theSelection.bHow[0] = true;
         }
-        else if (iMouseX > theSelection.x + theSelection.w && iMouseX < theSelection.x + theSelection.w + theSelection.csize*2 &&
+        else if (iMouseX > theSelection.x + draw_w && iMouseX < theSelection.x + draw_w + theSelection.csize*2 &&
             iMouseY > theSelection.y - theSelection.csize*2 && iMouseY < theSelection.y) {
 			
 			$('body').css('cursor', 'sw-resize');
             theSelection.bHow[1] = true;
         }
-        else if (iMouseX > theSelection.x + theSelection.w && iMouseX < theSelection.x + theSelection.w + theSelection.csize*2 &&
+        else if (iMouseX > theSelection.x + draw_w && iMouseX < theSelection.x + draw_w + theSelection.csize*2 &&
             iMouseY > theSelection.y + theSelection.h && iMouseY < theSelection.y + theSelection.h + theSelection.csize*2) {
 
 			$('body').css('cursor', 'pointer');
@@ -368,12 +368,20 @@ var ori_ratio;
 				theSelection.h = iFH;
 			if (iFX > cornerX)
 				theSelection.x = cornerX;
-			else
-				theSelection.x = iFX;
+			else {
+				if(iFX+iFW < cornerX+cornerW)
+					theSelection.x = cornerX + cornerW - iFW;
+				else
+					theSelection.x = iFX;
+			}
 			if (iFY > cornerY)
 				theSelection.y = cornerY;
-			else
-				theSelection.y = iFY;
+			else {
+				if(iFY+iFH < cornerY+cornerH)
+					theSelection.y = cornerY + cornerH - iFH;
+				else
+					theSelection.y = iFY;
+			}
 		}
 
 		/*
