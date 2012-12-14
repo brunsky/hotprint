@@ -68,6 +68,7 @@ var $wDiv;
 var bdr = parseInt(cornerDiv.css('border-left-width'), 10);
 var draw_w;
 var draw_h;
+var ori_ratio;
 
 	function Selection(x, y, w, h){
 		this.x = x; // initial positions
@@ -149,16 +150,16 @@ var draw_h;
 					 theSelection.y - theSelection.iCSize[0]*2, 
 					 theSelection.iCSize[0] * 2, theSelection.iCSize[0] * 2);
 
-		ctx.drawImage(bZoom, theSelection.x + theSelection.w + bdr*2, 
+		ctx.drawImage(bZoom, theSelection.x + draw_w + bdr*2, 
 					 theSelection.y - theSelection.iCSize[1]*2, 
 					 theSelection.iCSize[1] * 2, theSelection.iCSize[1] * 2);
 					 
-		ctx.drawImage(bSave, theSelection.x + theSelection.w+ bdr*2, 
-					 theSelection.y + theSelection.h+ bdr*2, 
+		ctx.drawImage(bSave, theSelection.x + draw_w+ bdr*2, 
+					 theSelection.y + draw_h+ bdr*2, 
 					 theSelection.iCSize[2] * 2, theSelection.iCSize[2] * 2);
 					 
 		ctx.drawImage(bRemove, theSelection.x - theSelection.iCSize[3]*2, 
-					 theSelection.y + theSelection.h+ bdr*2, 
+					 theSelection.y + draw_h+ bdr*2, 
 					 theSelection.iCSize[3] * 2, theSelection.iCSize[3] * 2);
 	}
 			
@@ -278,7 +279,7 @@ var draw_h;
 	
 	function eventMousemove(e) { // binding mouse move event
         var canvasOffset = $(canvas).offset();
-        iMouseX = Math.floor(e.pageX - canvasOffset.left);
+        iMouseX = Math.floor(e.pageX - canvasOffset.left); // relative to canvas
         iMouseY = Math.floor(e.pageY - canvasOffset.top);
 
         // in case of drag of whole selector
@@ -335,34 +336,47 @@ var draw_h;
 			$('body').css('cursor', 'default');
 		}
 		
-		/* resize in circle way
+		
+        if (theSelection.bDrag[0]) {
+			// moving process has been mentioned in 'Drag All'
+        }
+        
+		// resize in circle way
 		if (theSelection.bDrag[1]) { // in case of dragging of resize cubes
-			var cx = (theSelection.x + draw_w) / 2;
-			var cy = (theSelection.y + draw_h) / 2;
+			$('body').css('cursor', 'sw-resize');
+			var cx = theSelection.x + theSelection.w/2;
+			var cy = theSelection.y + theSelection.h/2;
 			var dx = iMouseX - cx;
 			var dy = iMouseY - cy;
 			if (dx < 0)	dx = -dx;
 			if (dy < 0) dy = -dy;
 			var dist = dx+dy;
-			var ratio = dist / draw_w;
-			var iFW = 
+			var ratio = dist / (theSelection.w + theSelection.h);
+			ratio = ratio / ori_ratio;
+			var iFW = Math.floor(theSelection.w * ratio);
+			var iFH = Math.floor(theSelection.h * ratio);
+			var iFX = Math.floor(cx - iFW/2);
+			var iFY = Math.floor(cy - iFH/2);
+			
+			if (iFW < cornerW)
+				theSelection.w = cornerW;
+			else
+				theSelection.w = iFW;
+			if (iFH < cornerH)
+				theSelection.h = cornerH;
+			else
+				theSelection.h = iFH;
+			if (iFX > cornerX)
+				theSelection.x = cornerX;
+			else
+				theSelection.x = iFX;
+			if (iFY > cornerY)
+				theSelection.y = cornerY;
+			else
+				theSelection.y = iFY;
 		}
-		*/
-        
-        var iFW = 0, iFH = 0;
-        if (theSelection.bDrag[0]) {
-			// moving process has been mentioned in 'Drag All'
-        }
-		
-        if (theSelection.bDrag[1]) { // in case of dragging of resize cubes
-			$('body').css('cursor', 'sw-resize');
-            var iFX = theSelection.x;
-            var iFY = iMouseY - theSelection.py;
-            if (iFY > cornerY) iFY = cornerY;
-            iFW = iMouseX - theSelection.px - iFX;
-            iFH = theSelection.h + theSelection.y - iFY;
-        }
 
+		/*
         if (iFW > theSelection.csize * 2 && iFH > theSelection.csize * 2) {
             
             if (iFX+iFW >= cornerX+cornerW && iFY+iFH >= cornerY+cornerH) {
@@ -380,7 +394,7 @@ var draw_h;
             }
             theSelection.x = iFX;
             theSelection.y = iFY;
-        }
+        }*/
 		
         drawScene();            
     }
@@ -431,14 +445,14 @@ var draw_h;
         }
 	}
 	
-	function eventMousedown(e) { // binding mousedown event
+	function eventMousedown(e) { // binding mousedown event	
         var canvasOffset = $(canvas).offset();
         iMouseX = Math.floor(e.pageX - canvasOffset.left);
         iMouseY = Math.floor(e.pageY - canvasOffset.top);
 
         theSelection.px = iMouseX - theSelection.x;
         theSelection.py = iMouseY - theSelection.y;
-
+        
         if (theSelection.bHow[0]) {
             theSelection.px = iMouseX - theSelection.x;
             theSelection.py = iMouseY - theSelection.y;
@@ -446,6 +460,16 @@ var draw_h;
         if (theSelection.bHow[1]) {
             theSelection.px = iMouseX - theSelection.x - theSelection.w;
             theSelection.py = iMouseY - theSelection.y;
+            
+            // calculate original ratio
+            var cx = theSelection.x + theSelection.w/2;
+			var cy = theSelection.y + theSelection.h/2;
+			var dx = iMouseX - cx;
+			var dy = iMouseY - cy;
+			if (dx < 0)	dx = -dx;
+			if (dy < 0) dy = -dy;
+			var dist = dx+dy;
+			ori_ratio = dist / (theSelection.w + theSelection.h);
         }
         if (theSelection.bHow[2]) {
             theSelection.px = iMouseX - theSelection.x - theSelection.w;
