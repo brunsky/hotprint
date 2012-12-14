@@ -404,6 +404,9 @@ function menuLoadLayout(_layoutName) {
 	else if(_layoutName === 'layout_7') {
 		$('#menu_layout').html('layout 7').fadeIn(300);
 	}
+	else if(_layoutName === 'layout_8') {
+		$('#menu_layout').html('layout 8').fadeIn(300);
+	}
 }
 
 // (ox, oy) is the position of case image
