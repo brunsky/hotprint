@@ -407,6 +407,15 @@ function menuLoadLayout(_layoutName) {
 	else if(_layoutName === 'layout_8') {
 		$('#menu_layout').html('layout 8').fadeIn(300);
 	}
+	else if(_layoutName === 'layout_9') {
+		$('#menu_layout').html('layout 9').fadeIn(300);
+	}
+	else if(_layoutName === 'layout_10') {
+		$('#menu_layout').html('layout 10').fadeIn(300);
+	}
+	else if(_layoutName === 'layout_11') {
+		$('#menu_layout').html('layout 11').fadeIn(300);
+	}
 }
 
 // (ox, oy) is the position of case image

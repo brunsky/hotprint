@@ -321,13 +321,13 @@ var ori_ratio;
             theSelection.bHow[1] = true;
         }
         else if (iMouseX > theSelection.x + draw_w && iMouseX < theSelection.x + draw_w + theSelection.csize*2 &&
-            iMouseY > theSelection.y + theSelection.h && iMouseY < theSelection.y + theSelection.h + theSelection.csize*2) {
+            iMouseY > theSelection.y + draw_h && iMouseY < theSelection.y + draw_h + theSelection.csize*2) {
 
 			$('body').css('cursor', 'pointer');
             theSelection.bHow[2] = true;
         }
         else if (iMouseX > theSelection.x - theSelection.csize*2 && iMouseX < theSelection.x &&
-            iMouseY > theSelection.y + theSelection.h&& iMouseY < theSelection.y + theSelection.h + theSelection.csize*2) {
+            iMouseY > theSelection.y + draw_h && iMouseY < theSelection.y + draw_h + theSelection.csize*2) {
 
 			$('body').css('cursor', 'pointer');
             theSelection.bHow[3] = true;
@@ -348,8 +348,8 @@ var ori_ratio;
 			var cy = theSelection.y + theSelection.h/2;
 			var dx = iMouseX - cx;
 			var dy = iMouseY - cy;
-			if (dx < 0)	dx = -dx;
-			if (dy < 0) dy = -dy;
+			if (dx < 0)	dx = - dx;
+			if (dy < 0) dy = - dy;
 			var dist = dx+dy;
 			var ratio = dist / (theSelection.w + theSelection.h);
 			ratio = ratio / ori_ratio;
@@ -414,7 +414,9 @@ var ori_ratio;
 		
 		// button#3, remove
 		if (iMouseX > theSelection.x - theSelection.csize*2 && iMouseX < theSelection.x + theSelection.csize*2 &&
-            iMouseY > theSelection.y + theSelection.h-theSelection.csize*2 && iMouseY < theSelection.y + theSelection.h + theSelection.csize*2) {
+            iMouseY > theSelection.y + draw_h-theSelection.csize*2 && iMouseY < theSelection.y + draw_h + theSelection.csize*2) {
+            
+            console.log("remove click");
             
             canvas.unbind();
 			$cDiv.unbind();
@@ -446,8 +448,8 @@ var ori_ratio;
 			cornerDiv.css('z-index','998');
         }
 		// button#2, save
-		if (iMouseX > theSelection.x + theSelection.w-theSelection.csize*2 && iMouseX < theSelection.x + theSelection.w + theSelection.csize*2 &&
-            iMouseY > theSelection.y + theSelection.h-theSelection.csize*2 && iMouseY < theSelection.y + theSelection.h + theSelection.csize*2) {
+		if (iMouseX > theSelection.x + draw_w-theSelection.csize*2 && iMouseX < theSelection.x + draw_w + theSelection.csize*2 &&
+            iMouseY > theSelection.y + draw_h-theSelection.csize*2 && iMouseY < theSelection.y + draw_h + theSelection.csize*2) {
 
             saveImg();
         }
@@ -510,6 +512,5 @@ var ori_ratio;
         }
         theSelection.px = 0;
         theSelection.py = 0;
-
     }
 }

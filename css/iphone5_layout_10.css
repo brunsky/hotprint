@@ -1,0 +1,18 @@
+#corner1 {
+    position: absolute;
+    width: 334px;
+    height: 302px;
+    top: 35px;
+    left: 28px;
+    border: 2px solid silver;
+    z-index: 999;
+}
+#corner2 {
+    position: absolute;
+    width: 334px;
+    height: 302px;
+    top: 339px;
+    left: 28px;
+    border: 2px solid silver;
+    z-index: 999;
+}
