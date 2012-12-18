@@ -114,8 +114,10 @@
 	        for(i=0; i<limit; i++)
 	        {
 	          var image = result.data[i];
-	          res += "<li><a href='"+image.link+"'><img src=\""+image.source+"\" class='draggable gallery-pool'/></a></li>";
-	
+	          if (image.width > image.height)
+	          	res += "<li><a href='"+image.link+"'><img src=\""+image.source+"\" id='recent_img"+i+"'class='draggable draggable-h gallery-pool'/></a></li>";
+	          else
+	          	res += "<li><a href='"+image.link+"'><img src=\""+image.source+"\" id='recent_img"+i+"'class='draggable draggable-w gallery-pool'/></a></li>";
 	        }
 	        
 	        gallery_bar_setting(res);
@@ -123,11 +125,13 @@
       });
 
   };
+  
+  
     
   _displayUserRecent = function(json){
 	var res = "";
 	for(var i=0; i<json.data.length; i++) {
-		res += "<li><a href='"+json.data[i].images.standard_resolution.url+"'><img src=\""+json.data[i].images.standard_resolution.url+"\" class='draggable gallery-pool'/></a></li>";
+		res += "<li><a href='"+json.data[i].images.standard_resolution.url+"'><img src=\""+json.data[i].images.standard_resolution.url+"\" class='draggable draggable-h draggable-w gallery-pool' /></a></li>";
 	}
 
 	gallery_bar_setting(res);
@@ -174,7 +178,7 @@ function gallery_bar_setting(res) {
 			}
 		},
 		start: function(event, ui) {
-			$(this).height(100).width(100);
+			//$(this).height(100).width(100);
 			$('.layout_corner').css('z-index', '998');
 			$('.layout_corner').animate({ opacity: 1});
 		},
@@ -229,10 +233,9 @@ function setDnD(maskImg, ox, oy) {
 				"position": "relative",
 				"top": "0px",
 				"left": "0px",
-				"width": $(this).css('width'),
-				"height": $(this).css('height'),
 				"opacity": "0"
 			});
+			
 			$(this).children(".draggable").draggable({
 				cursor: 'auto', 
 				cursorAt: { left: 50, top: 50 },
@@ -245,7 +248,7 @@ function setDnD(maskImg, ox, oy) {
 					}
 				},
 				start: function(event, ui) {
-					$(this).height(100).width(100);
+					//$(this).height(100).width(100);
 					$('.layout_corner').css('z-index', '998'); 
 					$('.layout_corner').animate({ opacity: 1 });
 					// set corner object

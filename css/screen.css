@@ -192,10 +192,14 @@ section {
 }
 
 .draggable { 
-	width: 100px; 
-	height: 100px; 
 	padding: 0; 
 	line-height: 0;  
+}
+.draggable-w {
+	width: 100px;
+}
+.draggable-h {
+	height: 100px;
 }
 
 .landing {
