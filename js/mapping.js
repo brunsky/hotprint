@@ -85,10 +85,18 @@ function doMasking(oriImg, maskImg, destDiv, ox, oy) {
 	if (w > h) {
 		_w = w;
 		_h = oriImg.height * (w / oriImg.width);
+		if (_h < h) {
+			_h = h;
+			_w = oriImg.width * (h / oriImg.height);
+		}
 	}
 	else if(w < h) {
 		_w = oriImg.width * (h / oriImg.height);
 		_h = h;
+		if (_w < w) {
+			_w = w;
+			_h = oriImg.height * (w / oriImg.width);
+		}
 	} 
 	else {
 		_w = w;

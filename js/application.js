@@ -16,6 +16,7 @@
   ,   _displayUserData
   ,   _login
   ,   _getUserRecent
+  ,	  _facebookPhotoAlbum
   ;
   
   var access_token
@@ -85,7 +86,42 @@
                 .fadeIn(300)
                 .append("ID: " + json.data.id);
 	user_id = json.data.id;
-	_getUserRecent();
+	//_getUserRecent();
+	_facebookPhotoAlbum();
+  };
+  
+  _facebookPhotoAlbum = function( callback ) {  
+
+    var settings = $.extend( {
+      'facebookAlbumId' : '10150146071791729',
+      'photoLimit'       : '10',
+      'randomOrder'      : 'false'
+    });
+
+      var albumId = settings.facebookAlbumId;
+      var photoLimit = settings.photoLimit;
+      var randomOrder = settings.randomOrder;
+      var url = "https://graph.facebook.com/"+albumId+"/photos";
+
+      $.getJSON(url, function success(result) {
+
+	        var limit = photoLimit;
+	        if(result.data.length < limit) {
+	          limit = result.data.length;
+	        }
+	        
+	        var res = "";
+	        for(i=0; i<limit; i++)
+	        {
+	          var image = result.data[i];
+	          res += "<li><a href='"+image.link+"'><img src=\""+image.source+"\" class='draggable gallery-pool'/></a></li>";
+	
+	        }
+	        
+	        gallery_bar_setting(res);
+        
+      });
+
   };
     
   _displayUserRecent = function(json){
@@ -94,6 +130,13 @@
 		res += "<li><a href='"+json.data[i].images.standard_resolution.url+"'><img src=\""+json.data[i].images.standard_resolution.url+"\" class='draggable gallery-pool'/></a></li>";
 	}
 
+	gallery_bar_setting(res);
+	
+  };
+  
+})(jQuery);
+
+function gallery_bar_setting(res) {
 	$(".ad-thumb-list").html("")
                 .fadeIn(300)
                 .append(res);
@@ -145,9 +188,7 @@
 			});
 		}
 	});
-  };
-  
-})(jQuery);
+}
 
 ////////////////////////////
 

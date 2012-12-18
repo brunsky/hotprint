@@ -86,12 +86,24 @@ var ori_ratio;
 	}
 
 	Selection.prototype.draw = function(){
-		if (theSelection.w >= theSelection.h) {
+		if (theSelection.w > theSelection.h) {
 			draw_w = theSelection.w + bdr;
 			draw_h = srcImg.height * (theSelection.w / srcImg.width) + bdr;
+			if (draw_h < theSelection.w) {
+				draw_w = srcImg.width * (theSelection.h / srcImg.height) + bdr;
+				draw_h = theSelection.h + bdr;
+			}
+		}
+		else if (theSelection.w < theSelection.h){
+			draw_w = srcImg.width * (theSelection.h / srcImg.height) + bdr;
+			draw_h = theSelection.h + bdr;
+			if (draw_w <  theSelection.h) {
+				draw_w = theSelection.w + bdr;
+				draw_h = srcImg.height * (theSelection.w / srcImg.width) + bdr;
+			}
 		}
 		else {
-			draw_w = srcImg.width * (theSelection.h / srcImg.height) + bdr;
+			draw_w = theSelection.w + bdr;
 			draw_h = theSelection.h + bdr;
 		}
 		ctx.drawImage(srcImg, 0, 0, srcImg.width, srcImg.height, 
