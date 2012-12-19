@@ -233,6 +233,8 @@ function setDnD(maskImg, ox, oy) {
 				"position": "relative",
 				"top": "0px",
 				"left": "0px",
+				"width": $(this).css('width'),
+				"height": $(this).css('height'),
 				"opacity": "0"
 			});
 			
@@ -248,7 +250,7 @@ function setDnD(maskImg, ox, oy) {
 					}
 				},
 				start: function(event, ui) {
-					//$(this).height(100).width(100);
+					$(this).height(100).width(100);
 					$('.layout_corner').css('z-index', '998'); 
 					$('.layout_corner').animate({ opacity: 1 });
 					// set corner object
@@ -328,6 +330,7 @@ function setDnD(maskImg, ox, oy) {
 								cirClipper);	
 						}
 						else if (divObj.attr("class").indexOf("layout_square") >= 0) {
+							
 							doClipping( 
 								doMasking(image, maskImg, divObj, ox, oy), 
 								divObj, 
@@ -741,6 +744,20 @@ $(function(){
     $.instagramr();
     
     $('#start-design').hide();
+    $('#login').qtip({
+    	title: {
+			text: '登入'
+		},
+		content: {
+			text:  $('#menu_color')
+		},
+		position: {
+			target: 'mouse',
+			adjust: {
+				mouse: false  
+			}
+		}
+	});
 });
 
 $(window).resize(function() { setContainer();setFooterTop()}); 

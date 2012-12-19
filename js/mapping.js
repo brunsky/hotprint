@@ -76,32 +76,29 @@ function doMasking(oriImg, maskImg, destDiv, ox, oy) {
     adjustMaskCtx.drawImage(maskImg, x, y, w, h, 0, 0, w, h); 
     
     // resize origin image
-    var resizeCanvas = document.createElement('canvas');
-	resizeCanvas.width = oriImg.width;
-	resizeCanvas.height = oriImg.height;
-    var resizeCtx = resizeCanvas.getContext('2d');
 	var _w;
 	var _h;
-	if (w > h) {
+	if (w >= h) {
 		_w = w;
-		_h = oriImg.height * (w / oriImg.width);
+		_h = oriImg.height * (_w / oriImg.width);
 		if (_h < h) {
 			_h = h;
-			_w = oriImg.width * (h / oriImg.height);
+			_w = oriImg.width * (_h / oriImg.height);
 		}
 	}
 	else if(w < h) {
-		_w = oriImg.width * (h / oriImg.height);
 		_h = h;
+		_w = oriImg.width * (_h / oriImg.height);
 		if (_w < w) {
 			_w = w;
-			_h = oriImg.height * (w / oriImg.width);
+			_h = oriImg.height * (_w / oriImg.width);
 		}
 	} 
-	else {
-		_w = w;
-		_h = h;
-	}
+	
+	var resizeCanvas = document.createElement('canvas');
+	resizeCanvas.width = _w;
+	resizeCanvas.height = _h;
+    var resizeCtx = resizeCanvas.getContext('2d');
 
     resizeCtx.drawImage(oriImg, 0, 0, _w, _h);
 	

@@ -12,21 +12,47 @@ function autoClipper(srcImgDom, dstCanvas) {
 				0, 0);
 }
 
+function max(a, b) {
+	if(a >= b) return a;
+	else return b;
+}
+
 //////////////////////////////////////////////////
 // autoClipper2 : resize canvas according to the ration between corner
 function autoClipper2(srcImgDom, dstCanvas, srcCorner, dstCorner) {
+	
 	// getting ratio from the width/height
-	var r = parseInt(dstCorner.css('width'), 10) / parseInt(srcCorner.css('width'), 10);
+	var distDiv_w = parseInt(dstCorner.css('width'), 10);
+	var distDiv_h = parseInt(dstCorner.css('height'), 10);
+	var srcDiv_w = parseInt(srcCorner.css('width'), 10);
+	var srcDiv_h = parseInt(srcCorner.css('height'), 10);
+	var r = max(distDiv_w, distDiv_h) / max(srcDiv_w, srcDiv_h);
 	// Calculate width & height after scaling
 	var w = Math.round($(srcImgDom).data('zw') * r);
 	var h = Math.round($(srcImgDom).data('zh') * r);
-	if (w < dstCanvas[0].width) w = dstCanvas[0].width;
-	if (h < dstCanvas[0].height) h = dstCanvas[0].height;
+	if (w < dstCanvas[0].width) {
+		w = Math.round(dstCanvas[0].width);
+		h = Math.round($(srcImgDom).data('zh') * (w/$(srcImgDom).data('zw')));
+	}
+	if (h < dstCanvas[0].height) {
+		h = Math.round(dstCanvas[0].height);
+		w = Math.round($(srcImgDom).data('zw') * (h/$(srcImgDom).data('zh')));
+	}
+	
 	// store new value
 	$(srcImgDom).data('zw', w);
 	$(srcImgDom).data('zh', h);
-	$(srcImgDom).data('zdx', Math.round($(srcImgDom).data('zdx') * r));
-	$(srcImgDom).data('zdy', Math.round($(srcImgDom).data('zdy') * r));
+	var zdx = Math.round($(srcImgDom).data('zdx') * r);
+	var zdy = Math.round($(srcImgDom).data('zdy') * r);
+	
+	// Fix zdy & zdx
+	if (h - zdy < distDiv_h)
+		zdy = h - distDiv_h;
+	if (w - zdx < distDiv_w)
+		zdx = w - distDiv_w;
+	
+	$(srcImgDom).data('zdx', zdx);
+	$(srcImgDom).data('zdy', zdy);
 
 	var $canvas = $('<canvas>');
 	var ctx = $canvas[0].getContext('2d'); 
@@ -86,26 +112,23 @@ var ori_ratio;
 	}
 
 	Selection.prototype.draw = function(){
-		if (theSelection.w > theSelection.h) {
+		if (theSelection.w >= theSelection.h) {
 			draw_w = theSelection.w + bdr;
 			draw_h = srcImg.height * (theSelection.w / srcImg.width) + bdr;
-			if (draw_h < theSelection.w) {
-				draw_w = srcImg.width * (theSelection.h / srcImg.height) + bdr;
+			if (draw_h < theSelection.h) {
 				draw_h = theSelection.h + bdr;
+				draw_w = srcImg.width * (draw_h / srcImg.height) + bdr;
 			}
 		}
 		else if (theSelection.w < theSelection.h){
 			draw_w = srcImg.width * (theSelection.h / srcImg.height) + bdr;
 			draw_h = theSelection.h + bdr;
-			if (draw_w <  theSelection.h) {
+			if (draw_w <  theSelection.w) {
 				draw_w = theSelection.w + bdr;
-				draw_h = srcImg.height * (theSelection.w / srcImg.width) + bdr;
+				draw_h = srcImg.height * (draw_w / srcImg.width) + bdr;
 			}
 		}
-		else {
-			draw_w = theSelection.w + bdr;
-			draw_h = theSelection.h + bdr;
-		}
+
 		ctx.drawImage(srcImg, 0, 0, srcImg.width, srcImg.height, 
 						theSelection.x + bdr, theSelection.y + bdr, 
 						draw_w, draw_h);
