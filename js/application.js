@@ -228,6 +228,9 @@ function setDnD(maskImg, ox, oy) {
 			if ($(this).children(".draggable").attr('src').indexOf('http://') >= 0) {
 				$(this).children(".draggable").data('src', $(this).children(".draggable").attr('src'));
 			}
+			// copy original size
+			$(this).children(".draggable").data('oh', $(this).data('oh'));
+			$(this).children(".draggable").data('ow', $(this).data('ow'));
 
 			$(this).children(".draggable").css({
 				"position": "relative",
@@ -250,7 +253,7 @@ function setDnD(maskImg, ox, oy) {
 					}
 				},
 				start: function(event, ui) {
-					$(this).height(100).width(100);
+					$(this).height($(this).data('oh')).width($(this).data('ow'));
 					$('.layout_corner').css('z-index', '998'); 
 					$('.layout_corner').animate({ opacity: 1 });
 					// set corner object
@@ -370,6 +373,8 @@ function setDnD(maskImg, ox, oy) {
 			$(this).data('zw', $(ui.draggable).data('zw'));
 			$(this).data('zh', $(ui.draggable).data('zh'));
 			$(this).data('corner', $(ui.draggable).data('corner'));
+			$(this).data('ow', $(ui.draggable)[0].width);
+			$(this).data('oh', $(ui.draggable)[0].height);
 		},
 		deactivate: function(event, ui) {
 			//
@@ -402,6 +407,8 @@ function setDnD(maskImg, ox, oy) {
 			$(this).removeData('zw');
 			$(this).removeData('zh');
 			$(this).removeData('corner');
+			$(this).removeData('ow');
+			$(this).removeData('oh');
 		}
 	});
 }

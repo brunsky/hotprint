@@ -320,6 +320,10 @@ function mod_randesign() {
 		// put image into layout
 		$(this).append($($('.gallery-pool')[r]).clone());
 		$(this).children(".draggable").removeClass('gallery-pool'); // remove to prevent getting the same one
+		// copy original size
+		$(this).children(".draggable").data('oh', $('.gallery-pool')[r].height);
+		$(this).children(".draggable").data('ow', $('.gallery-pool')[r].width);
+			
 		$(this).children(".draggable").css({
 			"position": "relative",
 			"top": "0px",
@@ -340,7 +344,7 @@ function mod_randesign() {
 				}
 			},
 			start: function(event, ui) {
-				$(this).height(100).width(100);
+				$(this).height($(this).data('oh')).width($(this).data('ow'));
 				$('.layout_corner').css('z-index', '998'); 
 				$('.layout_corner').animate({ opacity: 1 });
 				// set corner object
