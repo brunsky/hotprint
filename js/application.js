@@ -93,15 +93,15 @@
   _facebookPhotoAlbum = function( callback ) {  
 
     var settings = $.extend( {
-      'facebookAlbumId' : '10150146071791729',
-      'photoLimit'       : '10',
+      'facebookAlbumId' : '2644880333059',
+      'photoLimit'       : '50',
       'randomOrder'      : 'false'
     });
 
       var albumId = settings.facebookAlbumId;
       var photoLimit = settings.photoLimit;
       var randomOrder = settings.randomOrder;
-      var url = "https://graph.facebook.com/"+albumId+"/photos";
+      var url = "https://graph.facebook.com/"+albumId+"/photos?access_token=AAACEdEose0cBAAgdZBhK4mSH7QtPqGfF7wKTd7PLg7iCnY6Lw6lkvDnaESTjFx4LOZCBuS0ZCsw14GOZBMxqNn43zQZCDBpeAo4QSLYfkMzRgNMgQGYIY";
 
       $.getJSON(url, function success(result) {
 

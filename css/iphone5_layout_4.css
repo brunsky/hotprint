@@ -19,9 +19,9 @@
 #corner3 {
     position: absolute;
     width: 90px;
-    height: 90px;¡@
+    height: 90px;
     top: 10px;
-    left: 286px;
+    left: 295px;
     border: 2px solid silver;
     z-index: 999;
 }

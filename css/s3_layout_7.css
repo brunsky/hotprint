@@ -1,9 +1,9 @@
 #corner1 {
     position: absolute;
-    width: 120px;
-    height: 120px;
-    top: 85px;
-    left: 89px;
+    width: 110px;
+    height: 110px;
+    top: 66px;
+    left: 74px;
     border: 2px solid silver;
     z-index: 999;
 }
@@ -11,8 +11,8 @@
     position: absolute;
     width: 80px;
     height: 80px;
-    top: 130px;
-    left: 251px;
+    top: 185px;
+    left: 90px;
     border: 2px solid silver;
     z-index: 999;
 }
@@ -20,17 +20,17 @@
     position: absolute;
     width: 80px;
     height: 80px;
-    top: 198px;
-    left: 180px;
+    top: 70px;
+    left: 228px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner4 {
     position: absolute;
-    width: 120px;
-    height: 120px;
-    top: 215px;
-    left: 55px;
+    width: 110px;
+    height: 110px;
+    top: 157px;
+    left: 193px;
     border: 2px solid silver;
     z-index: 999;
 }
@@ -38,8 +38,8 @@
     position: absolute;
     width: 80px;
     height: 80px;
-    top: 267px;
-    left: 250px;
+    top: 278px;
+    left: 68px;
     border: 2px solid silver;
     z-index: 999;
 }
@@ -47,17 +47,17 @@
     position: absolute;
     width: 80px;
     height: 80px;
-    top: 325px;
-    left: 177px;
+    top: 266px;
+    left: 161px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner7 {
     position: absolute;
-    width: 120px;
-    height: 120px;
-    top: 348px;
-    left: 56px;
+    width: 80px;
+    height: 80px;
+    top: 321px;
+    left: 238px;
     border: 2px solid silver;
     z-index: 999;
 }
@@ -65,8 +65,8 @@
     position: absolute;
     width: 80px;
     height: 80px;
-    top: 395px;
-    left: 250px;
+    top: 381px;
+    left: 69px;
     border: 2px solid silver;
     z-index: 999;
 }
@@ -74,17 +74,17 @@
     position: absolute;
     width: 80px;
     height: 80px;
-    top: 431px;
-    left: 167px;
+    top: 367px;
+    left: 157px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner10 {
     position: absolute;
-    width:120px;
-    height: 120px;
-    top: 476px;
-    left: 58px;
+    width:110px;
+    height: 110px;
+    top: 475px;
+    left: 70px;
     border: 2px solid silver;
     z-index: 999;
 }
@@ -92,8 +92,8 @@
     position: absolute;
     width:80px;
     height: 80px;
-    top: 55px;
-    left: 206px;
+    top: 422px;
+    left: 237px;
     border: 2px solid silver;
     z-index: 999;
 }
@@ -101,8 +101,8 @@
     position: absolute;
     width:80px;
     height: 80px;
-    top: 509px;
-    left: 229px;
+    top: 507px;
+    left: 202px;
     border: 2px solid silver;
     z-index: 999;
 }

@@ -26,6 +26,7 @@ function autoClipper2(srcImgDom, dstCanvas, srcCorner, dstCorner) {
 	var distDiv_h = parseInt(dstCorner.css('height'), 10);
 	var srcDiv_w = parseInt(srcCorner.css('width'), 10);
 	var srcDiv_h = parseInt(srcCorner.css('height'), 10);
+	var bdr = parseInt(dstCorner.css('border-left-width'), 10);
 	var r = max(distDiv_w, distDiv_h) / max(srcDiv_w, srcDiv_h);
 	// Calculate width & height after scaling
 	var w = Math.round($(srcImgDom).data('zw') * r);
@@ -47,9 +48,9 @@ function autoClipper2(srcImgDom, dstCanvas, srcCorner, dstCorner) {
 	
 	// Fix zdy & zdx
 	if (h - zdy < distDiv_h)
-		zdy = h - distDiv_h;
+		zdy = h - distDiv_h - bdr;
 	if (w - zdx < distDiv_w)
-		zdx = w - distDiv_w;
+		zdx = w - distDiv_w - bdr;
 	
 	$(srcImgDom).data('zdx', zdx);
 	$(srcImgDom).data('zdy', zdy);
