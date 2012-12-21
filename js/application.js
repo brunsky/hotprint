@@ -15,8 +15,10 @@
   ,   _getUserData
   ,   _displayUserData
   ,   _login
+  ,   _login2
   ,   _getUserRecent
   ,	  _facebookPhotoAlbum
+  ,	  _fblogin
   ;
   
   var access_token
@@ -35,9 +37,10 @@
     
     // Remove no-js class
     $('html').removeClass('no-js');
-    
+    $('body').addClass('not-logged-in');
     // Check if user is logged in
     _login();
+    $('#login2').click(_fblogin);
     
   };
   
@@ -84,16 +87,60 @@
   _displayUserData = function(json){
     $("#get-user-data").html("")
                 .fadeIn(300)
-                .append("ID: " + json.data.id);
+                .append(json.data.username);
 	user_id = json.data.id;
-	//_getUserRecent();
-	_facebookPhotoAlbum();
+	_getUserRecent();
   };
+  
+  _fblogin = function() {
+	  	FB.login(function(response) {
+			  if (response.authResponse) {
+				    console.log("User is connected to the application.");
+				    access_token = response.authResponse.accessToken;
+				    // login success
+				    $('body').addClass('logged-in');
+				    $('#save-design').click(saveImg);
+		  			$('#random-design').click(randomDesign);
+		  			$('#start-design').click(startDesign);
+		  			// get album list
+		  			FB.api('/me?fields=albums,name', function(response) {
+		  				// show user name
+		  				$("#get-user-data").html("")
+								                .fadeIn(300)
+								                .append(response.name);
+						// create albumn selection drop box		                
+					  	$select = $('<select></select>');
+					  	$select.attr('id','fbalbums');
+					  	$.each(response.albums.data, function(key, value) {   
+						     $select
+						         .append($("<option></option>")
+						         .attr("value",value.id)
+						         .text(value.name)); 
+						});
+						$('.sources').append($select);
+						  	
+					  	$select.change(function(){
+					  		// Clear gallery pool at first
+					  		$('.recent').find('.draggable').each(function(index) {
+								$(this).remove();
+							  	$(this)[0] = null;
+							});		
+					  		_facebookPhotoAlbum();
+					  	});
+						
+						// setup photos after getting albums 
+						_facebookPhotoAlbum();
+					});
+			  }
+			  else
+			  		$('body').addClass('not-logged-in');
+		}, {scope: 'user_photos'});
+  }
   
   _facebookPhotoAlbum = function( callback ) {  
 
     var settings = $.extend( {
-      'facebookAlbumId' : '2644880333059',
+      'facebookAlbumId' : $('#fbalbums :selected').val(),
       'photoLimit'       : '50',
       'randomOrder'      : 'false'
     });
@@ -101,7 +148,7 @@
       var albumId = settings.facebookAlbumId;
       var photoLimit = settings.photoLimit;
       var randomOrder = settings.randomOrder;
-      var url = "https://graph.facebook.com/"+albumId+"/photos?access_token=AAACEdEose0cBAAgdZBhK4mSH7QtPqGfF7wKTd7PLg7iCnY6Lw6lkvDnaESTjFx4LOZCBuS0ZCsw14GOZBMxqNn43zQZCDBpeAo4QSLYfkMzRgNMgQGYIY";
+      var url = "https://graph.facebook.com/"+albumId+"/photos?access_token="+access_token;
 
       $.getJSON(url, function success(result) {
 
@@ -126,8 +173,6 @@
 
   };
   
-  
-    
   _displayUserRecent = function(json){
 	var res = "";
 	for(var i=0; i<json.data.length; i++) {
@@ -470,6 +515,9 @@ function menuLoadLayout(_layoutName) {
 	else if(_layoutName === 'layout_11') {
 		$('#menu_layout').html('layout 11').fadeIn(300);
 	}
+	else if(_layoutName === 'layout_12') {
+		$('#menu_layout').html('layout 12').fadeIn(300);
+	}
 }
 
 // (ox, oy) is the position of case image
@@ -751,6 +799,9 @@ $(function(){
     $.instagramr();
     
     $('#start-design').hide();
+    
+     $('.popbox').popbox();
+    /*
     $('#login').qtip({
     	title: {
 			text: '登入'
@@ -765,6 +816,7 @@ $(function(){
 			}
 		}
 	});
+	*/
 });
 
 $(window).resize(function() { setContainer();setFooterTop()}); 

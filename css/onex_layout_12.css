@@ -1,0 +1,45 @@
+#corner1 {
+    position: absolute;
+    width: 136px;
+    height: 193px;
+    top: 35px;
+    left: 27px;
+    border: 2px solid silver;
+    z-index: 999;
+}
+#corner2 {
+    position: absolute;
+    width: 136px;
+    height: 193px;
+    top: 230px;
+    left: 27px;
+    border: 2px solid silver;
+    z-index: 999;
+}
+#corner3 {
+    position: absolute;
+    width: 136px;
+    height: 192px;
+    top: 425px;
+    left: 27px;
+    border: 2px solid silver;
+    z-index: 999;
+}
+#corner4 {
+    position: absolute;
+    width: 196px;
+    height: 290px;
+    top: 35px;
+    left: 165px;
+    border: 2px solid silver;
+    z-index: 999;
+}
+#corner5 {
+    position: absolute;
+    width: 196px;
+    height: 290px;
+    top: 327px;
+    left: 165px;
+    border: 2px solid silver;
+    z-index: 999;
+}

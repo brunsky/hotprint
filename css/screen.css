@@ -177,6 +177,7 @@ section {
 	font: bold 12px/32px Arial, sans-serif;
 	text-decoration: none;
 	text-shadow: 0px 1px 0px rgba(0,0,0, .35);
+	text-align:left;
 
 	background: #6c6e74;
 	background: -moz-linear-gradient(top,  #6c6e74 0%, #4b4d51 100%);
@@ -216,8 +217,8 @@ section {
 
 #get-user-data,
 #random-design,
-#start-design,
-#login {
+#start-design
+{
   display: block;
   text-decoration:none;
   color: #fdfdfd;
@@ -253,12 +254,16 @@ body.not-logged-in #get-user-data { display: none; }
 body.not-logged-in #save-design { display: none; }
 body.not-logged-in #random-design { display: none; }
 body.not-logged-in #start-design { display: none; }
-body.not-logged-in #login { display: block; }
+/*body.not-logged-in #login { display: block; }
+body.not-logged-in #login2 { display: block; }*/
+body.not-logged-in .open { display: block; }
 
 body.logged-in #get-user-data { display: block; }
 body.logged-in #save-design { display: block; }
 body.logged-in #random-design { display: block; }
-body.logged-in #login { display: none; }
+/*body.logged-in #login { display: none; }
+body.logged-in #login2 { display: none; }*/
+body.logged-in .open { display: none; }
 
 #menubar {
 	position:fixed;
