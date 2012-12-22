@@ -26,8 +26,8 @@ function mod_saving(func_complete) {
 	
 		var resCanvas = document.createElement('canvas');
 	    var resCtx = resCanvas.getContext('2d');
-		resCanvas.width = $("#mCanvas")[0].width * scaling;
-		resCanvas.height = $("#mCanvas")[0].height * scaling;
+		resCanvas.width = Math.round($("#mCanvas")[0].width * scaling);
+		resCanvas.height = Math.round($("#mCanvas")[0].height * scaling);
 		
 		// scaling mask
 		var adjustMaskCanvas = document.createElement('canvas');
@@ -112,8 +112,8 @@ function mod_saving_for_host(func_complete) {
 	
 		var resCanvas = document.createElement('canvas');
 	    var resCtx = resCanvas.getContext('2d');
-		resCanvas.width = $("#mCanvas")[0].width * scaling;
-		resCanvas.height = $("#mCanvas")[0].height * scaling;
+		resCanvas.width = Math.round($("#mCanvas")[0].width * scaling);
+		resCanvas.height = Math.round($("#mCanvas")[0].height * scaling);
 		
 		// scaling mask
 		var adjustMaskCanvas = document.createElement('canvas');
@@ -148,10 +148,10 @@ function mod_saving_for_host(func_complete) {
 				var $c = $('<div></div>');
 				
 				$c.css('position', 'absolute');
-				$c.css('top', parseInt($(e).css('top'), 10) * scaling + 'px');
-				$c.css('left', parseInt($(e).css('left'), 10) * scaling + 'px');
-				$c.css('width', parseInt($(e).css('width'), 10) * scaling + 'px');
-				$c.css('height', parseInt($(e).css('height'), 10) * scaling + 'px');
+				$c.css('top', Math.round(parseInt($(e).css('top'), 10)) * scaling + 'px');
+				$c.css('left', Math.round(parseInt($(e).css('left'), 10)) * scaling + 'px');
+				$c.css('width', Math.round(parseInt($(e).css('width'), 10)) * scaling + 'px');
+				$c.css('height', Math.round(parseInt($(e).css('height'), 10)) * scaling + 'px');
 				$c.css('border', '6px solid silver'); // setup border in manually !!
 				//$c.css('border', $(this).css('border'));
 				//$c.css('border-left-width', parseInt($(this).css('border-left-width'), 10) * scaling + 'px');
@@ -177,10 +177,10 @@ function mod_saving_for_host(func_complete) {
 				}
 			
 				resCtx.drawImage($c.next()[0], 
-		    					(parseInt($c.next().css('left'), 10)-layout_x*scaling), 
-		    					(parseInt($c.next().css('top'), 10)-layout_y*scaling), 
-		    					parseInt($c.next().css('width'), 10),
-		    					parseInt($c.next().css('height'), 10));
+		    					(Math.round(parseInt($c.next().css('left'), 10))-layout_x*scaling), 
+		    					(Math.round(parseInt($c.next().css('top'), 10))-layout_y*scaling), 
+		    					Math.round(parseInt($c.next().css('width'), 10)),
+		    					Math.round(parseInt($c.next().css('height'), 10)));
 		    	$c.next().remove();
 		    	$c.next()[0] = null;			
 		    	$c.remove();
@@ -247,23 +247,43 @@ function mod_saving_for_host(func_complete) {
  * (low resolution)
  */
 function mod_gallerysave() {
+	var bdr = Math.round(parseInt($('.layout_corner').css('border-left-width'), 10));
 	var resCanvas = document.createElement('canvas');
     var resCtx = resCanvas.getContext('2d');
     $(resCanvas).attr('id', 'galleryCanvas');
-	resCanvas.width = $("#mCanvas")[0].width * 0.7;
-	resCanvas.height = $("#mCanvas")[0].height * 0.7;
+	resCanvas.width = Math.round($("#mCanvas")[0].width);
+	resCanvas.height = Math.round($("#mCanvas")[0].height);
 	resCtx.drawImage($("#mCanvas")[0], 0, 0, resCanvas.width, resCanvas.height);
 	$('.canvas_appended').each(function(index) {
     	resCtx.drawImage($(this)[0], 
-    					(parseInt($(this).css('left'), 10)-layout_x) * 0.7, 
-    					(parseInt($(this).css('top'), 10)-layout_y) * 0.7, 
-    					parseInt($(this)[0].width, 10) * 0.7,
-    					parseInt($(this)[0].height, 10) * 0.7);
+    					(Math.round(parseInt($(this).css('left'), 10))-layout_x), 
+    					(Math.round(parseInt($(this).css('top'), 10))-layout_y), 
+    					Math.round(parseInt($(this)[0].width, 10)),
+    					Math.round(parseInt($(this)[0].height, 10)));
 	});
+	/* 
+	 * Using canvas to show image
+	 * 
+	 */
+	/*
 	$(resCanvas).css('position', 'absolute');
 	$(resCanvas).css('top', '80px');
 	$(resCanvas).css('left', '100px');
 	$('body').append($(resCanvas));
+	*/
+	/* 
+	 * Using img tag to show image
+	 * 
+	 */
+	var img = $('<img>');
+	img.attr('id', 'galleryCanvas');
+	img.css('position', 'absolute');
+	img.css('top', '80px');
+	img.css('left', '100px');
+	img.css('width', Math.round($("#mCanvas")[0].width*0.7)+'px');
+	img.css('height', Math.round($("#mCanvas")[0].height*0.7)+'px');
+	$('body').append(img);
+	$('#galleryCanvas')[0].src = resCanvas.toDataURL();	
 }
 
 /*
@@ -276,8 +296,8 @@ function mod_saveremote(resCanvas) {
 	img.css('position', 'absolute');
 	img.css('top', '80px');
 	img.css('left', '100px');
-	img.css('width', $("#mCanvas")[0].width*0.7+'px');
-	img.css('height', $("#mCanvas")[0].height*0.7+'px');
+	img.css('width', Math.round($("#mCanvas")[0].width*0.7)+'px');
+	img.css('height', Math.round($("#mCanvas")[0].height*0.7)+'px');
 	$('body').append(img);
 	$('#galleryCanvas')[0].src = resCanvas.toDataURL();	
 	

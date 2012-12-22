@@ -36,15 +36,15 @@ function boxClipper(ctx, img, width, height) {
 // clipper is the function for clipping
 // support circle and square box
 function doClipping(srcImg, destDiv, clipper) {
-	var bdr = parseInt(destDiv.css('border-left-width'), 10);
-	var width = parseInt(destDiv.css('width'), 10) + bdr;
-	var height = parseInt(destDiv.css('height'), 10) + bdr;
+	var bdr = Math.round(parseInt(destDiv.css('border-left-width'), 10));
+	var width = Math.round(parseInt(destDiv.css('width'), 10)) + bdr;
+	var height = Math.round(parseInt(destDiv.css('height'), 10)) + bdr;
     var destCanvas = document.createElement('canvas');
     var destCtx = destCanvas.getContext('2d');
     destCanvas.setAttribute('style', 'position: absolute; top:0px; left:0px; z-index:997;');
     destCanvas.setAttribute('class', 'canvas_appended');
-	destCanvas.style.top = parseInt(destDiv.css('top'), 10) + bdr + 'px';
-	destCanvas.style.left = parseInt(destDiv.css('left'), 10) + bdr + 'px';
+	destCanvas.style.top = Math.round(parseInt(destDiv.css('top'), 10)) + bdr + 'px';
+	destCanvas.style.left = Math.round(parseInt(destDiv.css('left'), 10)) + bdr + 'px';
 	destCanvas.width = srcImg.width;
 	destCanvas.height = srcImg.height;
 	destDiv.after(destCanvas);
@@ -58,12 +58,15 @@ function doMasking(oriImg, maskImg, destDiv, ox, oy) {
 	console.log("m.height:"+maskImg.height);
 	console.log("ox:"+ox);
 	console.log("oy:"+oy); */
-    var b = parseInt(destDiv.css('border-left-width'), 10);
-    var x = parseInt(destDiv.css('left'), 10) + b - ox;
-    var y = parseInt(destDiv.css('top'), 10) + b - oy;
-    var w = parseInt(destDiv.css('width'), 10) + b;
-    var h = parseInt(destDiv.css('height'), 10) + b;
+    var b = Math.round(parseInt(destDiv.css('border-left-width'), 10));
+    var x = Math.round(parseInt(destDiv.css('left'), 10)) + b - ox;
+    var y = Math.round(parseInt(destDiv.css('top'), 10)) + b - oy;
+    var w = Math.round(parseInt(destDiv.css('width'), 10)) + b;
+    var h = Math.round(parseInt(destDiv.css('height'), 10)) + b;
     
+    console.log("width:"+destDiv.css('width')+",height:"+destDiv.css('height')+",left:"+destDiv.css('left')+",top:"+destDiv.css('top'));
+	console.log("w:"+w+",h:"+h+",x:"+x+",y:"+y+",b:"+b);
+	
     // adjust over position
     if (x+w > maskImg.width) w = maskImg.width - x;
     if (y+h > maskImg.height) h = maskImg.height - y;
@@ -80,20 +83,22 @@ function doMasking(oriImg, maskImg, destDiv, ox, oy) {
 	var _h;
 	if (w >= h) {
 		_w = w;
-		_h = oriImg.height * (_w / oriImg.width);
+		_h = Math.round(oriImg.height * (_w / oriImg.width));
 		if (_h < h) {
 			_h = h;
-			_w = oriImg.width * (_h / oriImg.height);
+			_w = Math.round(oriImg.width * (_h / oriImg.height));
 		}
 	}
 	else if(w < h) {
 		_h = h;
-		_w = oriImg.width * (_h / oriImg.height);
+		_w = Math.round(oriImg.width * (_h / oriImg.height));
 		if (_w < w) {
 			_w = w;
-			_h = oriImg.height * (_w / oriImg.width);
+			_h = Math.round(oriImg.height * (_w / oriImg.width));
 		}
 	} 
+	
+	console.log("_w:"+_w+",_h:"+_h);
 	
 	var resizeCanvas = document.createElement('canvas');
 	resizeCanvas.width = _w;

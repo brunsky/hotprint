@@ -22,11 +22,11 @@ function max(a, b) {
 function autoClipper2(srcImgDom, dstCanvas, srcCorner, dstCorner) {
 	
 	// getting ratio from the width/height
-	var distDiv_w = parseInt(dstCorner.css('width'), 10);
-	var distDiv_h = parseInt(dstCorner.css('height'), 10);
-	var srcDiv_w = parseInt(srcCorner.css('width'), 10);
-	var srcDiv_h = parseInt(srcCorner.css('height'), 10);
-	var bdr = parseInt(dstCorner.css('border-left-width'), 10);
+	var distDiv_w = Math.round(parseInt(dstCorner.css('width'), 10));
+	var distDiv_h = Math.round(parseInt(dstCorner.css('height'), 10));
+	var srcDiv_w = Math.round(parseInt(srcCorner.css('width'), 10));
+	var srcDiv_h = Math.round(parseInt(srcCorner.css('height'), 10));
+	var bdr = Math.round(parseInt(dstCorner.css('border-left-width'), 10));
 	var r = max(distDiv_w, distDiv_h) / max(srcDiv_w, srcDiv_h);
 	// Calculate width & height after scaling
 	var w = Math.round($(srcImgDom).data('zw') * r);
@@ -86,13 +86,13 @@ var theSelection;
 var canvas;
 var ctx;
 var iMouseX, iMouseY = 1;
-var cornerX = parseInt(cornerDiv.css('left'), 10);
-var cornerY = parseInt(cornerDiv.css('top'), 10);
-var cornerW = parseInt(cornerDiv.css('width'), 10);
-var cornerH = parseInt(cornerDiv.css('height'), 10);
+var cornerX = Math.round(parseInt(cornerDiv.css('left'), 10));
+var cornerY = Math.round(parseInt(cornerDiv.css('top'), 10));
+var cornerW = Math.round(parseInt(cornerDiv.css('width'), 10));
+var cornerH = Math.round(parseInt(cornerDiv.css('height'), 10));
 var $cDiv;
 var $wDiv;
-var bdr = parseInt(cornerDiv.css('border-left-width'), 10);
+var bdr = Math.round(parseInt(cornerDiv.css('border-left-width'), 10));
 var draw_w;
 var draw_h;
 var ori_ratio;
@@ -118,15 +118,15 @@ var ori_ratio;
 			draw_h = srcImg.height * (theSelection.w / srcImg.width) + bdr;
 			if (draw_h < theSelection.h) {
 				draw_h = theSelection.h + bdr;
-				draw_w = srcImg.width * (draw_h / srcImg.height) + bdr;
+				draw_w = Math.round(srcImg.width * (draw_h / srcImg.height)) + bdr;
 			}
 		}
 		else if (theSelection.w < theSelection.h){
-			draw_w = srcImg.width * (theSelection.h / srcImg.height) + bdr;
+			draw_w = Math.round(srcImg.width * (theSelection.h / srcImg.height)) + bdr;
 			draw_h = theSelection.h + bdr;
 			if (draw_w <  theSelection.w) {
 				draw_w = theSelection.w + bdr;
-				draw_h = srcImg.height * (draw_w / srcImg.width) + bdr;
+				draw_h = Math.round(srcImg.height * (draw_w / srcImg.width)) + bdr;
 			}
 		}
 
@@ -212,8 +212,8 @@ var ori_ratio;
 	$("body").append('<div class="modalOverlay"></div>');
 	$wDiv = $('.modalOverlay');
 	canvas = $('<canvas>');
-	canvas[0].width =parseInt($('body').css('width'), 10); 
-	canvas[0].height =parseInt($(document).height(), 10);
+	canvas[0].width = Math.round(parseInt($('body').css('width'), 10)); 
+	canvas[0].height = Math.round(parseInt($(document).height(), 10));
 	canvas.css('position', 'absolute');
 	canvas.css('left', '0px');
 	canvas.css('top', '0px');
@@ -231,8 +231,8 @@ var ori_ratio;
 	
 	ctx = canvas[0].getContext('2d');
 	if (typeof cornerDiv.children(".draggable").data('zdx') != 'undefined') {
-		theSelection = new Selection(parseInt(cornerDiv.css('left'), 10) - cornerDiv.children(".draggable").data('zdx'), 
-									parseInt(cornerDiv.css('top'), 10) - cornerDiv.children(".draggable").data('zdy'), 
+		theSelection = new Selection(Math.round(parseInt(cornerDiv.css('left'), 10)) - cornerDiv.children(".draggable").data('zdx'), 
+									Math.round(parseInt(cornerDiv.css('top'), 10)) - cornerDiv.children(".draggable").data('zdy'), 
 									cornerDiv.children(".draggable").data('zw')-bdr, 
 									cornerDiv.children(".draggable").data('zh')-bdr); 
 	}	

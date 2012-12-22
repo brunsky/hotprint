@@ -666,11 +666,17 @@ function loadLib(path) {
  * Store the image for output
  */
 function saveImg() {
+	
 	mod_saving(function() {		
 		releasePage('Design');
 		newPage('Gallery');
 	});
-
+	/*
+	mod_saving_for_host(function() {		
+		releasePage('Design');
+		newPage('Gallery');
+	});
+	*/
 }
 
 /*
