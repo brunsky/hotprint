@@ -115,7 +115,7 @@ var ori_ratio;
 	Selection.prototype.draw = function(){
 		if (theSelection.w >= theSelection.h) {
 			draw_w = theSelection.w + bdr;
-			draw_h = srcImg.height * (theSelection.w / srcImg.width) + bdr;
+			draw_h = Math.round(srcImg.height * (theSelection.w / srcImg.width)) + bdr;
 			if (draw_h < theSelection.h) {
 				draw_h = theSelection.h + bdr;
 				draw_w = Math.round(srcImg.width * (draw_h / srcImg.height)) + bdr;
@@ -389,10 +389,10 @@ var ori_ratio;
 			var dist = dx+dy;
 			var ratio = dist / (theSelection.w + theSelection.h);
 			ratio = ratio / ori_ratio;
-			var iFW = Math.floor(theSelection.w * ratio);
-			var iFH = Math.floor(theSelection.h * ratio);
-			var iFX = Math.floor(cx - iFW/2);
-			var iFY = Math.floor(cy - iFH/2);
+			var iFW = Math.round(theSelection.w * ratio);
+			var iFH = Math.round(theSelection.h * ratio);
+			var iFX = Math.round(cx - iFW/2);
+			var iFY = Math.round(cy - iFH/2);
 			
 			if (iFW < cornerW)
 				theSelection.w = cornerW;

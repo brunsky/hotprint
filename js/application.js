@@ -162,9 +162,9 @@
 	        {
 	          var image = result.data[i];
 	          if (image.width > image.height)
-	          	res += "<li><a href='"+image.link+"'><img src=\""+image.source+"\" id='recent_img"+i+"'class='draggable draggable-h gallery-pool'/></a></li>";
+	          	res += "<li><a href='"+image.link+"'><img src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-h gallery-pool'/></a></li>";
 	          else
-	          	res += "<li><a href='"+image.link+"'><img src=\""+image.source+"\" id='recent_img"+i+"'class='draggable draggable-w gallery-pool'/></a></li>";
+	          	res += "<li><a href='"+image.link+"'><img src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-w gallery-pool'/></a></li>";
 	        }
 	        
 	        gallery_bar_setting(res);
@@ -176,7 +176,7 @@
   _displayUserRecent = function(json){
 	var res = "";
 	for(var i=0; i<json.data.length; i++) {
-		res += "<li><a href='"+json.data[i].images.standard_resolution.url+"'><img src=\""+json.data[i].images.standard_resolution.url+"\" class='draggable draggable-h draggable-w gallery-pool' /></a></li>";
+		res += "<li><a href='"+json.data[i].images.standard_resolution.url+"'><img src=\""+json.data[i].images.standard_resolution.url+"\" id='recent_instaimg"+i+"' class='draggable draggable-h draggable-w gallery-pool' /></a></li>";
 	}
 
 	gallery_bar_setting(res);
@@ -225,7 +225,7 @@ function gallery_bar_setting(res) {
 		start: function(event, ui) {
 			//$(this).height(100).width(100);
 			$('.layout_corner').css('z-index', '998');
-			$('.layout_corner').animate({ opacity: 1});
+			$('.layout_corner').stop(true, true).animate({ opacity: 1});
 		},
 		stop: function(event, ui) {
 			isCornerFading = true;
@@ -252,7 +252,8 @@ function setDnD(maskImg, ox, oy) {
 			}
 			$(this).html('');
 			$(this).append($(ui.draggable).clone());
-			
+
+			$(this).children(".draggable").removeClass("gallery-pool");	
 			// if it is draged from gallery list then don't animate corner
 			if (isCornerFading == false) {
 				$('.layout_corner').animate({ opacity: CORNER_OPT},
@@ -300,7 +301,7 @@ function setDnD(maskImg, ox, oy) {
 				start: function(event, ui) {
 					$(this).height($(this).data('oh')).width($(this).data('ow'));
 					$('.layout_corner').css('z-index', '998'); 
-					$('.layout_corner').animate({ opacity: 1 });
+					$('.layout_corner').stop(true, true).animate({ opacity: 1 });
 					// set corner object
 					$(this).data('corner', $(this).parent());
 				}

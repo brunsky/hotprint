@@ -64,8 +64,8 @@ function doMasking(oriImg, maskImg, destDiv, ox, oy) {
     var w = Math.round(parseInt(destDiv.css('width'), 10)) + b;
     var h = Math.round(parseInt(destDiv.css('height'), 10)) + b;
     
-    console.log("width:"+destDiv.css('width')+",height:"+destDiv.css('height')+",left:"+destDiv.css('left')+",top:"+destDiv.css('top'));
-	console.log("w:"+w+",h:"+h+",x:"+x+",y:"+y+",b:"+b);
+    //console.log("width:"+destDiv.css('width')+",height:"+destDiv.css('height')+",left:"+destDiv.css('left')+",top:"+destDiv.css('top'));
+	//console.log("w:"+w+",h:"+h+",x:"+x+",y:"+y+",b:"+b);
 	
     // adjust over position
     if (x+w > maskImg.width) w = maskImg.width - x;
@@ -98,7 +98,7 @@ function doMasking(oriImg, maskImg, destDiv, ox, oy) {
 		}
 	} 
 	
-	console.log("_w:"+_w+",_h:"+_h);
+	//console.log("_w:"+_w+",_h:"+_h);
 	
 	var resizeCanvas = document.createElement('canvas');
 	resizeCanvas.width = _w;
