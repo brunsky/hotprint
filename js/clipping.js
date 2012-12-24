@@ -380,21 +380,19 @@ var ori_ratio;
 		// resize in circle way
 		if (theSelection.bDrag[1]) { // in case of dragging of resize cubes
 			$('body').css('cursor', 'sw-resize');
-			var cx = theSelection.x + theSelection.w/2;
-			var cy = theSelection.y + theSelection.h/2;
+			var cx = theSelection.x + draw_w/2;
+			var cy = theSelection.y + draw_h/2;
 			var dx = iMouseX - cx;
 			var dy = iMouseY - cy;
 			if (dx < 0)	dx = - dx;
 			if (dy < 0) dy = - dy;
 			var dist = dx+dy;
-			var ratio = dist / (theSelection.w + theSelection.h);
+			var ratio = dist / (draw_w + draw_h);
 			ratio = ratio / ori_ratio;
-			var iFW = Math.round(theSelection.w * ratio);
-			var iFH = Math.round(theSelection.h * ratio);
+			var iFW = Math.round(draw_w * ratio);
+			var iFH = Math.round(draw_h * ratio);
 			var iFX = Math.round(cx - iFW/2);
 			var iFY = Math.round(cy - iFH/2);
-			
-			console.log("iFX:"+iFX+", cornerX:"+cornerX);
 			
 			if (iFW < cornerW)
 				theSelection.w = cornerW;
@@ -408,10 +406,12 @@ var ori_ratio;
 				theSelection.x = cornerX;
 			}
 			else {
-				if(iFX+iFW < cornerX+cornerW)
+				if(iFX+iFW < cornerX+cornerW) {
 					theSelection.x = cornerX + cornerW - iFW;
-				else
+				}
+				else {
 					theSelection.x = iFX;
+				}
 			}
 			if (iFY > cornerY)
 				theSelection.y = cornerY;
@@ -433,8 +433,6 @@ var ori_ratio;
 		// button#3, remove
 		if (iMouseX > theSelection.x - theSelection.csize*2 && iMouseX < theSelection.x + theSelection.csize*2 &&
             iMouseY > theSelection.y + draw_h-theSelection.csize*2 && iMouseY < theSelection.y + draw_h + theSelection.csize*2) {
-            
-            console.log("remove click");
             
             canvas.unbind();
 			$cDiv.unbind();
@@ -490,14 +488,14 @@ var ori_ratio;
             theSelection.py = iMouseY - theSelection.y;
             
             // calculate original ratio
-            var cx = theSelection.x + theSelection.w/2;
-			var cy = theSelection.y + theSelection.h/2;
+            var cx = theSelection.x + draw_w/2;
+			var cy = theSelection.y + draw_h/2;
 			var dx = iMouseX - cx;
 			var dy = iMouseY - cy;
 			if (dx < 0)	dx = -dx;
 			if (dy < 0) dy = -dy;
 			var dist = dx+dy;
-			ori_ratio = dist / (theSelection.w + theSelection.h);
+			ori_ratio = dist / (draw_w+draw_h);
         }
         if (theSelection.bHow[2]) {
             theSelection.px = iMouseX - theSelection.x - theSelection.w;
