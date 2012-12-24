@@ -47,9 +47,9 @@ function autoClipper2(srcImgDom, dstCanvas, srcCorner, dstCorner) {
 	var zdy = Math.round($(srcImgDom).data('zdy') * r);
 	
 	// Fix zdy & zdx
-	if (h - zdy < distDiv_h)
+	if (h - zdy < distDiv_h - bdr)
 		zdy = h - distDiv_h - bdr;
-	if (w - zdx < distDiv_w)
+	if (w - zdx < distDiv_w - bdr)
 		zdx = w - distDiv_w - bdr;
 	
 	$(srcImgDom).data('zdx', zdx);
@@ -394,6 +394,8 @@ var ori_ratio;
 			var iFX = Math.round(cx - iFW/2);
 			var iFY = Math.round(cy - iFH/2);
 			
+			console.log("iFX:"+iFX+", cornerX:"+cornerX);
+			
 			if (iFW < cornerW)
 				theSelection.w = cornerW;
 			else
@@ -402,8 +404,9 @@ var ori_ratio;
 				theSelection.h = cornerH;
 			else
 				theSelection.h = iFH;
-			if (iFX > cornerX)
+			if (iFX > cornerX) {
 				theSelection.x = cornerX;
+			}
 			else {
 				if(iFX+iFW < cornerX+cornerW)
 					theSelection.x = cornerX + cornerW - iFW;
@@ -419,27 +422,6 @@ var ori_ratio;
 					theSelection.y = iFY;
 			}
 		}
-
-		/*
-        if (iFW > theSelection.csize * 2 && iFH > theSelection.csize * 2) {
-            
-            if (iFX+iFW >= cornerX+cornerW && iFY+iFH >= cornerY+cornerH) {
-            
-                if (iFW >= iFH) {
-                    var r = iFW / theSelection.w;
-                    theSelection.w = iFW;
-                    theSelection.h = r * theSelection.h;
-                }
-                else {
-                    var r = iFH / theSelection.h;
-                    theSelection.w = r * theSelection.w;
-                    theSelection.h = iFH;
-                }
-            }
-            theSelection.x = iFX;
-            theSelection.y = iFY;
-        }*/
-		
         drawScene();            
     }
 	
