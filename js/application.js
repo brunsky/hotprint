@@ -209,11 +209,10 @@ function gallery_bar_setting(res) {
 	}).mouseleave(function(){
 	});*/
 	
-	$('.draggable').draggable({
+	$('.gallery-pool').draggable({
 		cursor: 'move', 
 		helper: "clone", 
-		cursorAt: { left: 50, top: 50 },
-		distance: 10, 
+		cursorAt: { left: 35, top: 35 },
 		revert: "invalid",
 		drag: function(event, ui) {
 			ui.helper.css('z-index','1000');
@@ -221,11 +220,14 @@ function gallery_bar_setting(res) {
 			if ($(this).attr("class").indexOf("ui-draggable-dragging") >= 0) {
 				$(".ui-draggable-dragging").css('z-index','1000');
 			}
+			ui.helper.height($(this).data('oh'));
+			ui.helper.width($(this).data('ow'));
 		},
 		start: function(event, ui) {
-			//$(this).height(100).width(100);
 			$('.layout_corner').css('z-index', '998');
 			$('.layout_corner').stop(true, true).animate({ opacity: 1});
+			$(this).data('oh', Math.round($(this).height()*0.7));
+			$(this).data('ow', Math.round($(this).width()*0.7));
 		},
 		stop: function(event, ui) {
 			isCornerFading = true;
@@ -241,17 +243,54 @@ function gallery_bar_setting(res) {
 
 ////////////////////////////
 
+function clearCorner(pObj) {
+	if (pObj.attr('class').indexOf('layout_corner') >= 0) {
+		pObj.children(".draggable").each(function(index) {
+		  	$(this).remove();
+		  	$(this)[0] = null;
+		});
+		
+		pObj.css('cursor', 'default');
+		if (pObj.next().attr('class') == 'canvas_appended')
+			if (pObj.next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
+				pObj.next().remove();
+				pObj.next()[0] = null;
+			}
+		pObj.removeClass("removed");
+		pObj.css('z-index','998');
+		$('.layout_corner').animate({ opacity: CORNER_OPT},
+			{complete:  function() { 
+				$('.layout_corner > .draggable').parent().css('opacity', '0');
+			} 
+		});
+	}
+}
+
 // Define Drag&Drop
 function setDnD(maskImg, ox, oy) {
 	$( ".layout_corner" ).droppable({
 		accept: ".draggable",
+		tolerance: "pointer",
 		drop: function( event, ui ) {
+			// Prevent from drop into if spinning
+			if ($(this).children(".spinner").length > 0) {
+				return;
+			}
+			
+			$('.layout_corner').droppable( "disable" );
+
 			if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
 				$(this).next().remove();
 				$(this).next()[0] = null;
 			}
-			$(this).html('');
-			$(this).append($(ui.draggable).clone());
+
+			// Don't copy yourself...
+			if ($(ui.draggable).parent().attr('id') != $(this).attr('id')) {
+				$(this).html('');
+				$(this).append($(ui.draggable).clone());
+				// clear source corner
+				clearCorner($(ui.draggable).parent());
+			}
 
 			$(this).children(".draggable").removeClass("gallery-pool");	
 			// if it is draged from gallery list then don't animate corner
@@ -285,26 +324,6 @@ function setDnD(maskImg, ox, oy) {
 				"width": $(this).css('width'),
 				"height": $(this).css('height'),
 				"opacity": "0"
-			});
-			
-			$(this).children(".draggable").draggable({
-				cursor: 'auto', 
-				cursorAt: { left: 50, top: 50 },
-				distance: 10, 
-				revert:"invalid",
-				drag: function(event, ui) {
-					if ($(this).attr("class").indexOf("ui-draggable-dragging") >= 0) {
-						$(this).parent().css('z-index','1000');
-						$(this).css("opacity", "0.7");
-					}
-				},
-				start: function(event, ui) {
-					$(this).height($(this).data('oh')).width($(this).data('ow'));
-					$('.layout_corner').css('z-index', '998'); 
-					$('.layout_corner').stop(true, true).animate({ opacity: 1 });
-					// set corner object
-					$(this).data('corner', $(this).parent());
-				}
 			});
 			
 			var imgSrc = $(this).children(".draggable").attr('src');
@@ -342,6 +361,8 @@ function setDnD(maskImg, ox, oy) {
 							boxClipper);
 					}
 					divObj.css('opacity', '0');
+					setDragObj(divObj);
+					$('.layout_corner').droppable( "enable" );
 				}
 				
 			}
@@ -385,27 +406,18 @@ function setDnD(maskImg, ox, oy) {
 								divObj, 
 								boxClipper);
 						}
-						//spinner.stop();
-						//divObj.css('opacity', '0');
-						divObj.animate({ opacity: 0},
-							{complete:  function() { 
-								spinner.stop();
-							} 
-						});
-						
+						spinner.stop();
+						divObj.css('opacity', '0');
+						setDragObj(divObj);				
+						$('.layout_corner').droppable( "enable" );	
 					},
 					error: function(xhr, text_status){
 						spinner.stop();
+						$('.layout_corner').droppable( "enable" );
 						console.log("Fail to get image:"+imgSrc);
 					}
 				});
 			}
-			
-			$(this).children(".draggable").css('z-index','');
-			$(this).removeClass("removed");	
-			$(this).children(".draggable").removeClass("ui-draggable-dragging");		
-			$(this).css('cursor', 'move');
-			$(this).css('z-index','998');
 		},
 		out: function(event, ui) {
 			if ($(this).children(".draggable").length > 0 ) { 
@@ -419,35 +431,10 @@ function setDnD(maskImg, ox, oy) {
 			$(this).data('zw', $(ui.draggable).data('zw'));
 			$(this).data('zh', $(ui.draggable).data('zh'));
 			$(this).data('corner', $(ui.draggable).data('corner'));
-			$(this).data('ow', $(ui.draggable)[0].width);
-			$(this).data('oh', $(ui.draggable)[0].height);
+			$(this).data('ow', $(ui.helper)[0].width);
+			$(this).data('oh', $(ui.helper)[0].height);
 		},
 		deactivate: function(event, ui) {
-			//
-			// Please considering to remove draggable inside drop: status
-			// For you have got "removed" class. 
-			// That should be more effective :)
-			//
-			if ($(this).attr("class").indexOf("removed") >= 0) {
-				$(this).children(".draggable").each(function(index) {
-				  	$(this).remove();
-				  	$(this)[0] = null;
-				});
-
-				$(this).css('cursor', 'default');
-				if ($(this).next().attr('class') == 'canvas_appended')
-					if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
-						$(this).next().remove();
-						$(this).next()[0] = null;
-					}
-				$(this).removeClass("removed");
-				$(this).css('z-index','998');
-				$('.layout_corner').animate({ opacity: CORNER_OPT},
-					{complete:  function() { 
-						$('.layout_corner > .draggable').parent().css('opacity', '0');
-					} 
-				});
-			}
 			$(this).removeData('zdx');
 			$(this).removeData('zdy');
 			$(this).removeData('zw');
@@ -523,7 +510,6 @@ function menuLoadLayout(_layoutName) {
 
 // (ox, oy) is the position of case image
 function loadLayout(_maskImg, ox , oy, _layoutName){ 
-	console.log('layout:'+layout_x+','+layout_y);
 
 	// Cleanup
 	$('.layout_corner').each(function(index) {
@@ -597,7 +583,6 @@ function setCanvas(_phoneName) {
     var a = new Image();
 	a.src = "images/"+_phoneName+".png";
 	a.onload = function(){
-		console.log('get image:'+a.width+', '+a.height);
 		$("#mCanvas")[0].width = a.width;
         $("#mCanvas")[0].height = a.height;
         context.drawImage(a, 0, 0, a.width, a.height);

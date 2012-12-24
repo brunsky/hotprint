@@ -4,6 +4,24 @@ body {
   background-image:url('images/bg.png');
 }
 
+::-moz-selection{
+    background-color:Transparent;
+    color:#000;
+    }
+
+::selection {
+	background-color:Transparent;
+	color:#000;
+}
+
+.canvas_appended::-moz-selection,
+.canvas_appended::selection {
+	-moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 #cart {
 	display: none;
 	position:absolute;
@@ -192,10 +210,23 @@ section {
 	box-shadow: inset 0px 1px 0px 0px rgba(255,255,255, .1), 0px 1px 0px 0px rgba(0,0,0, .1);
 }
 
-.draggable { 
+.draggable::-moz-selection, 
+.draggable::selection{ 
 	padding: 0; 
 	line-height: 0;  
+	-moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
+
+.layout_corner {
+	-moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 .draggable-w {
 	width: 100px;
 }
@@ -203,7 +234,8 @@ section {
 	height: 100px;
 }
 
-.landing {
+.landing::-moz-selection, 
+.landing::selection{
 	margin: 0 auto;
 	width: 100px; 
 	height: 100px; 

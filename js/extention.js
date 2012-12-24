@@ -318,9 +318,48 @@ function mod_saveremote(resCanvas) {
 }
 
 /*
+ * Set up object for draggable
+ */
+function setDragObj(divObj) {
+	divObj.children(".draggable").draggable({
+		cursor: 'auto', 
+		cursorAt: { left: 35, top: 35 },
+		revert:"valid",
+		drag: function(event, ui) {
+			if ($(this).attr("class").indexOf("ui-draggable-dragging") >= 0) {
+				$(this).parent().css('z-index','1000');
+				$(this).css("opacity", "0.7");
+			}
+		},
+		start: function(event, ui) {
+			$(this).height($(this).data('oh')).width($(this).data('ow'));
+			$('.layout_corner').css('z-index', '998'); 
+			$('.layout_corner').stop(true, true).animate({ opacity: 1 });
+			// set corner object
+			$(this).data('corner', $(this).parent());
+		},
+		stop: function( event, ui ) {
+			if ($(this).parent().attr("class").indexOf("removed") >= 0) {
+				clearCorner($(this).parent());
+			}
+		}
+	});
+	divObj.children(".draggable").css('z-index','');
+	divObj.removeClass("removed");	
+	divObj.children(".draggable").removeClass("ui-draggable-dragging");		
+	divObj.css('cursor', 'move');
+	divObj.css('z-index','998');
+}
+
+/*
  * Generize random design
  */
 function mod_randesign() {
+	if($('.layout_corner').children('.spinner').length > 0) {
+		console.log('waiting spin stop');
+		return;
+	}
+	
 	// clear content
 	$('.layout_corner').css('opacity', CORNER_OPT);
 	$('.layout_corner').html('');
@@ -341,8 +380,8 @@ function mod_randesign() {
 		$(this).append($($('.gallery-pool')[r]).clone());
 		$(this).children(".draggable").removeClass('gallery-pool'); // remove to prevent getting the same one
 		// copy original size
-		$(this).children(".draggable").data('oh', $('.gallery-pool')[r].height);
-		$(this).children(".draggable").data('ow', $('.gallery-pool')[r].width);
+		$(this).children(".draggable").data('oh', Math.round($('.gallery-pool')[r].height*0.7));
+		$(this).children(".draggable").data('ow', Math.round($('.gallery-pool')[r].width*0.7));
 			
 		$(this).children(".draggable").css({
 			"position": "relative",
@@ -351,25 +390,6 @@ function mod_randesign() {
 			"width": $(this).css('width'),
 			"height": $(this).css('height'),
 			"opacity": "0"
-		});
-		$(this).children(".draggable").draggable({
-			cursor: 'auto', 
-			distance: 10, 
-			cursorAt: { left: 50, top: 50 },
-			revert:"invalid",
-			drag: function(event, ui) {
-				if ($(this).attr("class").indexOf("ui-draggable-dragging") >= 0) {
-					$(this).parent().css('z-index','1000');
-					$(this).css("opacity", "0.7");
-				}
-			},
-			start: function(event, ui) {
-				$(this).height($(this).data('oh')).width($(this).data('ow'));
-				$('.layout_corner').css('z-index', '998'); 
-				$('.layout_corner').stop(true, true).animate({ opacity: 1 });
-				// set corner object
-				$(this).data('corner', $(this).parent());
-			}
 		});
 		
 		var imgSrc = $(this).children(".draggable").attr('src');
@@ -417,15 +437,12 @@ function mod_randesign() {
 				// set corner div to invisible
 				divObj.css('opacity','0');
 				spinner.stop();
+				setDragObj(divObj);
 			},
 			error: function(xhr, text_status){
 				spinner.stop();
 				console.log("Fail to get image:"+imgSrc);
 			}
 		});
-		
-		$(this).children(".draggable").css('z-index','');		
-		$(this).css('cursor', 'move');
-		$(this).css('z-index','998');
 	});
 }
