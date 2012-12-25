@@ -210,6 +210,12 @@ section {
 	box-shadow: inset 0px 1px 0px 0px rgba(255,255,255, .1), 0px 1px 0px 0px rgba(0,0,0, .1);
 }
 
+td.last {
+    width: 1px;
+    white-space: nowrap;
+}
+
+
 .draggable::-moz-selection, 
 .draggable::selection{ 
 	padding: 0; 

@@ -229,13 +229,11 @@ function mod_saving_for_host(func_complete) {
 				delete resCanvas;
 				mod_saveremote(resCanvas);
 				resCanvas = null;
-				//mod_gallerysave();
 				$( "#progress-bar" ).remove();
 				$( "#progress-bar" )[0] = null;
 				$wDiv.remove();
 				$wDiv[0] = null;
-				
-				
+				// callback to notify application.js
 				func_complete();
 			}
 		}

@@ -3,11 +3,11 @@
  */
  
  // Global settings
- var PHONE_NAME = 'iphone5';
- var LAYOUT_NAME = 'layout_3';
- var layout_x = 410;
- var layout_y =  Math.floor($(window).height() * 0.1);
- var CORNER_OPT = 0.1;
+ var PHONE_NAME 	= 'iphone5';
+ var LAYOUT_NAME 	= 'layout_3';
+ var layout_x 		= 410;
+ var layout_y 		= Math.floor($(window).height() * 0.1);
+ var CORNER_OPT 	= 0.1;
  var isCornerFading = false;
 
   
@@ -16,6 +16,7 @@
   ,   _displayUserData
   ,   _login
   ,   _login2
+  ,	  _instalogin
   ,   _getUserRecent
   ,	  _facebookPhotoAlbum
   ,	  _fblogin
@@ -23,6 +24,7 @@
   
   var access_token
   ,   user_id
+  ,	  source_type
   ;
  
 (function(){
@@ -38,26 +40,29 @@
     // Remove no-js class
     $('html').removeClass('no-js');
     $('body').addClass('not-logged-in');
-    // Check if user is logged in
-    _login();
+    $('#login').click(_instalogin);
     $('#login2').click(_fblogin);
-    
+    $('#facebook-source-login').click(_fblogin);
+    $('#instagram-source-login').click(_instalogin);
   };
   
-  _getUserRecent = function() {
-  
-	var request = $.ajax({
-      dataType: "jsonp",
-      url: "https://api.instagram.com/v1/users/"+user_id+"/media/recent",
-      data: {
-        access_token: access_token,
-		count: 50
-      }
-    });
-    request.success(_displayUserRecent);
+  function bindFunc() {
+  	$('#save-design').unbind('click');
+	$('#random-design').unbind('click');
+	$('#start-design').unbind('click');
 	
-  };
+  	$('#save-design').bind('click',saveImg);
+	$('#random-design').bind('click',randomDesign);
+	$('#start-design').bind('click',startDesign);
+  }
   
+  /*
+   * 			Instagram code
+   */
+  
+  /*
+   * Instagram: Get token
+   */
   _getUserData = function(){
     
     var request = $.ajax({
@@ -71,19 +76,33 @@
     
   };
   
-  _login = function(){
-    access_token = location.hash.split('=')[1];
+  /*
+   * Instagram: User login
+   */
+  _instalogin = function() {
+  	window.open('https://instagram.com/oauth/authorize/?client_id=1e05a75f3b1548bbbdab2072bb0ed6e7&amp;redirect_uri=http://insta.camangiwebstation.com/instaredirect.html&amp;response_type=token', 'hotprintCloud', 'height=400,width=600,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes');
+  	return false;
+  };
+  
+  /*
+   * Instagram: login interface
+   */
+  _login = function(token){
+    //access_token = location.hash.split('=')[1];
+    access_token = token;
     if (access_token === undefined) {
       $('body').addClass('not-logged-in');
     } else {
       $('body').addClass('logged-in');
 	  _getUserData();
-	  $('#save-design').click(saveImg);
-	  $('#random-design').click(randomDesign);
-	  $('#start-design').click(startDesign);
+	  bindFunc();
+	  source_type = "Instagram";
     }
   };
   
+  /*
+   * Instagram: Get user id
+   */
   _displayUserData = function(json){
     $("#get-user-data").html("")
                 .fadeIn(300)
@@ -92,56 +111,99 @@
 	_getUserRecent();
   };
   
+  /*
+   * Instagram: Call photos API & disable facebook albums if any.
+   */
+  _getUserRecent = function() {
+  	if ($('#fbalbums').length > 0)
+  		$('#fbalbums').attr('disabled', 'disabled');
+  		
+	var request = $.ajax({
+      dataType: "jsonp",
+      url: "https://api.instagram.com/v1/users/"+user_id+"/media/recent",
+      data: {
+        access_token: access_token,
+		count: 50
+      }
+    });
+    request.success(_displayUserRecent);
+	
+  };
+    
+	/*
+	 * Instagram: Get photos
+	 */
+  _displayUserRecent = function(json){
+
+	var res = "";
+	for(var i=0; i<json.data.length; i++) {
+		res += "<li><a href='"+json.data[i].images.standard_resolution.url+"'><img src=\""+json.data[i].images.standard_resolution.url+"\" id='recent_instaimg"+i+"' class='draggable draggable-h draggable-w gallery-pool' /></a></li>";
+	}
+
+	gallery_bar_setting(res);
+	
+  };
+    
+  /*
+   * facebook: Login process
+   */
   _fblogin = function() {
-	  	FB.login(function(response) {
-			  if (response.authResponse) {
-				    console.log("User is connected to the application.");
-				    access_token = response.authResponse.accessToken;
-				    // login success
-				    $('body').addClass('logged-in');
-				    $('#save-design').click(saveImg);
-		  			$('#random-design').click(randomDesign);
-		  			$('#start-design').click(startDesign);
-		  			// get album list
-		  			FB.api('/me?fields=albums,name', function(response) {
-		  				// show user name
-		  				$("#get-user-data").html("")
-								                .fadeIn(300)
-								                .append(response.name);
-						// create albumn selection drop box		                
-					  	$select = $('<select></select>');
-					  	$select.attr('id','fbalbums');
-					  	$.each(response.albums.data, function(key, value) {   
-						     $select
-						         .append($("<option></option>")
-						         .attr("value",value.id)
-						         .text(value.name)); 
-						});
-						$('.sources').append($select);
-						  	
-					  	$select.change(function(){
-					  		// Clear gallery pool at first
-					  		$('.recent').find('.draggable').each(function(index) {
-								$(this).remove();
-							  	$(this)[0] = null;
-							});		
-					  		_facebookPhotoAlbum();
-					  	});
-						
-						// setup photos after getting albums 
-						_facebookPhotoAlbum();
-					});
-			  }
-			  else
-			  		$('body').addClass('not-logged-in');
-		}, {scope: 'user_photos'});
+	//clear photo of source 
+	$('#facebook-source').html('');
+  	FB.login(function(response) {
+	  if (response.authResponse) {
+	    source_type = "facebook";
+	    access_token = response.authResponse.accessToken;
+	    // login success
+	    $('body').addClass('logged-in');
+	    bindFunc();
+		// get album list
+		FB.api('/me?fields=albums,name', function(response) {
+			// show user name
+			$("#get-user-data").html("")
+					                .fadeIn(300)
+					                .append(response.name);
+			// create albumn selection drop box		                
+		  	$select = $('<select></select>');
+		  	$select.attr('id','fbalbums');
+		  	$.each(response.albums.data, function(key, value) {   
+			     $select
+			         .append($("<option></option>")
+			         .attr("value",value.id)
+			         .text(value.name)); 
+			});
+			$('#facebook-source').append($select);
+			  	
+		  	$select.change(function(){
+		  		// Clear gallery pool at first
+		  		$('.recent').find('.draggable').each(function(index) {
+					$(this).remove();
+				  	$(this)[0] = null;
+				});		
+		  		_facebookPhotoAlbum();
+		  	});
+			
+			// setup photos after getting albums 
+			_facebookPhotoAlbum();
+		});
+	  }
+	  else
+	  		$('body').addClass('not-logged-in');
+	}, {scope: 'user_photos'});
   }
   
+  /*
+   * 			facebook code
+   */
+  
+  /*
+   * facebook: Get photos
+   */
   _facebookPhotoAlbum = function( callback ) {  
 
     var settings = $.extend( {
       'facebookAlbumId' : $('#fbalbums :selected').val(),
-      'photoLimit'       : '50',
+      'photoLimit'       : '100',
       'randomOrder'      : 'false'
     });
 
@@ -151,6 +213,10 @@
       var url = "https://graph.facebook.com/"+albumId+"/photos?access_token="+access_token;
 
       $.getJSON(url, function success(result) {
+      		if ($('#fbalbums').length > 0)
+      			$('#fbalbums').attr('disabled', false);
+      			
+      		console.log(url)
 
 	        var limit = photoLimit;
 	        if(result.data.length < limit) {
@@ -173,18 +239,11 @@
 
   };
   
-  _displayUserRecent = function(json){
-	var res = "";
-	for(var i=0; i<json.data.length; i++) {
-		res += "<li><a href='"+json.data[i].images.standard_resolution.url+"'><img src=\""+json.data[i].images.standard_resolution.url+"\" id='recent_instaimg"+i+"' class='draggable draggable-h draggable-w gallery-pool' /></a></li>";
-	}
-
-	gallery_bar_setting(res);
-	
-  };
-  
 })(jQuery);
 
+/*
+ * Put photos into gallery pool & make its draggable settings
+ */
 function gallery_bar_setting(res) {
 	$(".ad-thumb-list").html("")
                 .fadeIn(300)
@@ -690,7 +749,12 @@ function newPage(page) {
 		$('#menubar').fadeIn(300);
 		$('.recent').fadeIn(300);
 		setCanvas(PHONE_NAME);
-		_getUserRecent();
+		if (startDesign == 'facebook') {
+			_fblogin();
+		}
+		else if (startDesign == 'Instagram') {
+			_instalogin();
+		}
 	}
 	else if (page == "Gallery") {
 		$('.buybutton').fadeIn(300);
