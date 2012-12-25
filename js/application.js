@@ -210,13 +210,11 @@
       var albumId = settings.facebookAlbumId;
       var photoLimit = settings.photoLimit;
       var randomOrder = settings.randomOrder;
-      var url = "https://graph.facebook.com/"+albumId+"/photos?access_token="+access_token;
+      var url = "https://graph.facebook.com/"+albumId+"/photos?access_token="+access_token+"&limit=0";
 
       $.getJSON(url, function success(result) {
       		if ($('#fbalbums').length > 0)
       			$('#fbalbums').attr('disabled', false);
-      			
-      		console.log(url)
 
 	        var limit = photoLimit;
 	        if(result.data.length < limit) {
