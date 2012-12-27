@@ -4,13 +4,12 @@
   position:relative;
 }
 
-  .collapse { position:relative; }
+  .collapse { position:relative;}
 
   .open {
     color: #fdfdfd;
     text-decoration:none;
-  	font: bold 14px/32px Arial, sans-serif;
-  	float: right;
+  	float: center;
     cursor: pointer;
   }
 

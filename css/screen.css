@@ -7,7 +7,7 @@ body {
 ::-moz-selection{
     background-color:Transparent;
     color:#000;
-    }
+}
 
 ::selection {
 	background-color:Transparent;
@@ -17,9 +17,9 @@ body {
 .canvas_appended::-moz-selection,
 .canvas_appended::selection {
 	-moz-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
+  	-khtml-user-select: none;
+  	-webkit-user-select: none;
+  	user-select: none;
 }
 
 #cart {
@@ -228,9 +228,9 @@ td.last {
 
 .layout_corner {
 	-moz-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
+  	-khtml-user-select: none;
+  	-webkit-user-select: none;
+  	user-select: none;
 }
 
 .draggable-w {
@@ -288,20 +288,16 @@ td.last {
 	left:0px;  
 }
 
-body.not-logged-in #get-user-data { display: none; }
 body.not-logged-in #save-design { display: none; }
 body.not-logged-in #random-design { display: none; }
 body.not-logged-in #start-design { display: none; }
-/*body.not-logged-in #login { display: block; }
-body.not-logged-in #login2 { display: block; }*/
-body.not-logged-in .open { display: block; }
+body.not-logged-in #logoutZone { display: none; }
+body.not-logged-in #loginZone { display: block; }
 
-body.logged-in #get-user-data { display: block; }
 body.logged-in #save-design { display: block; }
 body.logged-in #random-design { display: block; }
-/*body.logged-in #login { display: none; }
-body.logged-in #login2 { display: none; }*/
-body.logged-in .open { display: none; }
+body.logged-in #logoutZone { display: block; }
+body.logged-in #loginZone { display: none; }
 
 #menubar {
 	position:fixed;

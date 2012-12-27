@@ -14,12 +14,14 @@
   var _init
   ,   _getUserData
   ,   _displayUserData
-  ,   _login
-  ,   _login2
+  ,   _instaCrossLogin
   ,	  _instalogin
+  ,	  _instalogout
   ,   _getUserRecent
   ,	  _facebookPhotoAlbum
   ,	  _fblogin
+  ,	  _fblogout
+  ,	  _logout
   ;
   
   var access_token
@@ -50,19 +52,31 @@
   	$('#save-design').unbind('click');
 	$('#random-design').unbind('click');
 	$('#start-design').unbind('click');
+	$('#logout').unbind('click');
 	
   	$('#save-design').bind('click',saveImg);
 	$('#random-design').bind('click',randomDesign);
 	$('#start-design').bind('click',startDesign);
+	$('#logout').bind('click',_logout);
+  }
+  
+  _logout = function() {
+  	$("body").append('<div class="modalOverlay"></div>');
+  	_fblogout(_instalogout);
+  	// Reset Design panel
+  	setTimeout("location.reload()", 3000);
   }
   
   /*
    * 			Instagram code
    */
   
+  var instaRes; // For total returning photos
+  
   /*
    * Instagram: Get token
    */
+  
   _getUserData = function(){
     
     var request = $.ajax({
@@ -84,11 +98,16 @@
   	return false;
   };
   
+  _instalogout = function(callback) {
+	
+  	$('.modalOverlay').html('<iframe src="https://instagram.com/accounts/logout/" width="0" height="0" onLoad="_fblogout">');
+
+  }
+  
   /*
    * Instagram: login interface
    */
-  _login = function(token){
-    //access_token = location.hash.split('=')[1];
+  _instaCrossLogin = function(token){
     access_token = token;
     if (access_token === undefined) {
       $('body').addClass('not-logged-in');
@@ -104,26 +123,33 @@
    * Instagram: Get user id
    */
   _displayUserData = function(json){
-    $("#get-user-data").html("")
+    $(".open").html("")
                 .fadeIn(300)
                 .append(json.data.username);
 	user_id = json.data.id;
+	instaRes = '';
 	_getUserRecent();
   };
   
   /*
    * Instagram: Call photos API & disable facebook albums if any.
    */
-  _getUserRecent = function() {
+  _getUserRecent = function(next_url) {
   	if ($('#fbalbums').length > 0)
   		$('#fbalbums').attr('disabled', 'disabled');
   		
+  	var url;
+  	if(next_url != null) 
+  		url = next_url;
+  	else
+  		url = "https://api.instagram.com/v1/users/"+user_id+"/media/recent";
+  		
 	var request = $.ajax({
       dataType: "jsonp",
-      url: "https://api.instagram.com/v1/users/"+user_id+"/media/recent",
+      url: url,
       data: {
         access_token: access_token,
-		count: 50
+		count: 100
       }
     });
     request.success(_displayUserRecent);
@@ -134,15 +160,19 @@
 	 * Instagram: Get photos
 	 */
   _displayUserRecent = function(json){
-
-	var res = "";
-	for(var i=0; i<json.data.length; i++) {
-		res += "<li><a href='"+json.data[i].images.standard_resolution.url+"'><img src=\""+json.data[i].images.standard_resolution.url+"\" id='recent_instaimg"+i+"' class='draggable draggable-h draggable-w gallery-pool' /></a></li>";
-	}
-
-	gallery_bar_setting(res);
 	
+	for(var i=0; i<json.data.length; i++) {
+		instaRes += "<li><a href='"+json.data[i].images.standard_resolution.url+"'><img src=\""+json.data[i].images.standard_resolution.url+"\" id='recent_instaimg"+i+"' class='draggable draggable-h draggable-w gallery-pool' /></a></li>";
+	}
+	if (typeof json.pagination.next_url != 'undefined')
+		_getUserRecent(json.pagination.next_url);
+	else
+		gallery_bar_setting(instaRes);
   };
+    
+  /*
+   * 			facebook code
+   */
     
   /*
    * facebook: Login process
@@ -160,9 +190,7 @@
 		// get album list
 		FB.api('/me?fields=albums,name', function(response) {
 			// show user name
-			$("#get-user-data").html("")
-					                .fadeIn(300)
-					                .append(response.name);
+			$(".open").html("").fadeIn(300).append(response.name);
 			// create albumn selection drop box		                
 		  	$select = $('<select></select>');
 		  	$select.attr('id','fbalbums');
@@ -192,9 +220,13 @@
 	}, {scope: 'user_photos'});
   }
   
-  /*
-   * 			facebook code
-   */
+  _fblogout = function(callback) {
+  	FB.logout(function(response) {
+  		console.log('FB logout')
+		if (typeof callback != 'undefined')
+    		callback();
+	});
+  }
   
   /*
    * facebook: Get photos
@@ -203,7 +235,7 @@
 
     var settings = $.extend( {
       'facebookAlbumId' : $('#fbalbums :selected').val(),
-      'photoLimit'       : '100',
+      'photoLimit'       : '500',
       'randomOrder'      : 'false'
     });
 
@@ -747,10 +779,10 @@ function newPage(page) {
 		$('#menubar').fadeIn(300);
 		$('.recent').fadeIn(300);
 		setCanvas(PHONE_NAME);
-		if (startDesign == 'facebook') {
+		if (source_type == 'facebook') {
 			_fblogin();
 		}
-		else if (startDesign == 'Instagram') {
+		else if (source_type == 'Instagram') {
 			_instalogin();
 		}
 	}
@@ -854,23 +886,7 @@ $(function(){
     
     $('#start-design').hide();
     
-     $('.popbox').popbox();
-    /*
-    $('#login').qtip({
-    	title: {
-			text: '登入'
-		},
-		content: {
-			text:  $('#menu_color')
-		},
-		position: {
-			target: 'mouse',
-			adjust: {
-				mouse: false  
-			}
-		}
-	});
-	*/
+     $('#popbox').popbox();
 });
 
 $(window).resize(function() { setContainer();setFooterTop()}); 
