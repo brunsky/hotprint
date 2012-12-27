@@ -173,6 +173,8 @@
   /*
    * 			facebook code
    */
+  
+  var fbRes; // For total returning photos
     
   /*
    * facebook: Login process
@@ -208,10 +210,12 @@
 					$(this).remove();
 				  	$(this)[0] = null;
 				});		
+				fbRes = '';
 		  		_facebookPhotoAlbum();
 		  	});
 			
 			// setup photos after getting albums 
+			fbRes = '';
 			_facebookPhotoAlbum();
 		});
 	  }
@@ -231,7 +235,7 @@
   /*
    * facebook: Get photos
    */
-  _facebookPhotoAlbum = function( callback ) {  
+  _facebookPhotoAlbum = function( next_url ) {  
 
     var settings = $.extend( {
       'facebookAlbumId' : $('#fbalbums :selected').val(),
@@ -242,28 +246,39 @@
       var albumId = settings.facebookAlbumId;
       var photoLimit = settings.photoLimit;
       var randomOrder = settings.randomOrder;
-      var url = "https://graph.facebook.com/"+albumId+"/photos?access_token="+access_token+"&limit=0";
+      var url;
+      if (next_url != null)
+      	url = next_url;
+      else
+      	url = "https://graph.facebook.com/"+albumId+"/photos?access_token="+access_token+"&limit=0";
 
       $.getJSON(url, function success(result) {
+      	
       		if ($('#fbalbums').length > 0)
       			$('#fbalbums').attr('disabled', false);
 
 	        var limit = photoLimit;
 	        if(result.data.length < limit) {
-	          limit = result.data.length;
+	        	limit = result.data.length;
 	        }
 	        
-	        var res = "";
 	        for(i=0; i<limit; i++)
 	        {
 	          var image = result.data[i];
 	          if (image.width > image.height)
-	          	res += "<li><a href='"+image.link+"'><img src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-h gallery-pool'/></a></li>";
+	          	fbRes += "<li><a href='"+image.link+"'><img src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-h gallery-pool'/></a></li>";
 	          else
-	          	res += "<li><a href='"+image.link+"'><img src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-w gallery-pool'/></a></li>";
+	          	fbRes += "<li><a href='"+image.link+"'><img src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-w gallery-pool'/></a></li>";
 	        }
-	        
-	        gallery_bar_setting(res);
+			// Check if any more photos to get
+			if (typeof result.paging != 'undefined') {
+				if (typeof result.paging.next != 'undefined')
+					_facebookPhotoAlbum(result.paging.next);
+				else
+					gallery_bar_setting(fbRes);
+			}
+			else
+	        	gallery_bar_setting(fbRes);
         
       });
 
