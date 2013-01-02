@@ -320,6 +320,7 @@ function mod_saveremote(resCanvas) {
  */
 function setDragObj(divObj) {
 	divObj.children(".draggable").draggable({
+		scroll: false,
 		cursor: 'auto', 
 		cursorAt: { left: 35, top: 35 },
 		revert:"valid",
@@ -330,6 +331,7 @@ function setDragObj(divObj) {
 			}
 		},
 		start: function(event, ui) {
+			disable_scroll();
 			$(this).height($(this).data('oh')).width($(this).data('ow'));
 			$('.layout_corner').css('z-index', '998'); 
 			$('.layout_corner').stop(true, true).animate({ opacity: 1 });
@@ -337,6 +339,7 @@ function setDragObj(divObj) {
 			$(this).data('corner', $(this).parent());
 		},
 		stop: function( event, ui ) {
+			enable_scroll();
 			if ($(this).parent().attr("class").indexOf("removed") >= 0) {
 				clearCorner($(this).parent());
 			}
@@ -493,4 +496,46 @@ function poll(node, callback) {
       poll(node, callback);
     }, 1);
   }
+}
+
+// left: 37, up: 38, right: 39, down: 40,
+// spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36
+var keys = [37, 38, 39, 40];
+
+function preventDefault(e) {
+    e = e || window.event;
+    if (e.preventDefault) {
+        e.preventDefault();
+    }
+    e.returnValue = false;
+}
+
+function keydown(e) {
+    for (var i = keys.length; i--;) {
+        if (e.keyCode === keys[i]) {
+            preventDefault(e);
+            return;
+        }
+    }
+}
+/*
+ * Disable/Enable scrolling
+ */
+function wheel(e) {
+    preventDefault(e);
+}
+
+function disable_scroll() {
+    if (window.addEventListener) {
+        window.addEventListener('DOMMouseScroll', wheel, false);
+    }
+    window.onmousewheel = document.onmousewheel = wheel;
+    document.onkeydown = keydown;
+}
+
+function enable_scroll() {
+    if (window.removeEventListener) {
+        window.removeEventListener('DOMMouseScroll', wheel, false);
+    }
+    window.onmousewheel = document.onmousewheel = document.onkeydown = null;
 }

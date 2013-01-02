@@ -314,6 +314,7 @@ function gallery_bar_setting(res) {
 	});*/
 	
 	$('.gallery-pool').draggable({
+		scroll: false,
 		cursor: 'move', 
 		helper: "clone", 
 		cursorAt: { left: 35, top: 35 },
@@ -328,12 +329,14 @@ function gallery_bar_setting(res) {
 			ui.helper.width($(this).data('ow'));
 		},
 		start: function(event, ui) {
+			disable_scroll();
 			$('.layout_corner').css('z-index', '998');
 			$('.layout_corner').stop(true, true).animate({ opacity: 1});
 			$(this).data('oh', Math.round($(this).height()*0.7));
 			$(this).data('ow', Math.round($(this).width()*0.7));
 		},
 		stop: function(event, ui) {
+			enable_scroll();
 			isCornerFading = true;
 			$('.layout_corner').animate({ opacity: CORNER_OPT},
 				{complete:  function() { 
@@ -638,10 +641,8 @@ function loadLayout(_maskImg, ox , oy, _layoutName){
 
     $("head").append(cssFile);
 	// Import layout js
-	
 	styleOnload(cssFile[0],function() {
 		var layoutLocation = "js/"+_layoutName+".js?v="+(new Date()).getTime();
-		console.log(layoutLocation);
 		$.getScript(layoutLocation)
 			.done(function(data, textStatus, jqxhr) {
 				setDnD(maskImg, ox, oy); // Define Drag&Drop
@@ -649,20 +650,8 @@ function loadLayout(_maskImg, ox , oy, _layoutName){
 			.fail(function(data, textStatus, jqxhr) {
 				console.log('load layout.js failed');
 			});
+
 	});
-/*
-	cssFile.load(function() {
-		var layoutLocation = "js/"+_layoutName+".js?v="+(new Date()).getTime();
-		console.log(layoutLocation);
-		$.getScript(layoutLocation)
-			.done(function(data, textStatus, jqxhr) {
-				setDnD(maskImg, ox, oy); // Define Drag&Drop
-			})
-			.fail(function(data, textStatus, jqxhr) {
-				console.log('load layout.js failed');
-			});
-	});
-	*/
 }
 
 function setContainer(){  
@@ -755,6 +744,7 @@ function setAccordionMenu() {
 /*
  * Load external library
  */
+/*
 function loadLib(path) {
 	var layoutLocation = path;
 	$.getScript(layoutLocation)
@@ -765,6 +755,7 @@ function loadLib(path) {
 			console.log('load '+path+' failed');
 		})
 }
+*/
 
 /*
  * Store the image for output
@@ -882,10 +873,6 @@ $(function(){
 		$('body').css('overflow', 'auto');
 	}
 
-	loadLib('js/mapping.js?v='+(new Date()).getTime());
-	loadLib('js/clipping.js?v='+(new Date()).getTime());
-	loadLib('js/extention.js?v='+(new Date()).getTime());
-
 	setAccordionMenu();
 	setContainer();
 	setFooterTop();
@@ -919,7 +906,7 @@ $(function(){
 });
 
 $(window).resize(function() { setContainer();setFooterTop()}); 
-$(window).scroll(function() { setFooterTop(); });
+$(window).scroll(function() { setFooterTop(); console.log($(document).height())});
 
 // If browser didn't support console, then set it empty !
 if (!window.console) window.console = {};
