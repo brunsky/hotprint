@@ -444,3 +444,53 @@ function mod_randesign() {
 		});
 	});
 }
+
+/*
+ * CSS loader
+ */
+
+function styleOnload(node, callback) {
+    if (node.attachEvent) {
+      node.attachEvent('onload', callback);
+    }
+    else {
+      setTimeout(function() {
+        poll(node, callback);
+      }, 0);
+    }
+}
+
+function poll(node, callback) {
+  if (callback.isCalled) {
+    return;
+  }
+
+  var isLoaded = false;
+
+  if (/webkit/i.test(navigator.userAgent)) {//webkit
+    if (node['sheet']) {
+      isLoaded = true;
+    }
+  }else if (node['sheet']) {
+    try {
+      if (node['sheet'].cssRules) {
+        isLoaded = true;
+      }
+    } catch (ex) {
+      if (ex.code === 1000) {
+        isLoaded = true;
+      }
+    }
+  }
+
+  if (isLoaded) {
+    setTimeout(function() {
+      callback();
+    }, 1);
+  }
+  else {
+    setTimeout(function() {
+      poll(node, callback);
+    }, 1);
+  }
+}

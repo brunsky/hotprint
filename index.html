@@ -6,39 +6,37 @@
 
   <title>Insta Everything</title>
   <link rel="stylesheet" href="css/screen.css" type="text/css" id="main_css" media="screen" charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../lib/jquery.ad-gallery.css">
+  <link rel="stylesheet" type="text/css" href="lib/dc.core.1.1.0.min.css" />          
+  <link rel="stylesheet" type="text/css" href="lib/dc.cart.css" /> 
+  <link rel="stylesheet" href="lib/messi.min.css" />
+  <link rel='stylesheet' href='lib/popbox.css' type='text/css'>
   <script src="http://www.google.com/jsapi?key="></script>
   <script>
     google.load("jquery", "1.5");
   </script>
-  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
-  <script src="js/jquery.ui.touch-punch.min.js"></script>
-  <script src="js/jquery.corner.js"></script>
-  <script src="js/canvasMask.min.js"></script>
-  <script src="js/jquery.getimagedata.js"></script>
-  <script src="js/jquery.jsonp.min.js"></script>
-  
-  <script src="js/jcarousellite_1.0.1.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="../lib/jquery.ad-gallery.css">
-  <script type="text/javascript" src="../lib/jquery.ad-gallery.js"></script>
-  <script src="js/spin.min.js"></script>
-  <script src="js/application.js"></script>
-  
-  <!-- CSS for shopping cart-->      
-  <link rel="stylesheet" type="text/css" href="lib/dc.core.1.1.0.min.css" />          
-  <link rel="stylesheet" type="text/css" href="lib/dc.cart.css" />          
-  <!-- Javascript for shopping cart-->      
-  <script src="lib/dc.core.1.1.0.min.js" type="text/javascript"></script>        
-  <script src="lib/dc.cart.free.min.js" type="text/javascript"></script>            
-  <script src="lib/dc.cart.lang.js" type="text/javascript"></script> 
-  <!-- Popup module for modal dialog--> 
-  <link rel="stylesheet" href="lib/messi.min.css" />
-  <script src="lib/messi.min.js"></script>
-  <!-- Popup module for login/logout--> 
-  <link rel='stylesheet' href='lib/popbox.css' type='text/css'>
-  <script type='text/javascript' charset='utf-8' src='lib/popbox.js'></script>
-  <!-- Popup module for tip-->
-  <link type="text/css" rel="stylesheet" href="lib/jquery.qtip.min.css" />
-  <script src="lib/jquery.qtip.min.js"></script>
+  <script src="lib/LAB.min.js"></script>
+  <script>
+  	$LAB
+  	.script("http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js").wait()
+  	.script("js/jquery.ui.touch-punch.min.js")
+  	.script("js/jquery.corner.js")
+  	.script("js/canvasMask.min.js")
+  	.script("js/jquery.getimagedata.js")
+  	.script("js/jquery.jsonp.min.js")
+  	.script("js/jcarousellite_1.0.1.min.js")
+  	.script("../lib/jquery.ad-gallery.js")
+  	.script("js/spin.min.js")
+  	.script("lib/dc.core.1.1.0.min.js")
+  	.script("lib/dc.cart.free.min.js")
+  	.script("lib/dc.cart.lang.js")
+  	.script("lib/messi.min.js")
+  	.script("lib/popbox.js")
+  	.script("lib/extension.js")
+  	.script("js/application.js");
+  	
+  </script>
+
 </head>
 <body ONDRAGSTART="window.event.returnValue=false">
 <div class="mainmenu">

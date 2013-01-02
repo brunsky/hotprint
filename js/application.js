@@ -248,9 +248,9 @@
       var randomOrder = settings.randomOrder;
       var url;
       if (next_url != null)
-      	url = next_url;
+      	url = next_url+"&callback=?";
       else
-      	url = "https://graph.facebook.com/"+albumId+"/photos?access_token="+access_token+"&limit=0";
+      	url = "https://graph.facebook.com/"+albumId+"/photos?access_token="+access_token+"&limit=0&callback=?";
 
       $.getJSON(url, function success(result) {
       	
@@ -628,8 +628,6 @@ function loadLayout(_maskImg, ox , oy, _layoutName){
 
     $("link[type='text/css']#layout_css").remove();
     //Import CSS
-    //var cssFile = $('<link rel="stylesheet" href="" type="text/css" id="layout_css">');
-    //cssFile.attr({href : "css/"+_layoutName+".css?v="+(new Date()).getTime()});
     var cssFile = jQuery("<link>");
     cssFile.attr({
       rel:  "stylesheet",
@@ -637,10 +635,13 @@ function loadLayout(_maskImg, ox , oy, _layoutName){
       href: "css/"+_layoutName+".css?v="+(new Date()).getTime(),
       id: "layout_css"
     });   
+
     $("head").append(cssFile);
-	// Import layout
-	$('#layout_css').load(function() {
+	// Import layout js
+	
+	styleOnload(cssFile[0],function() {
 		var layoutLocation = "js/"+_layoutName+".js?v="+(new Date()).getTime();
+		console.log(layoutLocation);
 		$.getScript(layoutLocation)
 			.done(function(data, textStatus, jqxhr) {
 				setDnD(maskImg, ox, oy); // Define Drag&Drop
@@ -649,6 +650,19 @@ function loadLayout(_maskImg, ox , oy, _layoutName){
 				console.log('load layout.js failed');
 			});
 	});
+/*
+	cssFile.load(function() {
+		var layoutLocation = "js/"+_layoutName+".js?v="+(new Date()).getTime();
+		console.log(layoutLocation);
+		$.getScript(layoutLocation)
+			.done(function(data, textStatus, jqxhr) {
+				setDnD(maskImg, ox, oy); // Define Drag&Drop
+			})
+			.fail(function(data, textStatus, jqxhr) {
+				console.log('load layout.js failed');
+			});
+	});
+	*/
 }
 
 function setContainer(){  
