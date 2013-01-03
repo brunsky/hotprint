@@ -463,7 +463,7 @@ function clearDesign() {
 			{title: '清除內容', 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 
-			callback: function(val) {  
+			 callback: function(val) {  
 				if (val === 'Y') {
 					if ( $('.layout_corner').length ) {
 						$('.layout_corner').children('.draggable').each(function(index) {

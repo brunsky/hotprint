@@ -9,7 +9,7 @@
  var layout_y 		= Math.floor($(window).height() * 0.1);
  var CORNER_OPT 	= 0.1;
  var isCornerFading = false;
-
+ var maskImg;
   
   var _init
   ,   _getUserData
@@ -22,6 +22,7 @@
   ,	  _fblogin
   ,	  _fblogout
   ,	  _logout
+  ,	  _loadLayout
   ;
   
   var access_token
@@ -37,16 +38,30 @@
     }
   });
   
-  _init = function(){
-    
+  _init = function() {
     // Remove no-js class
     $('html').removeClass('no-js');
     $('body').addClass('not-logged-in');
+    // connect button and operations
     $('#login').click(_instalogin);
     $('#login2').click(_fblogin);
     $('#facebook-source-login').click(_fblogin);
     $('#instagram-source-login').click(_instalogin);
+    $('.layout_item').each(function(index) {
+     	$(this).click({param: $(this).attr('id')}, _loadLayout);
+    });
+    $('.phone_item').each(function(index) {
+     	$(this).click({param: $(this).attr('id')}, _loadPhone);
+    });
   };
+  
+  function _loadLayout(event) {
+  	menuLoadLayout(event.data.param);
+  }
+  
+  function _loadPhone(event) {
+  	menuLoadPhone(event.data.param);
+  }
   
   function bindFunc() {
   	$('#save-design').unbind('click');
@@ -557,64 +572,126 @@ function setDnD(maskImg, ox, oy) {
 
 // load phone canvas in menu
 function menuLoadPhone(_phoneName) {
-	PHONE_NAME = _phoneName;
-	setCanvas(_phoneName);
-	
-	if(_phoneName === 'iphone5') {
-		$('#menu_type').html('iPhone 5').fadeIn(300);
+	var change_phone = function(_layoutName) {
+		PHONE_NAME = _phoneName;
+		setCanvas(_phoneName);
+		
+		if(_phoneName === 'iphone5') {
+			$('#menu_type').html('iPhone 5').fadeIn(300);
+		}
+		else if(_phoneName === 'iphone4') {
+			$('#menu_type').html('iPhone 4/4S').fadeIn(300);
+		}
+		else if(_phoneName === 's3') {
+			$('#menu_type').html('S3').fadeIn(300);
+		}
+		else if(_phoneName === 'onex') {
+			$('#menu_type').html('HTC One X').fadeIn(300);
+		}
 	}
-	else if(_phoneName === 'iphone4') {
-		$('#menu_type').html('iPhone 4/4S').fadeIn(300);
+	if ($('.canvas_appended').length != 0 ) {
+		$("body").append('<div class="modalOverlay"></div>');
+		new Messi('你確定要切換手機嗎？所有的圖片將會被清空！', 
+			{title: '切換手機', 
+			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
+						{id: 1, label: 'No', val: 'N'}], 
+			callback: function(val) {  
+				$('.modalOverlay').remove();
+				$('.layout_corner').animate({ opacity: CORNER_OPT});
+				if (val === 'Y') {
+					if ( $('.layout_corner').length ) {
+						$('.layout_corner').children('.draggable').each(function(index) {
+					  		$(this).remove();
+						  	$(this)[0] = null;
+						});
+					}
+					if ( $('.canvas_appended').length ) {
+						$('.canvas_appended').each(function(index) {
+						  	$(this).remove();
+						  	$(this)[0] = null;
+						});
+					}
+					change_phone(_phoneName);
+				}
+			}});
 	}
-	else if(_phoneName === 's3') {
-		$('#menu_type').html('S3').fadeIn(300);
-	}
-	else if(_phoneName === 'onex') {
-		$('#menu_type').html('HTC One X').fadeIn(300);
-	}
+	else
+		change_phone(_phoneName);
 }
 
 // load layout in menu
 function menuLoadLayout(_layoutName) {
-	LAYOUT_NAME = _layoutName;
-	loadLayout(maskImg, layout_ox, layout_oy, PHONE_NAME+'_'+LAYOUT_NAME);
 	
-	if(_layoutName === 'layout_1') {
-		$('#menu_layout').html('layout 1').fadeIn(300);
+	var change_layout = function(_layoutName) {
+		LAYOUT_NAME = _layoutName;
+		loadLayout(maskImg, layout_ox, layout_oy, PHONE_NAME+'_'+LAYOUT_NAME);
+		
+		if(_layoutName === 'layout_1') {
+			$('#menu_layout').html('layout 1').fadeIn(300);
+		}
+		else if(_layoutName === 'layout_2') {
+			$('#menu_layout').html('layout 2').fadeIn(300);
+		}
+		else if(_layoutName === 'layout_3') {
+			$('#menu_layout').html('layout 3').fadeIn(300);
+		}
+		else if(_layoutName === 'layout_4') {
+			$('#menu_layout').html('layout 4').fadeIn(300);
+		}
+		else if(_layoutName === 'layout_5') {
+			$('#menu_layout').html('layout 5').fadeIn(300);
+		}
+		else if(_layoutName === 'layout_6') {
+			$('#menu_layout').html('layout 6').fadeIn(300);
+		}
+		else if(_layoutName === 'layout_7') {
+			$('#menu_layout').html('layout 7').fadeIn(300);
+		}
+		else if(_layoutName === 'layout_8') {
+			$('#menu_layout').html('layout 8').fadeIn(300);
+		}
+		else if(_layoutName === 'layout_9') {
+			$('#menu_layout').html('layout 9').fadeIn(300);
+		}
+		else if(_layoutName === 'layout_10') {
+			$('#menu_layout').html('layout 10').fadeIn(300);
+		}
+		else if(_layoutName === 'layout_11') {
+			$('#menu_layout').html('layout 11').fadeIn(300);
+		}
+		else if(_layoutName === 'layout_12') {
+			$('#menu_layout').html('layout 12').fadeIn(300);
+		}
 	}
-	else if(_layoutName === 'layout_2') {
-		$('#menu_layout').html('layout 2').fadeIn(300);
+	
+	if ($('.canvas_appended').length != 0 ) {
+		$("body").append('<div class="modalOverlay"></div>');
+		new Messi('你確定要切換版型嗎？所有的圖片將會被清空！', 
+			{title: '切換版型', 
+			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
+						{id: 1, label: 'No', val: 'N'}], 
+			callback: function(val) {  
+				$('.modalOverlay').remove();
+				$('.layout_corner').animate({ opacity: CORNER_OPT});
+				if (val === 'Y') {
+					if ( $('.layout_corner').length ) {
+						$('.layout_corner').children('.draggable').each(function(index) {
+					  		$(this).remove();
+						  	$(this)[0] = null;
+						});
+					}
+					if ( $('.canvas_appended').length ) {
+						$('.canvas_appended').each(function(index) {
+						  	$(this).remove();
+						  	$(this)[0] = null;
+						});
+					}
+					change_layout(_layoutName);
+				}
+			}});
 	}
-	else if(_layoutName === 'layout_3') {
-		$('#menu_layout').html('layout 3').fadeIn(300);
-	}
-	else if(_layoutName === 'layout_4') {
-		$('#menu_layout').html('layout 4').fadeIn(300);
-	}
-	else if(_layoutName === 'layout_5') {
-		$('#menu_layout').html('layout 5').fadeIn(300);
-	}
-	else if(_layoutName === 'layout_6') {
-		$('#menu_layout').html('layout 6').fadeIn(300);
-	}
-	else if(_layoutName === 'layout_7') {
-		$('#menu_layout').html('layout 7').fadeIn(300);
-	}
-	else if(_layoutName === 'layout_8') {
-		$('#menu_layout').html('layout 8').fadeIn(300);
-	}
-	else if(_layoutName === 'layout_9') {
-		$('#menu_layout').html('layout 9').fadeIn(300);
-	}
-	else if(_layoutName === 'layout_10') {
-		$('#menu_layout').html('layout 10').fadeIn(300);
-	}
-	else if(_layoutName === 'layout_11') {
-		$('#menu_layout').html('layout 11').fadeIn(300);
-	}
-	else if(_layoutName === 'layout_12') {
-		$('#menu_layout').html('layout 12').fadeIn(300);
-	}
+	else
+		change_layout(_layoutName);
 }
 
 // (ox, oy) is the position of case image
