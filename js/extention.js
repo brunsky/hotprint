@@ -4,15 +4,17 @@
 var scaling = 3; // Image saving ratio
  
 function mod_saving(func_complete) {
+	$("body").append('<div class="modalOverlay"></div>');
+	$wDiv = $('.modalOverlay');
 	// Check if design is completed
 	if (!($('.canvas_appended').length != 0 && 
 		$('.canvas_appended').length == $('.layout_corner').length)) {
 		new Messi('<p>您尚未完成設計哦</p><p>請先將圖片按您的喜好拖拉至所有的區塊後，才能儲存</p>', {title: '提醒您 !', modal: true});
+		$wDiv.remove();
 		return;
 	}
 	
-	$("body").append('<div class="modalOverlay"></div>');
-	$wDiv = $('.modalOverlay');
+	
 	$("body").append('<div id="progress-bar"><div id="status"></div></div>');
 	$( "#progress-bar" ).css('position','fixed');
 	$( "#progress-bar" ).css('z-index', '1001');
@@ -91,15 +93,17 @@ function mod_saving(func_complete) {
 }
 
 function mod_saving_for_host(func_complete) {
+	$("body").append('<div class="modalOverlay"></div>');
+	$wDiv = $('.modalOverlay');
 	// Check if design is completed
 	if (!($('.canvas_appended').length != 0 && 
 		$('.canvas_appended').length == $('.layout_corner').length)) {
 		new Messi('<p>您尚未完成設計哦</p><p>請先將圖片按您的喜好拖拉至所有的區塊後，才能儲存</p>', {title: '提醒您 !', modal: true});
+		$wDiv.remove();
 		return;
 	}
 	
-	$("body").append('<div class="modalOverlay"></div>');
-	$wDiv = $('.modalOverlay');
+	
 	$("body").append('<div id="progress-bar"><div id="status"></div></div>');
 	$( "#progress-bar" ).css('position','fixed');
 	$( "#progress-bar" ).css('z-index', '1001');
@@ -446,6 +450,38 @@ function mod_randesign() {
 			}
 		});
 	});
+}
+
+/*
+ * CLear button
+ */
+function clearDesign() {
+	// Check if any design already
+	if ($('.canvas_appended').length != 0 ) {
+		$("body").append('<div class="modalOverlay"></div>');
+		new Messi('你確定要清除設計嗎？所有的圖片將會被清空！', 
+			{title: '清除內容', 
+			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
+						{id: 1, label: 'No', val: 'N'}], 
+			callback: function(val) {  
+				if (val === 'Y') {
+					if ( $('.layout_corner').length ) {
+						$('.layout_corner').children('.draggable').each(function(index) {
+					  		$(this).remove();
+						  	$(this)[0] = null;
+						});
+					}
+					if ( $('.canvas_appended').length ) {
+						$('.canvas_appended').each(function(index) {
+						  	$(this).remove();
+						  	$(this)[0] = null;
+						});
+					}
+				}
+				$('.modalOverlay').remove();
+				$('.layout_corner').animate({ opacity: CORNER_OPT});
+			}});
+	}
 }
 
 /*

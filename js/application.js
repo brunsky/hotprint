@@ -51,11 +51,13 @@
   function bindFunc() {
   	$('#save-design').unbind('click');
 	$('#random-design').unbind('click');
+	$('#clear-design').unbind('click');
 	$('#start-design').unbind('click');
 	$('#logout').unbind('click');
 	
   	$('#save-design').bind('click',saveImg);
 	$('#random-design').bind('click',randomDesign);
+	$('#clear-design').bind('click',clearDesign);
 	$('#start-design').bind('click',startDesign);
 	$('#logout').bind('click',_logout);
   }
@@ -819,6 +821,7 @@ function newPage(page) {
 function releasePage(page) {
 	if (page == "Design") {
 		$('#random-design').hide();
+		$('#clear-design').hide();
 		$('#start-design').fadeIn(300);
 		$('#save-design').hide();
 		$('#menubar').hide();
@@ -854,6 +857,7 @@ function releasePage(page) {
 	}
 	else if (page == "Gallery") {
 		$('#random-design').fadeIn(300);
+		$('#clear-design').fadeIn(300);
 		$('#save-design').fadeIn(300);
 		$('#start-design').hide();
 	
