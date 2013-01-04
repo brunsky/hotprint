@@ -1,5 +1,4 @@
 <script>
-	access_token = location.hash.split('=')[1];
-    window.opener._instaCrossLogin(access_token);
-	window.close();
+	var access_token = location.hash.split('=')[1];
+	window.location.replace('http://insta.camangiwebstation.com/#token='+access_token+'&source=instagram');
 </script>

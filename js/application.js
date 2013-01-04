@@ -20,6 +20,7 @@
   ,   _getUserRecent
   ,	  _facebookPhotoAlbum
   ,	  _fblogin
+  ,	  _fbCrossLogin
   ,	  _fblogout
   ,	  _logout
   ,	  _loadLayout
@@ -53,6 +54,18 @@
     $('.phone_item').each(function(index) {
      	$(this).click({param: $(this).attr('id')}, _loadPhone);
     });
+    // Check if instagram has login already
+    if (location.hash != '') {
+	    var token_item = location.hash.split('&')[0];
+	    var source_item = location.hash.split('&')[1];
+	    if (source_item) {
+		    if (source_item.split('=')[1] == 'instagram')
+			    _instaCrossLogin(token_item.split('=')[1]);
+			else if(source_item.split('=')[1] == 'facebook')
+				_fbCrossLogin(token_item.split('=')[1]);
+			parent.location.hash = '';
+		}
+	}
   };
   
   function _loadLayout(event) {
@@ -81,7 +94,7 @@
   	$("body").append('<div class="modalOverlay"></div>');
   	_fblogout(_instalogout);
   	// Reset Design panel
-  	setTimeout("location.reload()", 3000);
+  	//setTimeout("location.reload()", 3000);
   }
   
   /*
@@ -111,35 +124,42 @@
    * Instagram: User login
    */
   _instalogin = function() {
-  	window.open('https://instagram.com/oauth/authorize/?client_id=1e05a75f3b1548bbbdab2072bb0ed6e7&amp;redirect_uri=http://insta.camangiwebstation.com/instaredirect.html&amp;response_type=token', 'hotprintCloud', 'height=400,width=600,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes');
-  	return false;
+  	window.location = 'https://instagram.com/oauth/authorize/?'+
+  							'client_id=1e05a75f3b1548bbbdab2072bb0ed6e7'+
+  							'&amp;redirect_uri=http://insta.camangiwebstation.com/instaredirect.html'+
+  							'&amp;response_type=token';
   };
   
   _instalogout = function(callback) {
-	
-  	$('.modalOverlay').html('<iframe src="https://instagram.com/accounts/logout/" width="0" height="0" onLoad="_fblogout">');
 
+  	//$('.modalOverlay').html('<iframe src="https://instagram.com/accounts/logout/" width="0" height="0" onLoad="window.location.replace()">');
+	$.ajax({
+	    url: 'https://instagram.com/accounts/logout/',
+	    dataType: 'jsonp',
+	    error: function(xhr) {
+	      	location.reload();
+	    },
+	    success: function(response) {
+		  	location.reload();
+	    }
+  });
   }
   
   /*
    * Instagram: login interface
    */
   _instaCrossLogin = function(token){
-    access_token = token;
-    if (access_token === undefined) {
-      $('body').addClass('not-logged-in');
-    } else {
+      access_token = token;
       $('body').addClass('logged-in');
 	  _getUserData();
 	  bindFunc();
 	  source_type = "Instagram";
-    }
   };
   
   /*
    * Instagram: Get user id
    */
-  _displayUserData = function(json){
+  _displayUserData = function(json) {
     $(".open").html("")
                 .fadeIn(300)
                 .append(json.data.username);
@@ -197,17 +217,27 @@
    * facebook: Login process
    */
   _fblogin = function() {
-	//clear photo of source 
-	$('#facebook-source').html('');
-  	FB.login(function(response) {
-	  if (response.authResponse) {
-	    source_type = "facebook";
-	    access_token = response.authResponse.accessToken;
-	    // login success
-	    $('body').addClass('logged-in');
-	    bindFunc();
-		// get album list
-		FB.api('/me?fields=albums,name', function(response) {
+  	
+  	window.location = 'http://www.facebook.com/dialog/oauth/?'+
+	    'client_id=436922296362142'+
+	    '&redirect_uri=http://insta.camangiwebstation.com/fbredirect.html'+
+	    '&response_type=token'+
+	    '&scope=user_photos';
+  }
+  
+  /*
+   * Instagram: login interface
+   */
+  _fbCrossLogin = function(token){
+  		//clear photo of source 
+  		$('#facebook-source').html('');
+  		access_token = token;
+    	$('body').addClass('logged-in');
+	  	bindFunc();
+	  	source_type = "facebook";
+	  	
+	  	// get album list
+		FB.api('/me?access_token='+access_token+'&fields=albums,name', function(response) {
 			// show user name
 			$(".open").html("").fadeIn(300).append(response.name);
 			// create albumn selection drop box		                
@@ -235,18 +265,24 @@
 			fbRes = '';
 			_facebookPhotoAlbum();
 		});
-	  }
-	  else
-	  		$('body').addClass('not-logged-in');
-	}, {scope: 'user_photos'});
+
   }
   
   _fblogout = function(callback) {
-  	FB.logout(function(response) {
-  		console.log('FB logout')
-		if (typeof callback != 'undefined')
-    		callback();
-	});
+  	FB.getLoginStatus(function(response) {
+  		if (response.status === 'connected') {
+  			FB.logout(function(response) {
+		  		console.log('FB logout');
+				if (typeof callback != 'undefined')
+		    		callback();
+			});
+  		}
+  		else {
+  			if (typeof callback != 'undefined')
+		    	callback();
+  		}
+  	});
+  	
   }
   
   /*
@@ -949,7 +985,7 @@ function releasePage(page) {
  * Initialize on DOM Ready
  */ 
 $(function(){
-	// For direfox, to dealing with wrong dragging position
+	// For firefox, to dealing with wrong dragging position
 	if (navigator.userAgent.indexOf("Firefox")!=-1) {
 		$('body').css('overflow', 'auto');
 	}
