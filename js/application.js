@@ -1023,7 +1023,7 @@ $(function(){
 });
 
 $(window).resize(function() { setContainer();setFooterTop()}); 
-$(window).scroll(function() { setFooterTop(); console.log($(document).height())});
+$(window).scroll(function() { setFooterTop();});
 
 // If browser didn't support console, then set it empty !
 if (!window.console) window.console = {};

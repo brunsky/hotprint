@@ -316,7 +316,6 @@ function mod_saveremote(resCanvas) {
     		zw: $(this).children(".draggable").data('zw'),
     		zh: $(this).children(".draggable").data('zh')});
 	});
-	console.log(jsonObj);
 }
 
 /*
@@ -562,6 +561,7 @@ function wheel(e) {
 }
 
 function disable_scroll() {
+	console.log('disable_scroll');
     if (window.addEventListener) {
         window.addEventListener('DOMMouseScroll', wheel, false);
     }
@@ -570,6 +570,7 @@ function disable_scroll() {
 }
 
 function enable_scroll() {
+	console.log('enable_scroll');
     if (window.removeEventListener) {
         window.removeEventListener('DOMMouseScroll', wheel, false);
     }
