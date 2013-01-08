@@ -44,10 +44,10 @@
     $('html').removeClass('no-js');
     $('body').addClass('not-logged-in');
     // connect button and operations
-    $('#login').click(_instalogin);
-    $('#login2').click(_fblogin);
-    $('#facebook-source-login').click(_fblogin);
-    $('#instagram-source-login').click(_instalogin);
+    $('#login').click({isPopup: false}, _instalogin);
+    $('#login2').click({isPopup: false}, _fblogin);
+    $('#facebook-source-login').click({isPopup: true}, _fblogin);
+    $('#instagram-source-login').click({isPopup: true}, _instalogin);
     $('.layout_item').each(function(index) {
      	$(this).click({param: $(this).attr('id')}, _loadLayout);
     });
@@ -123,11 +123,18 @@
   /*
    * Instagram: User login
    */
-  _instalogin = function() {
-  	window.location = 'https://instagram.com/oauth/authorize/?'+
+  _instalogin = function(event) {
+  	var url = 'https://instagram.com/oauth/authorize/?'+
   							'client_id=1e05a75f3b1548bbbdab2072bb0ed6e7'+
   							'&amp;redirect_uri=http://insta.camangiwebstation.com/instaredirect.html'+
   							'&amp;response_type=token';
+  	if (event.data.isPopup == true) {
+  		window.open(url,'hotprintCloud', 
+  						'height=400,width=600,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes');
+  		return false;
+  	}
+  	else
+  		window.location = url;
   };
   
   _instalogout = function(callback) {
@@ -216,13 +223,19 @@
   /*
    * facebook: Login process
    */
-  _fblogin = function() {
-  	
-  	window.location = 'http://www.facebook.com/dialog/oauth/?'+
+  _fblogin = function(event) {
+  	var url = 'http://www.facebook.com/dialog/oauth/?'+
 	    'client_id=436922296362142'+
 	    '&redirect_uri=http://insta.camangiwebstation.com/fbredirect.html'+
 	    '&response_type=token'+
 	    '&scope=user_photos';
+	if (event.data.isPopup == true) {
+		window.open(url,'hotprintCloud', 
+					'height=600,width=800,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes');
+		return false;
+	}
+	else
+  		window.location = url;
   }
   
   /*
@@ -389,7 +402,6 @@ function gallery_bar_setting(res) {
 			$(this).data('ow', Math.round($(this).width()*0.7));
 		},
 		stop: function(event, ui) {
-			enable_scroll();
 			isCornerFading = true;
 			$('.layout_corner').animate({ opacity: CORNER_OPT},
 				{complete:  function() { 
@@ -602,6 +614,7 @@ function setDnD(maskImg, ox, oy) {
 			$(this).removeData('corner');
 			$(this).removeData('ow');
 			$(this).removeData('oh');
+			enable_scroll();
 		}
 	});
 }

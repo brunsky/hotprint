@@ -334,6 +334,7 @@ function setDragObj(divObj) {
 			}
 		},
 		start: function(event, ui) {
+			console.log('start');
 			disable_scroll();
 			$(this).height($(this).data('oh')).width($(this).data('ow'));
 			$('.layout_corner').css('z-index', '998'); 
@@ -342,6 +343,7 @@ function setDragObj(divObj) {
 			$(this).data('corner', $(this).parent());
 		},
 		stop: function( event, ui ) {
+			console.log('stop');
 			enable_scroll();
 			if ($(this).parent().attr("class").indexOf("removed") >= 0) {
 				clearCorner($(this).parent());
@@ -561,7 +563,6 @@ function wheel(e) {
 }
 
 function disable_scroll() {
-	console.log('disable_scroll');
     if (window.addEventListener) {
         window.addEventListener('DOMMouseScroll', wheel, false);
     }
@@ -570,7 +571,6 @@ function disable_scroll() {
 }
 
 function enable_scroll() {
-	console.log('enable_scroll');
     if (window.removeEventListener) {
         window.removeEventListener('DOMMouseScroll', wheel, false);
     }
