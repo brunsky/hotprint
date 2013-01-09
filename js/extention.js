@@ -407,7 +407,9 @@ function mod_randesign() {
 		var imgSrc = $(this).children(".draggable").attr('src');
 		var divObj = $(this);
 		// copy img url from gallery-pool object
-		$(this).children(".draggable").data('src', imgSrc);
+		// Fixed url to hotprintCloud server
+		var str = HOST_URL + TEMP_DIR + imgSrc.replace(/\//g, "+");
+		$(this).children(".draggable").data('src', str);
 		
 		var opts = {
 		  lines: 13, // The number of lines to draw

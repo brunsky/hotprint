@@ -38,12 +38,25 @@ try {
 		);     
 		$context = stream_context_create($opts);
 		
+		$filename = dirname(__FILE__) . "/tmp/" . str_replace("/", "+", $url);
 		// Get the contents of the URL
-		$file = file_get_contents($url);
+		$file = "";
+		if (file_exists($filename)) {
+			$file = file_get_contents($filename);
+		}
+		else {
+			$file = file_get_contents($url);
+		}
 	
 		// Check if it is an image
 		if(@imagecreatefromstring($file)) {
-		
+
+			// check if file is not exist locally and didn't come from local host.
+			if (!file_exists($filename) && !strpos($filename, "camangiwebstation")) {
+				// save image into temp file
+				file_put_contents($filename , $file);	
+			}	
+			
 			// Get the image information
 			$size = getimagesize($url);
 			// Image type

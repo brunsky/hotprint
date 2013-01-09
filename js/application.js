@@ -3,6 +3,8 @@
  */
  
  // Global settings
+ var HOST_URL		= 'http://insta.camangiwebstation.com/';
+ var TEMP_DIR		= 'proxy/tmp/'
  var PHONE_NAME 	= 'iphone5';
  var LAYOUT_NAME 	= 'layout_3';
  var PHONE_COLOR	= 'white';
@@ -359,9 +361,9 @@
 	        {
 	          var image = result.data[i];
 	          if (image.width > image.height)
-	          	fbRes += "<li><a href='"+image.link+"'><img src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-h gallery-pool'/></a></li>";
+	          	fbRes += "<li><a href='"+image.source+"'><img src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-h gallery-pool'/></a></li>";
 	          else
-	          	fbRes += "<li><a href='"+image.link+"'><img src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-w gallery-pool'/></a></li>";
+	          	fbRes += "<li><a href='"+image.source+"'><img src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-w gallery-pool'/></a></li>";
 	        }
 			// Check if any more photos to get
 			if (typeof result.paging != 'undefined') {
@@ -512,7 +514,11 @@ function setDnD(maskImg, ox, oy) {
 			$(this).children(".draggable").data('corner', $(this).data('corner'));
 			// copy img url from gallery-pool object
 			if ($(this).children(".draggable").attr('src').indexOf('http://') >= 0) {
-				$(this).children(".draggable").data('src', $(this).children(".draggable").attr('src'));
+				// Fixed url to hotprintCloud server
+				var str = HOST_URL + TEMP_DIR + 
+								$(this).children(".draggable").attr('src').replace(/\//g, "+");
+				console.log(str);
+				$(this).children(".draggable").data('src', str);
 			}
 			// copy original size
 			$(this).children(".draggable").data('oh', $(this).data('oh'));
