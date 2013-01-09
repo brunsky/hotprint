@@ -32,6 +32,7 @@
   	.script("lib/dc.cart.lang.js")
   	.script("lib/messi.min.js")
   	.script("lib/popbox.js")
+  	.script("lib/jquery.cookie.js")
   	.script("js/mapping.js?v="+(new Date()).getTime())
   	.script("js/clipping.js?v="+(new Date()).getTime())
   	.script("js/extention.js?v="+(new Date()).getTime())
@@ -108,9 +109,9 @@
 	<li id="three" class="color">
 		<a href="#three">背蓋顏色<span id='menu_color'>白色</span></a>
 		<ul class="sub-menu">					
-			<li><a href="#"><em>1</em>白色</a></li>					
-			<li><a href="#"><em>2</em>黑色</a></li>
-			<li><a href="#"><em>3</em>透明</a></li>
+			<li><a class='color_item' id='white'><em>1</em>白色</a></li>					
+			<li><a class='color_item' id='black'><em>2</em>黑色</a></li>
+			<li><a class='color_item' id='trans'><em>3</em>透明</a></li>
 		</ul>
 	</li>
 	<!--

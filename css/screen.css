@@ -339,7 +339,8 @@ body.logged-in #loginZone { display: none; }
 /* Layout & Style */
 
 .layout_item,
-.phone_item {
+.phone_item,
+.color_item {
 	cursor:pointer;
 }
 

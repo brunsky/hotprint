@@ -75,17 +75,24 @@ function mod_saving(func_complete) {
 			}
 			else {
 
-				$.post("db/save_image.php", {userid: user_id, saveimag:JSON.stringify(jsonObj)}, function(data) {
-					delete resCanvas;
-					resCanvas = null;
-					mod_gallerysave();
+				$.post("db/save_image.php", 
+					{ userid: $.cookie('user_id'), 
+						user_type: $.cookie('user_type'),
+						saveimag: JSON.stringify(jsonObj),
+						phone_type: PHONE_NAME,
+						layout_no: LAYOUT_NAME,
+						phone_color: PHONE_COLOR},  
+					function(data) {
+						delete resCanvas;
+						resCanvas = null;
+						mod_gallerysave();
+							
+						$( "#progress-bar" ).remove();
+						$( "#progress-bar" )[0] = null;
+						$wDiv.remove();
+						$wDiv[0] = null;
 						
-					$( "#progress-bar" ).remove();
-					$( "#progress-bar" )[0] = null;
-					$wDiv.remove();
-					$wDiv[0] = null;
-					
-					func_complete();
+						func_complete();
 				});
 			}
 		}
@@ -342,8 +349,7 @@ function setDragObj(divObj) {
 			// set corner object
 			$(this).data('corner', $(this).parent());
 		},
-		stop: function( event, ui ) {
-			console.log('stop');
+		stop: function( event, ui ) { // It's triggered once drag out of corner 
 			enable_scroll();
 			if ($(this).parent().attr("class").indexOf("removed") >= 0) {
 				clearCorner($(this).parent());

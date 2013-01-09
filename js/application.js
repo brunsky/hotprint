@@ -5,6 +5,7 @@
  // Global settings
  var PHONE_NAME 	= 'iphone5';
  var LAYOUT_NAME 	= 'layout_3';
+ var PHONE_COLOR	= 'white';
  var layout_x 		= 410;
  var layout_y 		= Math.floor($(window).height() * 0.1);
  var CORNER_OPT 	= 0.1;
@@ -54,6 +55,9 @@
     $('.phone_item').each(function(index) {
      	$(this).click({param: $(this).attr('id')}, _loadPhone);
     });
+    $('.color_item').each(function(index) {
+     	$(this).click({param: $(this).attr('id')}, _loadColor);
+    });
     // Check if instagram has login already
     if (location.hash != '') {
 	    var token_item = location.hash.split('&')[0];
@@ -63,7 +67,11 @@
 			    _instaCrossLogin(token_item.split('=')[1]);
 			else if(source_item.split('=')[1] == 'facebook')
 				_fbCrossLogin(token_item.split('=')[1]);
+			else
+				return;
 			parent.location.hash = '';
+			$.cookie('source', source_item.split('=')[1]);
+			$.cookie('access_token', token_item.split('=')[1]);
 		}
 	}
   };
@@ -74,6 +82,10 @@
   
   function _loadPhone(event) {
   	menuLoadPhone(event.data.param);
+  }
+  
+  function _loadColor(event) {
+  	menuLoadColor(event.data.param);
   }
   
   function bindFunc() {
@@ -92,6 +104,9 @@
   
   _logout = function() {
   	$("body").append('<div class="modalOverlay"></div>');
+  	$.removeCookie('source');
+  	$.removeCookie('access_token');
+  	$.removeCookie('user_id');
   	_fblogout(_instalogout);
   	// Reset Design panel
   	//setTimeout("location.reload()", 3000);
@@ -138,9 +153,7 @@
   };
   
   _instalogout = function(callback) {
-
-  	//$('.modalOverlay').html('<iframe src="https://instagram.com/accounts/logout/" width="0" height="0" onLoad="window.location.replace()">');
-	$.ajax({
+  	$.ajax({
 	    url: 'https://instagram.com/accounts/logout/',
 	    dataType: 'jsonp',
 	    error: function(xhr) {
@@ -155,22 +168,28 @@
   /*
    * Instagram: login interface
    */
-  _instaCrossLogin = function(token){
+  _instaCrossLogin = function(token) {
+  	
       access_token = token;
       $('body').addClass('logged-in');
 	  _getUserData();
 	  bindFunc();
-	  source_type = "Instagram";
+	  source_type = "instagram";
   };
   
   /*
    * Instagram: Get user id
    */
   _displayUserData = function(json) {
-    $(".open").html("")
+    
+	user_id = json.data.id;
+	if ($.cookie('source') == 'instagram') {
+		$.cookie('user_id', user_id);
+		$.cookie('user_type', 'instagram');
+		$(".open").html("")
                 .fadeIn(300)
                 .append(json.data.username);
-	user_id = json.data.id;
+	}
 	instaRes = '';
 	_getUserRecent();
   };
@@ -179,6 +198,7 @@
    * Instagram: Call photos API & disable facebook albums if any.
    */
   _getUserRecent = function(next_url) {
+  	
   	if ($('#fbalbums').length > 0)
   		$('#fbalbums').attr('disabled', 'disabled');
   		
@@ -224,6 +244,7 @@
    * facebook: Login process
    */
   _fblogin = function(event) {
+  	
   	var url = 'http://www.facebook.com/dialog/oauth/?'+
 	    'client_id=436922296362142'+
 	    '&redirect_uri=http://insta.camangiwebstation.com/fbredirect.html'+
@@ -250,9 +271,15 @@
 	  	source_type = "facebook";
 	  	
 	  	// get album list
-		FB.api('/me?access_token='+access_token+'&fields=albums,name', function(response) {
-			// show user name
-			$(".open").html("").fadeIn(300).append(response.name);
+		FB.api('/me?access_token='+access_token+'&fields=albums,id,name', function(response) {
+			user_id = response.id;
+			if ($.cookie('source') == 'facebook') {
+				$.cookie('user_id', user_id);
+				$.cookie('user_type', 'facebook');
+				// show user name
+				$(".open").html("").fadeIn(300).append(response.name);
+			}
+			
 			// create albumn selection drop box		                
 		  	$select = $('<select></select>');
 		  	$select.attr('id','fbalbums');
@@ -450,6 +477,8 @@ function setDnD(maskImg, ox, oy) {
 			}
 			
 			$('.layout_corner').droppable( "disable" );
+			
+			enable_scroll();
 
 			if ($(this).next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
 				$(this).next().remove();
@@ -614,29 +643,51 @@ function setDnD(maskImg, ox, oy) {
 			$(this).removeData('corner');
 			$(this).removeData('ow');
 			$(this).removeData('oh');
-			enable_scroll();
 		}
 	});
 }
 
 // load phone canvas in menu
 function menuLoadPhone(_phoneName) {
-	var change_phone = function(_layoutName) {
+	var change_phone = function(_phoneName) {
 		PHONE_NAME = _phoneName;
-		setCanvas(_phoneName);
 		
 		if(_phoneName === 'iphone5') {
 			$('#menu_type').html('iPhone 5').fadeIn(300);
+			$('#white.color_item').parent().show();
+			$('#black.color_item').parent().show();
+			$('#trans.color_item').parent().show();
 		}
 		else if(_phoneName === 'iphone4') {
 			$('#menu_type').html('iPhone 4/4S').fadeIn(300);
+			PHONE_COLOR = 'white';
+			$('#menu_color').html('白色').fadeIn(300);
+			$('#white.color_item').parent().show();
+			$('#black.color_item').parent().hide();
+			$('#trans.color_item').parent().hide();
 		}
 		else if(_phoneName === 's3') {
 			$('#menu_type').html('S3').fadeIn(300);
+			if(PHONE_COLOR == 'black') {
+				PHONE_COLOR = 'white';
+				$('#menu_color').html('白色').fadeIn(300);
+			}
+			$('#white.color_item').parent().show();
+			$('#black.color_item').parent().hide();
+			$('#trans.color_item').parent().show();	
 		}
 		else if(_phoneName === 'onex') {
 			$('#menu_type').html('HTC One X').fadeIn(300);
+			if(PHONE_COLOR == 'black') {
+				PHONE_COLOR = 'white';
+				$('#menu_color').html('白色').fadeIn(300);
+			}
+			$('#white.color_item').parent().show();
+			$('#black.color_item').parent().hide();
+			$('#trans.color_item').parent().show();
 		}
+		
+		setCanvas(_phoneName);
 	}
 	if ($('.canvas_appended').length != 0 ) {
 		$("body").append('<div class="modalOverlay"></div>');
@@ -666,6 +717,52 @@ function menuLoadPhone(_phoneName) {
 	}
 	else
 		change_phone(_phoneName);
+}
+
+// Change phone color in menu
+function menuLoadColor(_phoneColor) {
+	var change_color = function(_phoneColor) {
+		PHONE_COLOR = _phoneColor;
+		setCanvas(PHONE_NAME);
+		
+		if(_phoneColor === 'white') {
+			$('#menu_color').html('白色').fadeIn(300);
+		}
+		else if(_phoneColor === 'black') {
+			$('#menu_color').html('黑色').fadeIn(300);
+		}
+		else if(_phoneColor === 'trans') {
+			$('#menu_color').html('透明').fadeIn(300);
+		}
+	}
+	if ($('.canvas_appended').length != 0 ) {
+		$("body").append('<div class="modalOverlay"></div>');
+		new Messi('你確定要切換背蓋顏色嗎？所有的圖片將會被清空！', 
+			{title: '切換背蓋顏色', 
+			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
+						{id: 1, label: 'No', val: 'N'}], 
+			callback: function(val) {  
+				$('.modalOverlay').remove();
+				$('.layout_corner').animate({ opacity: CORNER_OPT});
+				if (val === 'Y') {
+					if ( $('.layout_corner').length ) {
+						$('.layout_corner').children('.draggable').each(function(index) {
+					  		$(this).remove();
+						  	$(this)[0] = null;
+						});
+					}
+					if ( $('.canvas_appended').length ) {
+						$('.canvas_appended').each(function(index) {
+						  	$(this).remove();
+						  	$(this)[0] = null;
+						});
+					}
+					change_color(_phoneColor);
+				}
+			}});
+	}
+	else
+		change_color(_phoneColor);
 }
 
 // load layout in menu
@@ -816,7 +913,7 @@ function setCanvas(_phoneName) {
     $("#mCanvas").css('left', layout_ox+'px'); 
 
     var a = new Image();
-	a.src = "images/"+_phoneName+".png";
+	a.src = "images/"+_phoneName+"_"+PHONE_COLOR+".png";
 	a.onload = function(){
 		$("#mCanvas")[0].width = a.width;
         $("#mCanvas")[0].height = a.height;
@@ -928,10 +1025,10 @@ function newPage(page) {
 		$('.recent').fadeIn(300);
 		setCanvas(PHONE_NAME);
 		if (source_type == 'facebook') {
-			_fblogin();
+			_fbCrossLogin(access_token);
 		}
-		else if (source_type == 'Instagram') {
-			_instalogin();
+		else if (source_type == 'instagram') {
+			_instaCrossLogin(access_token);
 		}
 	}
 	else if (page == "Gallery") {
