@@ -69,12 +69,23 @@
 			    _instaCrossLogin(token_item.split('=')[1]);
 			else if(source_item.split('=')[1] == 'facebook')
 				_fbCrossLogin(token_item.split('=')[1]);
-			else
+			else {
+				$.removeCookie('source');
+  				$.removeCookie('access_token');
+				parent.location.hash = '';
 				return;
+			}
 			parent.location.hash = '';
-			$.cookie('source', source_item.split('=')[1]);
 			$.cookie('access_token', token_item.split('=')[1]);
 		}
+		else {
+			$.removeCookie('source');
+  			$.removeCookie('access_token');
+		}
+	}
+	else {
+		$.removeCookie('source');
+  		$.removeCookie('access_token');
 	}
   };
   
@@ -124,23 +135,6 @@
   var instaRes; // For total returning photos
   
   /*
-   * Instagram: Get token
-   */
-  
-  _getUserData = function(){
-    
-    var request = $.ajax({
-      dataType: "jsonp",
-      url: "https://api.instagram.com/v1/users/self",
-      data: {
-        access_token: access_token
-      }
-    });
-    request.success(_displayUserData);
-    
-  };
-  
-  /*
    * Instagram: User login
    */
   _instalogin = function(event) {
@@ -176,10 +170,29 @@
   _instaCrossLogin = function(token) {
   	
       access_token = token;
+      source_type = "instagram";
+      if ($.cookie('source') == null)
+      	$.cookie('source', source_type);
       $('body').addClass('logged-in');
 	  _getUserData();
 	  bindFunc();
-	  source_type = "instagram";
+  };
+  
+  /*
+   * Instagram: Get token
+   */
+  
+  _getUserData = function(){
+    
+    var request = $.ajax({
+      dataType: "jsonp",
+      url: "https://api.instagram.com/v1/users/self",
+      data: {
+        access_token: access_token
+      }
+    });
+    request.success(_displayUserData);
+    
   };
   
   /*
@@ -224,7 +237,7 @@
     request.success(_displayUserRecent);
 	
   };
-    
+     
 	/*
 	 * Instagram: Get photos
 	 */
@@ -271,9 +284,11 @@
   		//clear photo of source 
   		$('#facebook-source').html('');
   		access_token = token;
+  		source_type = "facebook";
+  		if ($.cookie('source') == null)
+      		$.cookie('source', source_type);
     	$('body').addClass('logged-in');
 	  	bindFunc();
-	  	source_type = "facebook";
 	  	
 	  	// get album list
 		FB.api('/me?access_token='+access_token+'&fields=albums,id,name', function(response) {
