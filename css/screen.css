@@ -211,6 +211,10 @@ section {
 	box-shadow: inset 0px 1px 0px 0px rgba(255,255,255, .1), 0px 1px 0px 0px rgba(0,0,0, .1);
 }
 
+.gallery-pool {
+	cursor: pointer;
+}
+
 td.last {
     width: 1px;
     white-space: nowrap;
@@ -580,4 +584,17 @@ body.logged-in #loginZone { display: none; }
 	background-repeat: no-repeat;
 	background-image: url(images/icons2.png);
 	background-position: -96px 0px;
+}
+
+#price_tag {
+	display: none;
+	position: absolute;
+	height: 140px;
+	width: 300px;
+	font: bold 32px/32px Arial, sans-serif;
+	text-align:center;
+	line-height:140px;
+	background-repeat: no-repeat;
+	background-image: url(images/icons2.png);
+	background-position: -200px -183px;
 }

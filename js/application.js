@@ -228,7 +228,7 @@
   _displayUserRecent = function(json){
 	
 	for(var i=0; i<json.data.length; i++) {
-		instaRes += "<li><a href='"+json.data[i].images.standard_resolution.url+"'><img src=\""+json.data[i].images.standard_resolution.url+"\" id='recent_instaimg"+i+"' class='draggable draggable-h draggable-w gallery-pool' /></a></li>";
+		instaRes += "<li><a><img src=\""+json.data[i].images.standard_resolution.url+"\" id='recent_instaimg"+i+"' class='draggable draggable-h draggable-w gallery-pool' /></a></li>";
 	}
 	if (typeof json.pagination.next_url != 'undefined')
 		_getUserRecent(json.pagination.next_url);
@@ -361,9 +361,9 @@
 	        {
 	          var image = result.data[i];
 	          if (image.width > image.height)
-	          	fbRes += "<li><a href='"+image.source+"'><img src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-h gallery-pool'/></a></li>";
+	          	fbRes += "<li><a><img src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-h gallery-pool'/></a></li>";
 	          else
-	          	fbRes += "<li><a href='"+image.source+"'><img src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-w gallery-pool'/></a></li>";
+	          	fbRes += "<li><a><img src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-w gallery-pool'/></a></li>";
 	        }
 			// Check if any more photos to get
 			if (typeof result.paging != 'undefined') {
@@ -401,13 +401,29 @@ function gallery_bar_setting(res) {
 		"user-select": "none"
 	});
 	
-	/*選取動畫待研究*/
-	/*
-	$('.draggable').mouseenter(function(){
-		$(this).animate({ top: $('#recent').css('top') }, 'fast');
-	}).mouseleave(function(){
-	});*/
-	
+	// Selection animation ,Just support webkit based browser 
+	if ($.browser.webkit) {
+		$('.gallery-pool').hover(function(){
+			$(this).css('opacity', 0);
+			var $c = $(this).clone();
+			$c.css({
+				"left": $(this).position().left,
+				"top": $(this).position().top,
+				"width": $(this).css('width'),
+				"height": $(this).css('height'),
+				"position": "absolute",
+				"opacity": 1,
+				"box-shadow": "3px 3px 4px black",
+				"pointer-events": "none"
+			});		
+			$(this).after($c);
+			$c.animate({ top: '-=20', left: '-=5', width: '+=10', height: '+=10'}, 'fast');
+		}, function(){
+			$(this).css('opacity', 1);
+			$(this).next().remove();
+		});
+	}
+
 	$('.gallery-pool').draggable({
 		scroll: false,
 		cursor: 'move', 
@@ -431,6 +447,7 @@ function gallery_bar_setting(res) {
 			$(this).data('ow', Math.round($(this).width()*0.7));
 		},
 		stop: function(event, ui) {
+			enable_scroll();
 			isCornerFading = true;
 			$('.layout_corner').animate({ opacity: CORNER_OPT},
 				{complete:  function() { 
@@ -474,11 +491,13 @@ function setDnD(maskImg, ox, oy) {
 		tolerance: "pointer",
 		drop: function( event, ui ) {
 			// Prevent from drop into if spinning
+			
 			if ($(this).children(".spinner").length > 0) {
+				console.log('spinning!');
 				return;
 			}
 			
-			$('.layout_corner').droppable( "disable" );
+			$(this).droppable( "disable" );
 			
 			enable_scroll();
 
@@ -517,7 +536,6 @@ function setDnD(maskImg, ox, oy) {
 				// Fixed url to hotprintCloud server
 				var str = HOST_URL + TEMP_DIR + 
 								$(this).children(".draggable").attr('src').replace(/\//g, "+");
-				console.log(str);
 				$(this).children(".draggable").data('src', str);
 			}
 			// copy original size
@@ -569,7 +587,7 @@ function setDnD(maskImg, ox, oy) {
 					}
 					divObj.css('opacity', '0');
 					setDragObj(divObj);
-					$('.layout_corner').droppable( "enable" );
+					divObj.droppable( "enable" );
 				}
 				
 			}
@@ -607,7 +625,6 @@ function setDnD(maskImg, ox, oy) {
 								cirClipper);	
 						}
 						else if (divObj.attr("class").indexOf("layout_square") >= 0) {
-							
 							doClipping( 
 								doMasking(image, maskImg, divObj, ox, oy), 
 								divObj, 
@@ -616,11 +633,11 @@ function setDnD(maskImg, ox, oy) {
 						spinner.stop();
 						divObj.css('opacity', '0');
 						setDragObj(divObj);				
-						$('.layout_corner').droppable( "enable" );	
+						divObj.droppable( "enable" );	
 					},
 					error: function(xhr, text_status){
 						spinner.stop();
-						$('.layout_corner').droppable( "enable" );
+						divObj.droppable( "enable" );
 						console.log("Fail to get image:"+imgSrc);
 					}
 				});
@@ -889,7 +906,7 @@ function setContainer(){
     var winH=$(window).height();  
     var docH=$(document).height();  
     $('#wrapper').css('height',winH-$('.recent').height()+'px');  
-    //$('#wrapper').css('width',$(window).width()+'px');  
+    $('#wrapper').css('width',$(window).width()+'px');  
 }  
   
 function setFooterTop(){  
@@ -937,6 +954,7 @@ function setCanvas(_phoneName) {
         	console.log("Get "+_phoneName+", "+layout_ox+', '+layout_oy);
         	maskImg = image;
         	menuLoadLayout(LAYOUT_NAME);
+        	loadPriceTag(true);
         },
         error: function(xhr, text_status){
             console.log("Failed to get "+_phoneName+": "+text_status);
@@ -1097,6 +1115,16 @@ function releasePage(page) {
 	}
 }
 
+function loadPriceTag(isShow) {
+	if (isShow == true) {
+		$('#price_tag').show();
+		$('#price_tag').css('left', 400+layout_ox+'px');
+		$('#price_tag').css('top', 300+layout_oy+'px');
+	}
+	else
+		$('#price_tag').hide();
+}
+
 /*
  * Initialize on DOM Ready
  */ 
@@ -1135,7 +1163,7 @@ $(function(){
     
     $('#start-design').hide();
     
-     $('#popbox').popbox();
+    $('#popbox').popbox();
 });
 
 $(window).resize(function() { setContainer();setFooterTop()}); 

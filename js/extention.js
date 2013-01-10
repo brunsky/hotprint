@@ -341,7 +341,6 @@ function setDragObj(divObj) {
 			}
 		},
 		start: function(event, ui) {
-			console.log('start');
 			disable_scroll();
 			$(this).height($(this).data('oh')).width($(this).data('ow'));
 			$('.layout_corner').css('z-index', '998'); 
@@ -366,12 +365,34 @@ function setDragObj(divObj) {
 /*
  * Generize random design
  */
+
 function mod_randesign() {
+
 	if($('.layout_corner').children('.spinner').length > 0) {
 		console.log('waiting spin stop');
 		return;
 	}
 	
+	if ($('.canvas_appended').length != 0 ) {
+		$("body").append('<div class="modalOverlay"></div>');
+		new Messi('你確定要重新隨機設計嗎？之前的圖片將會被清空！', 
+			{title: '隨機設計', 
+			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
+						{id: 1, label: 'No', val: 'N'}], 
+			 callback: function(val) {  
+				if (val === 'Y') {
+					_randesign();
+				}
+				$('.modalOverlay').remove();
+				$('.layout_corner').animate({ opacity: CORNER_OPT});
+			}});
+	}
+	else
+		_randesign();
+}
+
+function _randesign() {
+
 	// clear content
 	$('.layout_corner').css('opacity', CORNER_OPT);
 	$('.layout_corner').html('');
@@ -465,6 +486,12 @@ function mod_randesign() {
  * CLear button
  */
 function clearDesign() {
+	
+	if($('.layout_corner').children('.spinner').length > 0) {
+		console.log('waiting spin stop');
+		return;
+	}
+	
 	// Check if any design already
 	if ($('.canvas_appended').length != 0 ) {
 		$("body").append('<div class="modalOverlay"></div>');
