@@ -590,7 +590,7 @@ body.logged-in #loginZone { display: none; }
 	display: none;
 	position: absolute;
 	height: 140px;
-	width: 300px;
+	width: 280px;
 	font: bold 32px/32px Arial, sans-serif;
 	text-align:center;
 	line-height:140px;

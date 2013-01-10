@@ -19,7 +19,7 @@ function mod_saving(func_complete) {
 	$( "#progress-bar" ).css('position','fixed');
 	$( "#progress-bar" ).css('z-index', '1001');
 	$( "#progress-bar" ).css('top', '300px');
-	$( "#progress-bar" ).css('left', '500px');
+	$( "#progress-bar" ).css('left', layout_ox+'px');
 	$status = $('#status');
 	var a = new Image();
 	a.src = "images/"+PHONE_NAME+"_mask2.png";
@@ -37,7 +37,7 @@ function mod_saving(func_complete) {
 	    adjustMaskCanvas.height = a.height;
 	    var adjustMaskCtx = adjustMaskCanvas.getContext('2d');                       
 	    adjustMaskCtx.drawImage(a, 0, 0); 
-		
+		// counting for progress bar
 		var factor = 100 / $('.layout_corner').length; 
 		var inc = 0;
 		
@@ -99,6 +99,9 @@ function mod_saving(func_complete) {
 	}
 }
 
+/*
+ * HD ouput for factory 
+ */
 function mod_saving_for_host(func_complete) {
 	$("body").append('<div class="modalOverlay"></div>');
 	$wDiv = $('.modalOverlay');
@@ -176,20 +179,20 @@ function mod_saving_for_host(func_complete) {
 		
 		    	if ($(e).attr("class").indexOf("layout_circle") >= 0) {
 					doClipping( 
-						doMasking($imgSrc[0], adjustMaskCanvas, $c, layout_x*scaling, layout_y*scaling), 
+						doMasking($imgSrc[0], adjustMaskCanvas, $c, layout_ox*scaling, layout_oy*scaling), 
 						$c, 
 						cirClipper);	
 				}
 				else if ($(e).attr("class").indexOf("layout_square") >= 0) {
 					doClipping( 
-						doMasking($imgSrc[0], adjustMaskCanvas, $c, layout_x*scaling, layout_y*scaling), 
+						doMasking($imgSrc[0], adjustMaskCanvas, $c, layout_ox*scaling, layout_oy*scaling), 
 						$c, 
 						boxClipper);
 				}
 			
 				resCtx.drawImage($c.next()[0], 
-		    					(Math.round(parseInt($c.next().css('left'), 10))-layout_x*scaling), 
-		    					(Math.round(parseInt($c.next().css('top'), 10))-layout_y*scaling), 
+		    					(Math.round(parseInt($c.next().css('left'), 10))-layout_ox*scaling), 
+		    					(Math.round(parseInt($c.next().css('top'), 10))-layout_oy*scaling), 
 		    					Math.round(parseInt($c.next().css('width'), 10)),
 		    					Math.round(parseInt($c.next().css('height'), 10)));
 		    	$c.next().remove();
@@ -265,8 +268,8 @@ function mod_gallerysave() {
 	resCtx.drawImage($("#mCanvas")[0], 0, 0, resCanvas.width, resCanvas.height);
 	$('.canvas_appended').each(function(index) {
     	resCtx.drawImage($(this)[0], 
-    					(Math.round(parseInt($(this).css('left'), 10))-layout_x), 
-    					(Math.round(parseInt($(this).css('top'), 10))-layout_y), 
+    					(Math.round(parseInt($(this).css('left'), 10))-layout_ox), 
+    					(Math.round(parseInt($(this).css('top'), 10))-layout_oy), 
     					Math.round(parseInt($(this)[0].width, 10)),
     					Math.round(parseInt($(this)[0].height, 10)));
 	});
@@ -284,11 +287,12 @@ function mod_gallerysave() {
 	 * Using img tag to show image
 	 * 
 	 */
+	
 	var img = $('<img>');
 	img.attr('id', 'galleryCanvas');
 	img.css('position', 'absolute');
 	img.css('top', '80px');
-	img.css('left', '100px');
+	img.css('left', '200px');
 	img.css('width', Math.round($("#mCanvas")[0].width*0.7)+'px');
 	img.css('height', Math.round($("#mCanvas")[0].height*0.7)+'px');
 	$('body').append(img);

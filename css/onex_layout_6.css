@@ -1,288 +1,286 @@
 #corner1 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 35px;
-    left: 41px;
+    width: 59px;
+    height: 59px;
+    top: 60px;
+    left: 60px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner2 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 35px;
-    left: 120px;
+    width: 59px;
+    height: 59px;
+    top: 60px;
+    left: 196px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner3 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 35px;
-    left: 199px;
+    width: 59px;
+    height: 59px;
+    top: 60px;
+    left: 264px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner4 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 35px;
-    left: 278px;
+    width: 59px;
+    height: 59px;
+    top: 127px;
+    left: 196px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner5 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 109px;
-    left: 41px;
+    width: 59px;
+    height: 59px;
+    top: 127px;
+    left: 264px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner6 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 109px;
-    left: 120px;
+    width: 59px;
+    height: 59px;
+    top: 194px;
+    left: 60px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner7 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 109px;
-    left: 199px;
+    width: 59px;
+    height: 59px;
+    top: 194px;
+    left: 127px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner8 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 109px;
-    left: 278px;
+    width: 59px;
+    height: 59px;
+    top: 261px;
+    left: 60px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner9 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 183px;
-    left: 41px;
+    width: 59px;
+    height: 59px;
+    top: 261px;
+    left: 127px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner10 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 183px;
-    left: 120px;
+    width: 59px;
+    height: 59px;
+    top: 194px;
+    left: 196px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner11 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 183px;
-    left: 199px;
+    width: 59px;
+    height: 59px;
+    top: 328px;
+    left: 60px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner12 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 183px;
-    left: 278px;
+    width: 59px;
+    height: 59px;
+    top: 328px;
+    left: 196px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner13 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 257px;
-    left: 41px;
+    width: 59px;
+    height: 59px;
+    top: 328px;
+    left: 264px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner14 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 257px;
-    left: 120px;
+    width: 59px;
+    height: 59px;
+    top: 395px;
+    left: 196px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner15 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 257px;
-    left: 199px;
+    width: 59px;
+    height: 59px;
+    top: 395px;
+    left: 264px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner16 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 257px;
-    left: 278px;
+    width: 59px;
+    height: 59px;
+    top: 462px;
+    left: 60px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner17 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 331px;
-    left: 41px;
+    width: 59px;
+    height: 59px;
+    top: 462px;
+    left: 127px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner18 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 331px;
-    left: 120px;
+    width: 59px;
+    height: 59px;
+    top: 529px;
+    left: 60px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner19 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 331px;
-    left: 199px;
+    width: 59px;
+    height: 59px;
+    top: 529px;
+    left: 127px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner20 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 331px;
-    left: 278px;
+    width: 59px;
+    height: 59px;
+    top: 462px;
+    left: 196px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner21 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 405px;
-    left: 41px;
+    width: 59px;
+    height: 59px;
+    top: 60px;
+    left: 127px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner22 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 405px;
-    left: 120px;
+    width: 59px;
+    height: 59px;
+    top: 127px;
+    left: 60px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner23 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 405px;
-    left: 199px;
+    width: 59px;
+    height: 59px;
+    top: 127px;
+    left: 127px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner24 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 405px;
-    left: 278px;
+    width: 59px;
+    height: 59px;
+    top: 194px;
+    left: 264px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner25 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 479px;
-    left: 41px;
+    width: 59px;
+    height: 59px;
+    top: 261px;
+    left: 196px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner26 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 479px;
-    left: 120px;
+    width: 59px;
+    height: 59px;
+    top: 261px;
+    left: 264px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner27 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 479px;
-    left: 199px;
+    width: 59px;
+    height: 59px;
+    top: 328px;
+    left: 127px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner28 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 479px;
-    left: 278px;
+    width: 59px;
+    height: 59px;
+    top: 395px;
+    left: 60px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner29 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 553px;
-    left: 41px;
+    width: 59px;
+    height: 59px;
+    top: 395px;
+    left: 127px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner30 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 553px;
-    left: 120px;
+    width: 59px;
+    height: 59px;
+    top: 462px;
+    left: 264px;
     border: 2px solid silver;
     z-index: 999;
-}
-#corner31 {
+}#corner31 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 553px;
-    left: 199px;
+    width: 59px;
+    height: 59px;
+    top: 529px;
+    left: 196px;
     border: 2px solid silver;
     z-index: 999;
-}
-#corner32 {
+}#corner32 {
     position: absolute;
-    width: 70px;
-    height: 65px;
-    top: 553px;
-    left: 278px;
+    width: 59px;
+    height: 59px;
+    top: 529px;
+    left: 264px;
     border: 2px solid silver;
     z-index: 999;
 }

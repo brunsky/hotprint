@@ -8,8 +8,8 @@
  var PHONE_NAME 	= 'iphone5';
  var LAYOUT_NAME 	= 'layout_3';
  var PHONE_COLOR	= 'white';
- var layout_x 		= 410;
- var layout_y 		= Math.floor($(window).height() * 0.1);
+ var layout_ox 		= 410;
+ var layout_oy 		= Math.floor($(window).height() * 0.1);
  var CORNER_OPT 	= 0.1;
  var isCornerFading = false;
  var maskImg;
@@ -109,6 +109,9 @@
   	$.removeCookie('source');
   	$.removeCookie('access_token');
   	$.removeCookie('user_id');
+  	$.removeCookie('phone_name');
+  	$.removeCookie('layout_name');
+  	$.removeCookie('phone_color');
   	_fblogout(_instalogout);
   	// Reset Design panel
   	//setTimeout("location.reload()", 3000);
@@ -402,7 +405,7 @@ function gallery_bar_setting(res) {
 	});
 	
 	// Selection animation ,Just support webkit based browser 
-	if ($.browser.webkit) {
+	if (!$.browser.msie) {
 		$('.gallery-pool').hover(function(){
 			$(this).css('opacity', 0);
 			var $c = $(this).clone();
@@ -674,7 +677,7 @@ function setDnD(maskImg, ox, oy) {
 function menuLoadPhone(_phoneName) {
 	var change_phone = function(_phoneName) {
 		PHONE_NAME = _phoneName;
-		
+		$.cookie('phone_name', PHONE_NAME);
 		if(_phoneName === 'iphone5') {
 			$('#menu_type').html('iPhone 5').fadeIn(300);
 			$('#white.color_item').parent().show();
@@ -684,15 +687,17 @@ function menuLoadPhone(_phoneName) {
 		else if(_phoneName === 'iphone4') {
 			$('#menu_type').html('iPhone 4/4S').fadeIn(300);
 			PHONE_COLOR = 'white';
+			$.cookie('phone_color', PHONE_COLOR);
 			$('#menu_color').html('白色').fadeIn(300);
 			$('#white.color_item').parent().show();
 			$('#black.color_item').parent().hide();
 			$('#trans.color_item').parent().hide();
 		}
 		else if(_phoneName === 's3') {
-			$('#menu_type').html('S3').fadeIn(300);
+			$('#menu_type').html('Galaxy S3').fadeIn(300);
 			if(PHONE_COLOR == 'black') {
 				PHONE_COLOR = 'white';
+				$.cookie('phone_color', PHONE_COLOR);
 				$('#menu_color').html('白色').fadeIn(300);
 			}
 			$('#white.color_item').parent().show();
@@ -703,6 +708,7 @@ function menuLoadPhone(_phoneName) {
 			$('#menu_type').html('HTC One X').fadeIn(300);
 			if(PHONE_COLOR == 'black') {
 				PHONE_COLOR = 'white';
+				$.cookie('phone_color', PHONE_COLOR);
 				$('#menu_color').html('白色').fadeIn(300);
 			}
 			$('#white.color_item').parent().show();
@@ -746,6 +752,7 @@ function menuLoadPhone(_phoneName) {
 function menuLoadColor(_phoneColor) {
 	var change_color = function(_phoneColor) {
 		PHONE_COLOR = _phoneColor;
+		$.cookie('phone_color', PHONE_COLOR);
 		setCanvas(PHONE_NAME);
 		
 		if(_phoneColor === 'white') {
@@ -793,6 +800,7 @@ function menuLoadLayout(_layoutName) {
 	
 	var change_layout = function(_layoutName) {
 		LAYOUT_NAME = _layoutName;
+		$.cookie('layout_name', LAYOUT_NAME)
 		loadLayout(maskImg, layout_ox, layout_oy, PHONE_NAME+'_'+LAYOUT_NAME);
 		
 		if(_layoutName === 'layout_1') {
@@ -906,14 +914,14 @@ function setContainer(){
     var winH=$(window).height();  
     var docH=$(document).height();  
     $('#wrapper').css('height',winH-$('.recent').height()+'px');  
-    $('#wrapper').css('width',$(window).width()+'px');  
+    //$('#wrapper').css('width',$(document).width()+'px');  
 }  
   
 function setFooterTop(){  
     var winH=$(window).height();   
     $('.recent').css('top',winH-$('.recent').height()+$(document).scrollTop()+'px');  
-    $('.recent').css('width',$(window).width()+'px');  
-	$('.ad-gallery').css('width',($(window).width()-50)+'px');
+    $('.recent').css('width',$(document).width()+'px');  
+	$('.ad-gallery').css('width',($(document).width()-50)+'px');
 }
 
 function setCanvas(_phoneName) {
@@ -931,7 +939,7 @@ function setCanvas(_phoneName) {
 	var winH=$(window).height();
 	var winW=$(window).width(); 
     layout_oy = Math.floor(winH * 0.1);
-    layout_ox = 410;
+    layout_ox = Math.floor(winW * 0.3);//410;
     $("#mCanvas").css('top', layout_oy+'px');
     $("#mCanvas").css('left', layout_ox+'px'); 
 
@@ -1056,8 +1064,8 @@ function newPage(page) {
 		}
 	}
 	else if (page == "Gallery") {
-		$('.buybutton').fadeIn(300);
-		$('#cart').fadeIn(300);
+		//$('.buybutton').fadeIn(300);
+		//$('#cart').fadeIn(300);
 	}
 }
 
@@ -1082,6 +1090,8 @@ function releasePage(page) {
 		$('.recent').hide();
 		$('.ad-preloads').remove();
 		$('.ad-preloads')[0] = null;
+		
+		loadPriceTag(false);
 
 		if ( $('.layout_corner').length ) {
 			
@@ -1118,7 +1128,7 @@ function releasePage(page) {
 function loadPriceTag(isShow) {
 	if (isShow == true) {
 		$('#price_tag').show();
-		$('#price_tag').css('left', 400+layout_ox+'px');
+		$('#price_tag').css('left', 370+layout_ox+'px');
 		$('#price_tag').css('top', 300+layout_oy+'px');
 	}
 	else
@@ -1138,8 +1148,14 @@ $(function(){
 	setContainer();
 	setFooterTop();
 	// Create phone case canvas and layout
+	if ($.cookie('phone_name'))
+		PHONE_NAME = $.cookie('phone_name');
+	if ($.cookie('phone_color'))
+		PHONE_COLOR = $.cookie('phone_color');
+	if($.cookie('layout_name'))
+        LAYOUT_NAME = $.cookie('layout_name');
 	menuLoadPhone(PHONE_NAME);
-	
+	/*
 	var cart = $('#cart').DCAJAXPaypalCart({  
             width:600,  
             height:400,  
@@ -1158,7 +1174,7 @@ $(function(){
             price:'34.99',                // Cost of the item
             shipping: '0'                 // Shipping cost for the item (Optional)
         });
-		
+	*/
     $.instagramr();
     
     $('#start-design').hide();
