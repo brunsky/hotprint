@@ -118,7 +118,7 @@ function mod_saving_for_host(func_complete) {
 	$( "#progress-bar" ).css('position','fixed');
 	$( "#progress-bar" ).css('z-index', '1001');
 	$( "#progress-bar" ).css('top', '300px');
-	$( "#progress-bar" ).css('left', '500px');
+	$( "#progress-bar" ).css('left', layout_ox+'px');
 	$status = $('#status');
 	var a = new Image();
 	a.src = "images/"+PHONE_NAME+"_mask2.png";
