@@ -106,12 +106,14 @@
 	$('#random-design').unbind('click');
 	$('#clear-design').unbind('click');
 	$('#start-design').unbind('click');
+	$('#my-gallery').unbind('click');
 	$('#logout').unbind('click');
 	
   	$('#save-design').bind('click',saveImg);
 	$('#random-design').bind('click',randomDesign);
 	$('#clear-design').bind('click',clearDesign);
 	$('#start-design').bind('click',startDesign);
+	$('#my-gallery').bind('click',openGallery);
 	$('#logout').bind('click',_logout);
   }
   
@@ -1036,12 +1038,12 @@ function saveImg() {
 	
 	mod_saving(function() {		
 		releasePage('Design');
-		newPage('Gallery');
+		newPage('Save');
 	});
 	/*
 	mod_saving_for_host(function() {		
 		releasePage('Design');
-		newPage('Gallery');
+		newPage('Save');
 	});
 	*/
 }
@@ -1057,8 +1059,16 @@ function randomDesign() {
  * Enter design page
  */
 function startDesign() {
-	releasePage('Gallery');
+	releasePage('Save');
 	newPage('Design');
+}
+
+/*
+ * Enter gallery page
+ */
+function openGallery() {
+	releasePage('Save');
+	newPage('Gallery');
 }
 
 
@@ -1070,6 +1080,9 @@ function newPage(page) {
 	if (page == "Design") {
 		$('#menubar').fadeIn(300);
 		$('.recent').fadeIn(300);
+		$('#random-design').fadeIn(300);
+		$('#clear-design').fadeIn(300);
+		$('#save-design').fadeIn(300);
 		setCanvas(PHONE_NAME);
 		if (source_type == 'facebook') {
 			_fbCrossLogin(access_token);
@@ -1078,21 +1091,25 @@ function newPage(page) {
 			_instaCrossLogin(access_token);
 		}
 	}
-	else if (page == "Gallery") {
+	else if (page == "Save") {
 		$('.buybutton').fadeIn(300);
+		$('#start-design').fadeIn(300);
+		$('#my-gallery').fadeIn(300);
 		//$('#cart').fadeIn(300);
+	}
+	else if (page == "Gallery") {
+		$('#start-design').fadeIn(300);
 	}
 }
 
 /*
  * release Page from given page name
- * page: "Design", "Gallery"
+ * page: "Design", "Gallery", "Save"
  */
 function releasePage(page) {
 	if (page == "Design") {
 		$('#random-design').hide();
 		$('#clear-design').hide();
-		$('#start-design').fadeIn(300);
 		$('#save-design').hide();
 		$('#menubar').hide();
 		$('#mCanvas').remove();
@@ -1127,12 +1144,9 @@ function releasePage(page) {
 			});
 		}
 	}
-	else if (page == "Gallery") {
-		$('#random-design').fadeIn(300);
-		$('#clear-design').fadeIn(300);
-		$('#save-design').fadeIn(300);
+	else if (page == "Save") {
 		$('#start-design').hide();
-	
+		$('#my-gallery').hide();
 		$('#galleryCanvas').remove();
 		$('#galleryCanvas')[0] = null;
 		$('.buybutton').hide()
@@ -1193,8 +1207,17 @@ $(function(){
     $.instagramr();
     
     $('#start-design').hide();
+    $('#my-gallery').hide();
     
     $('#popbox').popbox();
+    
+    // Check browser version
+    $("body").iealert({
+		support: "ie9",
+		title: "您的瀏覽器版本太老舊了!",
+		text: "為了更好、更安全的使用體驗 <br>請<font color=\"red\">立即更新</font>您的瀏覽器吧。",
+		upgradeTitle: "立即更新"
+	});
 });
 
 $(window).resize(function() { setContainer();setFooterTop()}); 
