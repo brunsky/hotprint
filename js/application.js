@@ -1079,7 +1079,7 @@ function newPage(page) {
 		}
 	}
 	else if (page == "Gallery") {
-		//$('.buybutton').fadeIn(300);
+		$('.buybutton').fadeIn(300);
 		//$('#cart').fadeIn(300);
 	}
 }
@@ -1144,7 +1144,7 @@ function loadPriceTag(isShow) {
 	if (isShow == true) {
 		$('#price_tag').show();
 		$('#price_tag').css('left', 370+layout_ox+'px');
-		$('#price_tag').css('top', 300+layout_oy+'px');
+		$('#price_tag').css('top', 80+layout_oy+'px');
 	}
 	else
 		$('#price_tag').hide();

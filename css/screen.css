@@ -514,6 +514,7 @@ body.logged-in #loginZone { display: none; }
 	background:#ffffff; 
 	width:300px; 
 	height:14px; 
+	text-align: center;
 	-moz-border-radius:10px; 
 	-webkit-border-radius:10px; 
 	-khtml-border-radius:10px; 
@@ -589,12 +590,13 @@ body.logged-in #loginZone { display: none; }
 #price_tag {
 	display: none;
 	position: absolute;
-	height: 140px;
-	width: 280px;
-	font: bold 32px/32px Arial, sans-serif;
-	text-align:center;
-	line-height:140px;
+	height: 164px;
+	width: 267px;
+	font: 30px/32px Helvetica-Light;
+	font-weight: lighter;
+	text-align: center;
+	padding-top: 4%;
 	background-repeat: no-repeat;
 	background-image: url(images/icons2.png);
-	background-position: -200px -183px;
+	background-position: -220px -184px;
 }
