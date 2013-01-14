@@ -1173,6 +1173,14 @@ $(function(){
 		$('body').css('overflow', 'auto');
 	}
 
+    // Check browser version
+    $("body").iealert({
+		support: "ie8",
+		title: "您的瀏覽器版本太老舊了!",
+		text: "為了更好、更安全的使用體驗 <br>請<font color=\"red\">立即更新</font>您的瀏覽器吧。",
+		upgradeTitle: "立即更新"
+	});
+	
 	setAccordionMenu();
 	setContainer();
 	setFooterTop();
@@ -1210,14 +1218,7 @@ $(function(){
     $('#my-gallery').hide();
     
     $('#popbox').popbox();
-    
-    // Check browser version
-    $("body").iealert({
-		support: "ie9",
-		title: "您的瀏覽器版本太老舊了!",
-		text: "為了更好、更安全的使用體驗 <br>請<font color=\"red\">立即更新</font>您的瀏覽器吧。",
-		upgradeTitle: "立即更新"
-	});
+
 });
 
 $(window).resize(function() { setContainer();setFooterTop()}); 

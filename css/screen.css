@@ -602,4 +602,5 @@ body.logged-in #loginZone { display: none; }
 	background-repeat: no-repeat;
 	background-image: url(images/icons2.png);
 	background-position: -220px -184px;
+	z-index: 0;
 }
