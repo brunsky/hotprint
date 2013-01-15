@@ -12,6 +12,7 @@
  var layout_oy 		= Math.floor($(window).height() * 0.1);
  var CORNER_OPT 	= 0.1;
  var isCornerFading = false;
+ var PAGE			= 'Design';
  var maskImg;
   
   var _init
@@ -108,6 +109,7 @@
 	$('#start-design').unbind('click');
 	$('#my-gallery').unbind('click');
 	$('#logout').unbind('click');
+	$('#go-to-my-gallery').unbind('click');
 	
   	$('#save-design').bind('click',saveImg);
 	$('#random-design').bind('click',randomDesign);
@@ -115,6 +117,7 @@
 	$('#start-design').bind('click',startDesign);
 	$('#my-gallery').bind('click',openGallery);
 	$('#logout').bind('click',_logout);
+	$('#go-to-my-gallery').bind('click',openGallery);
   }
   
   _logout = function() {
@@ -1059,15 +1062,15 @@ function randomDesign() {
  * Enter design page
  */
 function startDesign() {
-	releasePage('Save');
+	releasePage(PAGE);
 	newPage('Design');
 }
 
 /*
- * Enter gallery page
+ * Enter gallery page from save page
  */
 function openGallery() {
-	releasePage('Save');
+	releasePage(PAGE);
 	newPage('Gallery');
 }
 
@@ -1077,6 +1080,7 @@ function openGallery() {
  * page: "Design", "Gallery"
  */
 function newPage(page) {
+	PAGE = page;
 	if (page == "Design") {
 		$('#menubar').fadeIn(300);
 		$('.recent').fadeIn(300);
@@ -1099,6 +1103,7 @@ function newPage(page) {
 	}
 	else if (page == "Gallery") {
 		$('#start-design').fadeIn(300);
+		mod_gallery();
 	}
 }
 
@@ -1152,6 +1157,11 @@ function releasePage(page) {
 		$('.buybutton').hide()
 		$('#cart').hide();
 	}
+	else if (page == "Gallery") {
+		$('#start-design').hide();
+		$('#gallery').remove();
+		$('#gallery')[0] = null;
+	}
 }
 
 function loadPriceTag(isShow) {
@@ -1187,11 +1197,22 @@ $(function(){
 	// Create phone case canvas and layout
 	if ($.cookie('phone_name'))
 		PHONE_NAME = $.cookie('phone_name');
-	if ($.cookie('phone_color'))
+	if ($.cookie('phone_color')) {
 		PHONE_COLOR = $.cookie('phone_color');
+		if(PHONE_COLOR === 'white') {
+			$('#menu_color').html('白色').fadeIn(300);
+		}
+		else if(PHONE_COLOR === 'black') {
+			$('#menu_color').html('黑色').fadeIn(300);
+		}
+		else if(PHONE_COLOR === 'trans') {
+			$('#menu_color').html('透明').fadeIn(300);
+		}
+	}
 	if($.cookie('layout_name'))
         LAYOUT_NAME = $.cookie('layout_name');
 	menuLoadPhone(PHONE_NAME);
+	
 	/*
 	var cart = $('#cart').DCAJAXPaypalCart({  
             width:600,  

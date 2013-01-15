@@ -20,7 +20,7 @@ function max(a, b) {
 //////////////////////////////////////////////////
 // autoClipper2 : resize canvas according to the ration between corner
 function autoClipper2(srcImgDom, dstCanvas, srcCorner, dstCorner) {
-	
+
 	// getting ratio from the width/height
 	var distDiv_w = Math.round(parseInt(dstCorner.css('width'), 10));
 	var distDiv_h = Math.round(parseInt(dstCorner.css('height'), 10));

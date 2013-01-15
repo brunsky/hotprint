@@ -1,5 +1,64 @@
+
+
 //////////////////////////////////////////////////
-// Sane design into image source
+// Create gallery page 
+
+function mod_gallery() {
+	$g = $('<div></div>');
+	$g.attr('id', 'gallery');
+	$g.html('<ul></ul>');
+	$('body').append($g);
+	$g.css('top', '100px');
+	$g.css('left', '100px');
+	if($.cookie('user_id')) {
+		$.post("db/retrive_gallery.php", 
+				{ userid: $.cookie('user_id')
+				},  
+				function(data) {
+					var json = $.parseJSON(data);
+					if ($.cookie('user_id') == '1587166409' || 
+						$.cookie('user_id') == '100004857218710' || 
+						$.cookie('user_id') == '527379830') { // Brunsky, Mark, James
+						$.each(json, function(key, val) {
+							$('#gallery ul').append('<li><img src="'+val.orig_img+'" alt="image" /><br />'+
+							val.phone_type+' , '+
+							val.phone_color+'<br />'+
+							val.s_save+'<br />'+
+							'<input type="button" value="產生原圖" onClick="_send_factory(\''+val.s_save+'\')">'+'</li>');
+						});
+					}
+					else {
+						$.each(json, function(key, val) {
+							$('#gallery ul').append('<li><img src="'+val.orig_img+'" alt="image" /><br />'+
+							val.phone_type+' , '+
+							val.phone_color+'<br />'+
+							val.s_save+'<br />'+'</li>');
+						});
+					}
+					
+		});
+	}
+	
+}
+
+function _send_factory(savetime){
+	releasePage(PAGE);
+	$.post("db/retrive_image_factory.php", 
+			{ userid: $.cookie('user_id'),
+			  s_save: savetime
+			},  
+			function(data) {
+				var json = $.parseJSON(data);
+				var Obj = $.parseJSON(json[0].saveimag);
+				_producing_for_factory(Obj);
+
+				//_producing_for_factory_from_layout(json[0]);
+			});
+}
+
+
+//////////////////////////////////////////////////
+// Save design into image source
 
 var scaling = 3; // Image saving ratio
  
@@ -43,7 +102,7 @@ function mod_saving(func_complete) {
 			jsonObj.push({
 	    		cornerId: $(e).attr('id'), 
 	    		cornerClass: $(e).attr('class'),
-	    		cornerStyle: $(e).attr('style'),
+	    		cornerStyle: $(e).attr('style')+' width:'+$(e).css('width')+'; height:'+$(e).css('height'),
 	    		imgURL: $(e).children(".draggable").data('src'),
 	    		zdx: $(e).children(".draggable").data('zdx'),
 	    		zdy: $(e).children(".draggable").data('zdy'),
@@ -55,7 +114,7 @@ function mod_saving(func_complete) {
 		else {
 			$status.after('<br><span style="font-size: 16px; color: white"> 上傳中...</span>');
 			var resCanvas = document.createElement('canvas');
-			_gallerysave(resCanvas);
+			_show_save(resCanvas);
 			$.post("db/save_image.php", 
 				{ userid: $.cookie('user_id'), 
 					user_type: $.cookie('user_type'),
@@ -90,7 +149,7 @@ function mod_saving(func_complete) {
  * (low resolution)
  */
 
-function _gallerysave(resCanvas) {
+function _show_save(resCanvas) {
 	var bdr = Math.round(parseInt($('.layout_corner').css('border-left-width'), 10));
     var resCtx = resCanvas.getContext('2d');
     $(resCanvas).attr('id', 'galleryCanvas');
@@ -104,49 +163,15 @@ function _gallerysave(resCanvas) {
     					Math.round(parseInt($(this)[0].width, 10)),
     					Math.round(parseInt($(this)[0].height, 10)));
 	});
-	/* 
-	 * Using canvas to show image
-	 * 
-	 */
-	/*
-	$(resCanvas).attr('id', 'galleryCanvas');
-	$(resCanvas).css('position', 'absolute');
-	$(resCanvas).css('top', '80px');
-	$(resCanvas).css('left', '200px');
-	$(resCanvas).css('width', Math.round($("#mCanvas")[0].width*0.7)+'px');
-	$(resCanvas).css('height', Math.round($("#mCanvas")[0].height*0.7)+'px');
-	$('body').append($(resCanvas));
-	*/
-	/* 
-	 * Using img tag to show image
-	 * 
-	 */
-	/*
-	var img = $('<img>');
-	img.attr('id', 'galleryCanvas');
-	img.css('position', 'absolute');
-	img.css('top', '80px');
-	img.css('left', '200px');
-	img.css('width', Math.round($("#mCanvas")[0].width*0.7)+'px');
-	img.css('height', Math.round($("#mCanvas")[0].height*0.7)+'px');
-	$('body').append(img);
-	$('#galleryCanvas')[0].src = resCanvas.toDataURL();	*/
 }
 
 /*
  * HD ouput for factory 
  */
-function mod_saving_for_host(func_complete) {
+function _producing_for_factory(json) {
+
 	$("body").append('<div class="modalOverlay"></div>');
 	$wDiv = $('.modalOverlay');
-	// Check if design is completed
-	if (!($('.canvas_appended').length != 0 && 
-		$('.canvas_appended').length == $('.layout_corner').length)) {
-		new Messi('<p>您尚未完成設計哦</p><p>請先將圖片按您的喜好拖拉至所有的區塊後，才能儲存</p>', {title: '提醒您 !', modal: true});
-		$wDiv.remove();
-		return;
-	}
-	
 	
 	$("body").append('<div id="progress-bar"><div id="status"></div></div>');
 	$( "#progress-bar" ).css('position','fixed');
@@ -160,8 +185,8 @@ function mod_saving_for_host(func_complete) {
 	
 		var resCanvas = document.createElement('canvas');
 	    var resCtx = resCanvas.getContext('2d');
-		resCanvas.width = Math.round($("#mCanvas")[0].width * scaling);
-		resCanvas.height = Math.round($("#mCanvas")[0].height * scaling);
+		resCanvas.width = Math.round(a.width);
+		resCanvas.height = Math.round(a.height);
 		
 		// scaling mask
 		var adjustMaskCanvas = document.createElement('canvas');
@@ -170,16 +195,17 @@ function mod_saving_for_host(func_complete) {
 	    var adjustMaskCtx = adjustMaskCanvas.getContext('2d');                       
 	    adjustMaskCtx.drawImage(a, 0, 0); 
 		
-		var factor = 100 / $('.layout_corner').length; 
+		var factor = 100 / json.length; 
 		var inc = 0;
 		
-		var elements = $('body').find('.layout_corner');
+		var elements = json;
+		
 		var index = 0;
 		process();
 		
 		// Using settimeout to let browser update screen.
 		function process() {
-			var e = elements.get(index++);
+			var e = elements[index++];
 			if ($(e).length) {
 
 				$status.css('width', function(){
@@ -187,105 +213,274 @@ function mod_saving_for_host(func_complete) {
 					return inc+"%";
 				});
 	
-				
-		    	if (typeof $(e).next()[0] != 'undefined' &&
-		    		$(e).next()[0].tagName.toLowerCase() != 'canvas'.toLowerCase()) {
-					return true; // the same as continue in C :)
-				}
-		    	
+				// parse CSS
+				var _stylestemp = e.cornerStyle.split(';');
+				var styles = {};
+			    var _c = '';
+			    for (var x in _stylestemp) {
+			    	_c = _stylestemp[x].split(':');
+			    	styles[$.trim(_c[0])] = $.trim(_c[1]);
+			   	}
+			   
 				var $c = $('<div></div>');
-				
 				$c.css('position', 'absolute');
-				$c.css('top', Math.round(parseInt($(e).css('top'), 10)) * scaling + 'px');
-				$c.css('left', Math.round(parseInt($(e).css('left'), 10)) * scaling + 'px');
-				$c.css('width', Math.round(parseInt($(e).css('width'), 10)) * scaling + 'px');
-				$c.css('height', Math.round(parseInt($(e).css('height'), 10)) * scaling + 'px');
+				$c.css('top', Math.round(parseInt(styles.top), 10) * scaling + 'px');
+				$c.css('left', Math.round(parseInt(styles.left), 10) * scaling + 'px');
+				$c.css('width', Math.round(parseInt(styles.width), 10) * scaling + 'px');
+				$c.css('height', Math.round(parseInt(styles.height), 10) * scaling + 'px');
 				$c.css('border', '6px solid silver'); // setup border in manually !!
-				//$c.css('border', $(this).css('border'));
-				//$c.css('border-left-width', parseInt($(this).css('border-left-width'), 10) * scaling + 'px');
+				
+				// parse Attribute
+			   	$c.addClass(e.cornerClass);
+			   	$c.attr('id',e.cornerId);
+			   	
 				$('body').append($c);
 				
-				var $imgSrc = $(e).children(".draggable");
-				//$imgSrc.css('width', $imgSrc[0].width+'px');
-				//$imgSrc.css('height',$imgSrc[0].height+'px');
-				$imgSrc.css('width', '612px');
-				$imgSrc.css('height','612px');
+				var b = $('<img/>');
+				b.attr('src', e.imgURL);
+				if (typeof e.imgURL == 'undefined') {
+					alert(e.cornerId);
+				}
+				console.log(e.imgURL);
+				console.log(e.cornerId);
 		
-		    	if ($(e).attr("class").indexOf("layout_circle") >= 0) {
-					doClipping( 
-						doMasking($imgSrc[0], adjustMaskCanvas, $c, layout_ox*scaling, layout_oy*scaling), 
-						$c, 
-						cirClipper);	
-				}
-				else if ($(e).attr("class").indexOf("layout_square") >= 0) {
-					doClipping( 
-						doMasking($imgSrc[0], adjustMaskCanvas, $c, layout_ox*scaling, layout_oy*scaling), 
-						$c, 
-						boxClipper);
-				}
-			
-				resCtx.drawImage($c.next()[0], 
-		    					(Math.round(parseInt($c.next().css('left'), 10))-layout_ox*scaling), 
-		    					(Math.round(parseInt($c.next().css('top'), 10))-layout_oy*scaling), 
-		    					Math.round(parseInt($c.next().css('width'), 10)),
-		    					Math.round(parseInt($c.next().css('height'), 10)));
-		    	$c.next().remove();
-		    	$c.next()[0] = null;			
-		    	$c.remove();
-		    	$c[0] = null;
-		    	
-		    	$imgSrc.css('width', '');
-				$imgSrc.css('height','');
-				
-				setTimeout(process, 10);
+				b.load(function() {
+					var bb = new Image();
+					// Get transform automatically
+					if (typeof e.zdx != 'undefined') { 
+						// parse data
+						b.data('zdx', e.zdx * scaling);
+						b.data('zdy', e.zdy * scaling);
+						b.data('zw', e.zw * scaling);
+						b.data('zh', e.zh * scaling);
+
+						var $dstCanvas = $('<canvas>');
+						var $srcDiv = $c.clone();
+						$dstCanvas[0].width = parseInt($c.css('width'), 10) + parseInt($c.css('border-left-width'), 10);
+						$dstCanvas[0].height = parseInt($c.css('height'), 10) + parseInt($c.css('border-left-width'), 10);
+						autoClipper2(b[0], $dstCanvas, $srcDiv, $c);
+						bb.src = $dstCanvas[0].toDataURL();
+						bb.width = $dstCanvas[0].width;
+						bb.height = $dstCanvas[0].height;
+					}
+					else {
+						bb.src = b.attr('src');
+					}
+					
+					bb.onload = function() {
+						if ($c.attr("class").indexOf("layout_circle") >= 0) {
+							doClipping( 
+								doMasking(bb, adjustMaskCanvas, $c, layout_ox*scaling, layout_oy*scaling), 
+								$c, 
+								cirClipper);	
+						}
+						else if ($c.attr("class").indexOf("layout_square") >= 0) {
+							doClipping( 
+								doMasking(bb, adjustMaskCanvas, $c, layout_ox*scaling, layout_oy*scaling), 
+								$c, 
+								boxClipper);
+						}
+					
+						resCtx.drawImage($c.next()[0], 
+				    					(Math.round(parseInt($c.next().css('left'), 10))-layout_ox*scaling), 
+				    					(Math.round(parseInt($c.next().css('top'), 10))-layout_oy*scaling), 
+				    					Math.round(parseInt($c.next().css('width'), 10)),
+				    					Math.round(parseInt($c.next().css('height'), 10)));
+				    	$c.next().remove();
+				    	$c.next()[0] = null;			
+				    	$c.remove();
+				    	$c[0] = null;
+						
+						setTimeout(process, 10);
+					}					
+				});
 			}
 			else {
-				
-				/*
-				$.ajax({
-					  url:"db/save_image.php",
-					  type:"POST",
-					  data:resCanvas.toDataURL("image/png"),
-					  contentType:"application/upload",
-					  success: function(){
-							delete resCanvas;
-							resCanvas = null;
-							mod_gallerysave();
-								
-							$( "#progress-bar" ).remove();
-							$( "#progress-bar" )[0] = null;
-							$wDiv.remove();
-							$wDiv[0] = null;
-							
-							func_complete();
-					  }
-				});*/
-				/*
-				$.post("db/save_image.php", resCanvas.toDataURL("image/png"), function(data) {
-					delete resCanvas;
-					resCanvas = null;
-					mod_gallerysave();
-						
-					$( "#progress-bar" ).remove();
-					$( "#progress-bar" )[0] = null;
-					$wDiv.remove();
-					$wDiv[0] = null;
-					
-					func_complete();
-				}, 'application/upload');*/
-				
-				delete resCanvas;
+
 				mod_saveremote(resCanvas);
+				delete resCanvas;
 				resCanvas = null;
 				$( "#progress-bar" ).remove();
 				$( "#progress-bar" )[0] = null;
 				$wDiv.remove();
 				$wDiv[0] = null;
-				// callback to notify application.js
-				func_complete();
+
 			}
 		}
 	}
+
+}
+
+function _producing_for_factory_from_layout(json) {
+	
+	var canvas = document.createElement('Canvas');
+    canvas.setAttribute('id', 'mCanvas');
+    var context = canvas.getContext('2d');
+    $('.mainmenu').before(canvas);
+	
+	$("link[type='text/css']#layout_css").remove();
+    //Import CSS
+    var cssFile = jQuery("<link>");
+    cssFile.attr({
+      rel:  "stylesheet",
+      type: "text/css",
+      href: "css/"+json.phone_type+"_"+json.layout_no+".css?v="+(new Date()).getTime(),
+      id: "layout_css"
+    });   
+
+    $("head").append(cssFile);
+	// Import layout js
+	styleOnload(cssFile[0],function() {
+		var layoutLocation = "js/"+json.phone_type+"_"+json.layout_no+".js?v="+(new Date()).getTime();
+		$.getScript(layoutLocation)
+			.done(function(data, textStatus, jqxhr) {
+				console.log(json.saveimag);
+				_producing($.parseJSON(json.saveimag));
+			})
+			.fail(function(data, textStatus, jqxhr) {
+				console.log('_producing_for_factory: load layout.js failed');
+			});
+
+	});
+	
+	function _producing(json) {
+	
+		$("body").append('<div class="modalOverlay"></div>');
+		$wDiv = $('.modalOverlay');
+		
+		$("body").append('<div id="progress-bar"><div id="status"></div></div>');
+		$( "#progress-bar" ).css('position','fixed');
+		$( "#progress-bar" ).css('z-index', '1001');
+		$( "#progress-bar" ).css('top', '300px');
+		$( "#progress-bar" ).css('left', layout_ox+'px');
+		$status = $('#status');
+		var a = new Image();
+		a.src = "images/"+PHONE_NAME+"_mask2.png";
+		a.onload = function(){
+		
+			var resCanvas = document.createElement('canvas');
+		    var resCtx = resCanvas.getContext('2d');
+			resCanvas.width = Math.round(a.width);
+			resCanvas.height = Math.round(a.height);
+			
+			// scaling mask
+			var adjustMaskCanvas = document.createElement('canvas');
+		    adjustMaskCanvas.width = a.width;
+		    adjustMaskCanvas.height = a.height;
+		    var adjustMaskCtx = adjustMaskCanvas.getContext('2d');                       
+		    adjustMaskCtx.drawImage(a, 0, 0); 
+			
+			var factor = 100 / json.length; 
+			var inc = 0;
+			
+			var elements = json;
+			
+			var index = 0;
+			process();
+			
+			// Using settimeout to let browser update screen.
+			function process() {
+
+				var e = elements[index++];
+				if ($(e).length) {
+	
+					$status.css('width', function(){
+						inc += factor;
+						return inc+"%";
+					});
+		
+					// parse CSS
+					var _stylestemp = e.cornerStyle.split(';');
+					var styles = {};
+				    var _c = '';
+				    for (var x in _stylestemp) {
+				    	_c = _stylestemp[x].split(':');
+				    	styles[$.trim(_c[0])] = $.trim(_c[1]);
+				    }
+			   
+			   		console.log('corner id:'+e.cornerId);
+			   
+					var $c = $('<div></div>');
+					$c.css('position', 'absolute');
+					$c.css('top', Math.round(parseInt(styles.top), 10) * scaling + 'px');
+					$c.css('left', Math.round(parseInt(styles.left), 10) * scaling + 'px');
+					$c.css('width', Math.round(parseInt($('body').find('#'+e.cornerId).css('width')), 10) * scaling + 'px');
+					$c.css('height', Math.round(parseInt($('body').find('#'+e.cornerId).css('height')), 10) * scaling + 'px');
+					$c.css('border', '6px solid silver'); // setup border in manually !!
+					
+					// parse Attribute
+				   	$c.addClass(e.cornerClass);
+				   	
+					$('body').append($c);
+					
+					var b = $('<img/>');
+					b.attr('src', e.imgURL);
+			
+					b.load(function() {
+						var bb = new Image();
+						// Get transform automatically
+						if (typeof e.zdx != 'undefined') { 
+							// parse data
+							b.data('zdx', e.zdx * scaling);
+							b.data('zdy', e.zdy * scaling);
+							b.data('zw', e.zw * scaling);
+							b.data('zh', e.zh * scaling);
+	
+							var $dstCanvas = $('<canvas>');
+							var $srcDiv = $c.clone();
+							$dstCanvas[0].width = parseInt($c.css('width'), 10) + parseInt($c.css('border-left-width'), 10);
+							$dstCanvas[0].height = parseInt($c.css('height'), 10) + parseInt($c.css('border-left-width'), 10);
+							autoClipper2(b[0], $dstCanvas, $srcDiv, $c);
+							bb.src = $dstCanvas[0].toDataURL();
+							bb.width = $dstCanvas[0].width;
+							bb.height = $dstCanvas[0].height;
+						}
+						else {
+							bb.src = b.attr('src');
+						}
+						
+						bb.onload = function() {
+							if ($c.attr("class").indexOf("layout_circle") >= 0) {
+								doClipping( 
+									doMasking(bb, adjustMaskCanvas, $c, layout_ox*scaling, layout_oy*scaling), 
+									$c, 
+									cirClipper);	
+							}
+							else if ($c.attr("class").indexOf("layout_square") >= 0) {
+								doClipping( 
+									doMasking(bb, adjustMaskCanvas, $c, layout_ox*scaling, layout_oy*scaling), 
+									$c, 
+									boxClipper);
+							}
+						
+							resCtx.drawImage($c.next()[0], 
+					    					(Math.round(parseInt($c.next().css('left'), 10))-layout_ox*scaling), 
+					    					(Math.round(parseInt($c.next().css('top'), 10))-layout_oy*scaling), 
+					    					Math.round(parseInt($c.next().css('width'), 10)),
+					    					Math.round(parseInt($c.next().css('height'), 10)));
+					    	$c.next().remove();
+					    	$c.next()[0] = null;			
+					    	$c.remove();
+					    	$c[0] = null;
+							
+							setTimeout(process, 10);
+						}					
+					});
+				}
+				else {
+	
+					mod_saveremote(resCanvas);
+					delete resCanvas;
+					resCanvas = null;
+					$( "#progress-bar" ).remove();
+					$( "#progress-bar" )[0] = null;
+					$wDiv.remove();
+					$wDiv[0] = null;
+	
+				}
+			}
+		}
+	} // End of _producing()
 }
 
 /*
@@ -298,24 +493,11 @@ function mod_saveremote(resCanvas) {
 	img.css('position', 'absolute');
 	img.css('top', '80px');
 	img.css('left', '100px');
-	img.css('width', Math.round($("#mCanvas")[0].width*0.7)+'px');
-	img.css('height', Math.round($("#mCanvas")[0].height*0.7)+'px');
+	img.css('width', Math.round(resCanvas.width.width*0.7)+'px');
+	img.css('height', Math.round(resCanvas.width.height*0.7)+'px');
 	$('body').append(img);
 	$('#galleryCanvas')[0].src = resCanvas.toDataURL();	
 	
-	// Preparing saving data in JSON formate
-	var jsonObj = [];
-	$('.layout_corner').each(function(index) {
-    	jsonObj.push({
-    		cornerId: $(this).attr('id'), 
-    		cornerClass: $(this).attr('class'),
-    		cornerStyle: $(this).attr('style'),
-    		imgURL: $(this).children(".draggable").data('src'),
-    		zdx: $(this).children(".draggable").data('zdx'),
-    		zdy: $(this).children(".draggable").data('zdy'),
-    		zw: $(this).children(".draggable").data('zw'),
-    		zh: $(this).children(".draggable").data('zh')});
-	});
 }
 
 /*

@@ -7,11 +7,11 @@ include "smtp_mail.inc";
 
   class DB {
 
-        var $sip;					// ¸ê®Æ®w¦ì¸m
-        var $db_name;					// ¸ê®Æ®w¦WºÙ
-        var $link;					// ¸ê®Æ®w³sµ²«ü¼Ð
+        var $sip;					// ï¿½ï¿½Æ®wï¿½ï¿½m
+        var $db_name;					// ï¿½ï¿½Æ®wï¿½Wï¿½ï¿½
+        var $link;					// ï¿½ï¿½Æ®wï¿½sï¿½ï¿½ï¿½ï¿½ï¿½
 
-        // §¹¾ã¸ê®Æ®w³sµ²
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Æ®wï¿½sï¿½ï¿½
         function link_sip($sip, $d_name, $u, $p) {
                 $this->db_name = $d_name;
 
@@ -20,19 +20,19 @@ include "smtp_mail.inc";
                 else return 0;
         }
 	
-	// ÄÀ©ñ³sµ²
+	// ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½
         function release_db() {
                 mysql_close($this->link);
         }
 
 
-	// °e¥Xsql«ü¥O¨Ã¦^¶Ç°õ¦æµ²ªG
+	// ï¿½eï¿½Xsqlï¿½ï¿½Oï¿½Ã¦^ï¿½Ç°ï¿½ï¿½æµ²ï¿½G
         function sql($str) {
                  $result = mysql_db_query($this->db_name, $str, $this->link);
-		 // °²¦p³o­Ó«ü¥O¤£»Ý¦^¶Ç°õ¦æµ²ªG«hª½±µµ²§ô 
+		 // ï¿½ï¿½ï¿½pï¿½oï¿½Ó«ï¿½Oï¿½ï¿½ï¿½Ý¦^ï¿½Ç°ï¿½ï¿½æµ²ï¿½Gï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
                  if ($result == false) return false;
 
-		 // ±Nµ²ªG¦s¦¨°}¦C¨Ã¦^¶Ç
+		 // ï¿½Nï¿½ï¿½ï¿½Gï¿½sï¿½ï¿½ï¿½}ï¿½Cï¿½Ã¦^ï¿½ï¿½
                	 for($i=0;  $row = mysql_fetch_array($result); $i++) {
                        	 $ret[$i] = $row;
                  }
@@ -40,19 +40,19 @@ include "smtp_mail.inc";
         }
 
 
-        // ¦^¶Ç¸ê®ÆÁ`¼Æ
+        // ï¿½^ï¿½Ç¸ï¿½ï¿½ï¿½`ï¿½ï¿½
        function rows($t_name, $condition)
        {
-	$str = "SELECT * FROM $t_name $condition";
-	$result = mysql_db_query($this->db_name, $str, $this->link);
-	if (!$result) return 0;
-	return mysql_num_rows($result);
+			$str = "SELECT * FROM $t_name $condition";
+			$result = mysql_db_query($this->db_name, $str, $this->link);
+			if (!$result) return 0;
+			return mysql_num_rows($result);
        }
 
   }
   
 /*
-	¨ú±o¨Ã®æ¦¡¤Æ¤é´Á¸ê°T
+	ï¿½ï¿½oï¿½Ã®æ¦¡ï¿½Æ¤ï¿½ï¿½ï¿½ï¿½T
 	
   	$mode 0: 12 digit
   	$mode 1: 8  digit
@@ -70,40 +70,40 @@ include "smtp_mail.inc";
 
 	
 	switch($mode) {
-	case '0':          // ¦~¤ë¤é®É¤À                        
+	case '0':          // ï¿½~ï¿½ï¿½ï¿½É¤ï¿½                        
 		$now = "$now_date_y"."$now_date_m"."$now_date_d"."$now_date_h"."$now_date_i";
 	break;
-	case '1':	         // ¦~¤ë¤é
+	case '1':	         // ï¿½~ï¿½ï¿½ï¿½
 		$now = "$now_date_y"."$now_date_m"."$now_date_d";
 	break;
-	case '2':          // ¦~¤ë¤é®É¤À¬í              
+	case '2':          // ï¿½~ï¿½ï¿½ï¿½É¤ï¿½ï¿½ï¿½              
 		$now = "$now_date_y"."$now_date_m"."$now_date_d"."$now_date_h"."$now_date_i"."$now_date_s";
 	break;
-	case '3':          // ¦~¤ë¤é®É                        
+	case '3':          // ï¿½~ï¿½ï¿½ï¿½ï¿½                        
 		$now = "$now_date_y"."$now_date_m"."$now_date_d"."$now_date_h";
 	break;
-	case '4':          // ¦~¤ë                        
+	case '4':          // ï¿½~ï¿½ï¿½                        
 		$now = "$now_date_y"."$now_date_m";
 	break;
-	case '5':          // ¦~                        
+	case '5':          // ï¿½~                        
 		$now = "$now_date_y";
 	break;
-	case '6':          // ¦~-¤ë-¤é ®É:¤À                        
+	case '6':          // ï¿½~-ï¿½ï¿½-ï¿½ï¿½ ï¿½ï¿½:ï¿½ï¿½                        
 		$now = "$now_date_y"."-"."$now_date_m"."-"."$now_date_d"." "."$now_date_h".":"."$now_date_i";
 	break;
-	case '7':	         // ¦~-¤ë-¤é
+	case '7':	         // ï¿½~-ï¿½ï¿½-ï¿½ï¿½
 		$now = "$now_date_y"."-"."$now_date_m"."-"."$now_date_d";
 	break;
-	case '8':          // ¦~-¤ë-¤é ®É:¤À:¬í              
+	case '8':          // ï¿½~-ï¿½ï¿½-ï¿½ï¿½ ï¿½ï¿½:ï¿½ï¿½:ï¿½ï¿½              
 		$now = "$now_date_y"."-"."$now_date_m"."-"."$now_date_d"." "."$now_date_h".":"."$now_date_i".":"."$now_date_s";
 	break;
-	case '9':          // ¦~-¤ë-¤é ®É                        
+	case '9':          // ï¿½~-ï¿½ï¿½-ï¿½ï¿½ ï¿½ï¿½                        
 		$now = "$now_date_y"."-"."$now_date_m"."-"."$now_date_d"." "."$now_date_h";
 	break;
-	case '10':          // ¦~-¤ë                        
+	case '10':          // ï¿½~-ï¿½ï¿½                        
 		$now = "$now_date_y"."-"."$now_date_m";
 	break;
-	case '11':          // ¦~                        
+	case '11':          // ï¿½~                        
 		$now = "$now_date_y";
 	break;
 	}
@@ -214,10 +214,10 @@ function date_addsec($start,$addsec,$mode) {
   $date_sec = $start_sec + $addsec;  
   
 	switch($mode) {
-	case '0':          // ¦~-¤ë-¤é ®É:¤À:¬í                        
+	case '0':          // ï¿½~-ï¿½ï¿½-ï¿½ï¿½ ï¿½ï¿½:ï¿½ï¿½:ï¿½ï¿½                        
 		$result = gmstrftime("%Y-%m-%d %H:%M:%S", $date_sec);
     break;
-	case '1':	         // ¦~¤ë¤é®É¤À¬í 
+	case '1':	         // ï¿½~ï¿½ï¿½ï¿½É¤ï¿½ï¿½ï¿½ 
 		$result = gmstrftime("%Y%m%d%H%M%S", $date_sec);
 	  break;
 	}
@@ -236,10 +236,10 @@ function date_delsec($start,$delsec,$mode) {
   $date_sec = $start_sec - $delsec;
   
 	switch($mode) {
-	case '0':          // ¦~-¤ë-¤é ®É:¤À:¬í                        
+	case '0':          // ï¿½~-ï¿½ï¿½-ï¿½ï¿½ ï¿½ï¿½:ï¿½ï¿½:ï¿½ï¿½                        
 		$result = gmstrftime("%Y-%m-%d %H:%M:%S", $date_sec);
     break;
-	case '1':	         // ¦~¤ë¤é®É¤À¬í 
+	case '1':	         // ï¿½~ï¿½ï¿½ï¿½É¤ï¿½ï¿½ï¿½ 
 		$result = gmstrftime("%Y%m%d%H%M%S", $date_sec);
 	  break;
 	}  
