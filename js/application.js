@@ -561,6 +561,9 @@ function setDnD(maskImg, ox, oy) {
 								$(this).children(".draggable").attr('src').replace(/\//g, "+");
 				$(this).children(".draggable").data('src', str);
 			}
+			else {
+				$(this).children(".draggable").data('src', $(this).data('src'));
+			}
 			// copy original size
 			$(this).children(".draggable").data('oh', $(this).data('oh'));
 			$(this).children(".draggable").data('ow', $(this).data('ow'));
@@ -677,6 +680,7 @@ function setDnD(maskImg, ox, oy) {
 			$(this).data('zdy', $(ui.draggable).data('zdy'));
 			$(this).data('zw', $(ui.draggable).data('zw'));
 			$(this).data('zh', $(ui.draggable).data('zh'));
+			$(this).data('src', $(ui.draggable).data('src'));
 			$(this).data('corner', $(ui.draggable).data('corner'));
 			$(this).data('ow', $(ui.helper)[0].width);
 			$(this).data('oh', $(ui.helper)[0].height);
@@ -686,6 +690,7 @@ function setDnD(maskImg, ox, oy) {
 			$(this).removeData('zdy');
 			$(this).removeData('zw');
 			$(this).removeData('zh');
+			$(this).removeData('src');
 			$(this).removeData('corner');
 			$(this).removeData('ow');
 			$(this).removeData('oh');
