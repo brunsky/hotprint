@@ -3,7 +3,12 @@
  */
  
  // Global settings
- var HOST_URL		= 'http://insta.camangiwebstation.com/';
+ var SANDBOX		= true;
+ var HOST_URL		= '';
+ if (SANDBOX)
+ 	HOST_URL		= 'http://sandbox.hotprintcloud.com/';
+ else
+ 	HOST_URL		= 'http://www.hotprintcloud.com/';
  var TEMP_DIR		= 'proxy/tmp/'
  var PHONE_NAME 	= 'iphone5';
  var LAYOUT_NAME 	= 'layout_3';
@@ -144,8 +149,8 @@
    */
   _instalogin = function(event) {
   	var url = 'https://instagram.com/oauth/authorize/?'+
-  							'client_id=1e05a75f3b1548bbbdab2072bb0ed6e7'+
-  							'&amp;redirect_uri=http://insta.camangiwebstation.com/instaredirect.html'+
+  							'client_id=48fb462fd1254631a2c63416a01eb3f0'+
+  							'&amp;redirect_uri='+HOST_URL+'instaredirect.html'+
   							'&amp;response_type=token';
   	if (event.data.isPopup == true) {
   		window.open(url,'hotprintCloud', 
@@ -269,8 +274,8 @@
   _fblogin = function(event) {
   	
   	var url = 'http://www.facebook.com/dialog/oauth/?'+
-	    'client_id=436922296362142'+
-	    '&redirect_uri=http://insta.camangiwebstation.com/fbredirect.html'+
+	    'client_id=396030097155221'+
+	    '&redirect_uri='+HOST_URL+'fbredirect.html'+
 	    '&response_type=token'+
 	    '&scope=user_photos';
 	if (event.data.isPopup == true) {
@@ -640,7 +645,7 @@ function setDnD(maskImg, ox, oy) {
 				var spinner = new Spinner(opts).spin($(this)[0]);
 				$.getImageData({
 					url: imgSrc,
-					server: "http://insta.camangiwebstation.com/proxy/getImageData.php",
+					server: HOST_URL+"proxy/getImageData.php",
 					success: function(image){
 						divObj.children(".draggable").attr('src', image.src);
 						divObj.children(".draggable").addClass("cached");
@@ -978,8 +983,8 @@ function setCanvas(_phoneName) {
 
 	// Get mask image    
     $.getImageData({
-        url: "http://insta.camangiwebstation.com/images/"+_phoneName+"_mask.png",
-        server: "http://insta.camangiwebstation.com/proxy/getImageData.php",
+        url: HOST_URL+"images/"+_phoneName+"_mask.png",
+        server: HOST_URL+"proxy/getImageData.php",
         success: function(image){
         	// Load Layout
         	//layout_oy = parseInt($("#mCanvas").css('top'), 10);

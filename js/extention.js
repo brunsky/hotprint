@@ -628,7 +628,7 @@ function _randesign() {
 		var spinner = new Spinner(opts).spin($(this)[0]);
 		$.getImageData({
 			url: imgSrc,
-			server: "http://insta.camangiwebstation.com/proxy/getImageData.php",
+			server: HOST_URL+"proxy/getImageData.php",
 			success: function(image){
 				divObj.children(".draggable").attr('src', image.src);
 				divObj.children(".draggable").addClass("cached");
