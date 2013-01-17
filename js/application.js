@@ -490,6 +490,9 @@ function gallery_bar_setting(res) {
 ////////////////////////////
 
 function clearCorner(pObj) {
+	if (typeof pObj.attr('class') == 'undefined')
+		return;
+		
 	if (pObj.attr('class').indexOf('layout_corner') >= 0) {
 		pObj.children(".draggable").each(function(index) {
 		  	$(this).remove();
@@ -518,6 +521,12 @@ function setDnD(maskImg, ox, oy) {
 		accept: ".draggable",
 		tolerance: "pointer",
 		drop: function( event, ui ) {
+			
+			// if doubled copy then drop here abandoned!
+			if (typeof $(ui.draggable).parent().attr('id') == 'undefined') {
+				return;
+			}
+
 			// Prevent from drop into if spinning
 			
 			if ($(this).children(".spinner").length > 0) {
@@ -533,7 +542,7 @@ function setDnD(maskImg, ox, oy) {
 				$(this).next().remove();
 				$(this).next()[0] = null;
 			}
-
+			console.log('Flight#'+$(ui.draggable).attr('id')+' from: '+$(ui.draggable).parent().attr('id')+' will drop at airport:'+$(this).attr('id'));
 			// Don't copy yourself...
 			if ($(ui.draggable).parent().attr('id') != $(this).attr('id')) {
 				$(this).html('');

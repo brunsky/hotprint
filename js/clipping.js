@@ -133,13 +133,15 @@ var ori_ratio;
 		ctx.drawImage(srcImg, 0, 0, srcImg.width, srcImg.height, 
 						theSelection.x + bdr, theSelection.y + bdr, 
 						draw_w, draw_h);
+
 		// storing bright region
-		theSelection.oImg = ctx.getImageData(cornerX + bdr, cornerY + bdr, cornerW + bdr, cornerH + bdr);   
+		theSelection.oImg = ctx.getImageData(cornerX + bdr, cornerY + bdr, cornerW + bdr, cornerH + bdr); 
+		
 		// covering dark region
 		ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
 		ctx.fillRect(theSelection.x + bdr, theSelection.y + bdr, 
 					 draw_w, draw_h);   
-		  
+
 		// drawing stroke rect of whole image
 		ctx.strokeStyle = '#fff';
 		ctx.lineWidth = bdr;
@@ -147,8 +149,9 @@ var ori_ratio;
 					   theSelection.y-theSelection.iCSize[0], 
 					   draw_w+bdr*2+theSelection.iCSize[0]*2,
 					   draw_h+bdr*2+theSelection.iCSize[0]*2);
-		
+
 		// resoring bright zone 
+		
 		var c1 = $('<canvas>');
 		var c2 = $('<canvas>');
 
@@ -178,7 +181,7 @@ var ori_ratio;
 			$cDiv.next().remove();
 		}
 		$cDiv.after(c2);
-			
+		
 		// drawing function cubes
 		ctx.fillStyle = '#fff';
 
@@ -197,14 +200,15 @@ var ori_ratio;
 		ctx.drawImage(bRemove, theSelection.x - theSelection.iCSize[3]*2, 
 					 theSelection.y + draw_h+ bdr*2, 
 					 theSelection.iCSize[3] * 2, theSelection.iCSize[3] * 2);
+	
 	}
 			
 	function drawScene(){ 
-	
+
 		ctx.clearRect(-theSelection.csize/2, -theSelection.csize/2,
 						ctx.canvas.width+theSelection.csize,
 						ctx.canvas.height+theSelection.csize);
-	
+
 		// draw selection
 		theSelection.draw();
 	}
@@ -248,6 +252,7 @@ var ori_ratio;
 	canvas.click(eventMouseclick);
 	
 	function saveImg() {
+		
 		if (cornerDiv.next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
 			cornerDiv.next()[0] = null;
 			cornerDiv.next().remove();
@@ -256,8 +261,8 @@ var ori_ratio;
 			var c = $('<canvas>');
 			c[0].width = cornerW + bdr;
 			c[0].height = cornerH + bdr;
-			var ctx = c[0].getContext('2d');
-			ctx.putImageData(theSelection.oImg, 0, 0);
+			var _ctx = c[0].getContext('2d');
+			_ctx.putImageData(theSelection.oImg, 0, 0);
 			doClipping( 
 				doMasking(c[0], maskImg, cornerDiv, layout_ox, layout_oy), 
 				cornerDiv, 
@@ -267,8 +272,8 @@ var ori_ratio;
 			var c = $('<canvas>');
 			c[0].width = cornerW + bdr;
 			c[0].height = cornerH + bdr;
-			var ctx = c[0].getContext('2d');
-			ctx.putImageData(theSelection.oImg, 0, 0);
+			var _ctx = c[0].getContext('2d');
+			_ctx.putImageData(theSelection.oImg, 0, 0);
 			doClipping( 
 				doMasking(c[0], maskImg, cornerDiv, layout_ox, layout_oy), 
 				cornerDiv, 

@@ -19,9 +19,13 @@ for (var i=1; i<=16; i++) {
 	
 	$('#corner'+i).dblclick(function(e) {
 		if ($(this).children(".draggable").attr("class").indexOf("cached") >= 0) {
+			var _cornerDiv = $(this);
 			var _img = new Image();
 			_img.src = $(this).children(".draggable").attr('src');
-			realClipper($(this), _img);
+			_img.onload = function() {
+				realClipper(_cornerDiv, _img);
+			}
+			
 			/*
 			_img.onload = function() {
 				realClipper($(this), _img);   
