@@ -550,6 +550,10 @@ function setDnD(maskImg, ox, oy) {
 				// clear source corner
 				clearCorner($(ui.draggable).parent());
 			}
+			else {
+				clearCorner($(ui.draggable).parent());
+				$(this).append($(ui.draggable).clone());
+			}
 
 			$(this).children(".draggable").removeClass("gallery-pool");	
 			// if it is draged from gallery list then don't animate corner

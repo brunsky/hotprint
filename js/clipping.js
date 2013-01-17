@@ -22,22 +22,23 @@ function max(a, b) {
 function autoClipper2(srcImgDom, dstCanvas, srcCorner, dstCorner) {
 
 	// getting ratio from the width/height
-	var distDiv_w = Math.round(parseInt(dstCorner.css('width'), 10));
-	var distDiv_h = Math.round(parseInt(dstCorner.css('height'), 10));
-	var srcDiv_w = Math.round(parseInt(srcCorner.css('width'), 10));
-	var srcDiv_h = Math.round(parseInt(srcCorner.css('height'), 10));
 	var bdr = Math.round(parseInt(dstCorner.css('border-left-width'), 10));
+	var distDiv_w = Math.round(parseInt(dstCorner.css('width'), 10)) + bdr;
+	var distDiv_h = Math.round(parseInt(dstCorner.css('height'), 10)) + bdr;;
+	var srcDiv_w = Math.round(parseInt(srcCorner.css('width'), 10)) + bdr;;
+	var srcDiv_h = Math.round(parseInt(srcCorner.css('height'), 10)) + bdr;;
+	
 	var r = max(distDiv_w, distDiv_h) / max(srcDiv_w, srcDiv_h);
 	// Calculate width & height after scaling
 	var w = Math.round($(srcImgDom).data('zw') * r);
 	var h = Math.round($(srcImgDom).data('zh') * r);
 	if (w < dstCanvas[0].width) {
-		w = Math.round(dstCanvas[0].width);
-		h = Math.round($(srcImgDom).data('zh') * (w/$(srcImgDom).data('zw')));
+		w = Math.round(dstCanvas[0].width) + bdr;;
+		h = Math.round($(srcImgDom).data('zh') * (w/$(srcImgDom).data('zw'))) + bdr;;
 	}
 	if (h < dstCanvas[0].height) {
-		h = Math.round(dstCanvas[0].height);
-		w = Math.round($(srcImgDom).data('zw') * (h/$(srcImgDom).data('zh')));
+		h = Math.round(dstCanvas[0].height) + bdr;;
+		w = Math.round($(srcImgDom).data('zw') * (h/$(srcImgDom).data('zh'))) + bdr;;
 	}
 	
 	// store new value
@@ -47,10 +48,10 @@ function autoClipper2(srcImgDom, dstCanvas, srcCorner, dstCorner) {
 	var zdy = Math.round($(srcImgDom).data('zdy') * r);
 	
 	// Fix zdy & zdx
-	if (h - zdy < distDiv_h - bdr)
-		zdy = h - distDiv_h - bdr;
-	if (w - zdx < distDiv_w - bdr)
-		zdx = w - distDiv_w - bdr;
+	if (h - zdy < distDiv_h)
+		zdy = 0;
+	if (w - zdx < distDiv_w)
+		zdx = 0;
 	
 	$(srcImgDom).data('zdx', zdx);
 	$(srcImgDom).data('zdy', zdy);
