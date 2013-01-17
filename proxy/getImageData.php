@@ -46,15 +46,13 @@ try {
 		}
 		else {
 			$file = file_get_contents($url);
-			echo"// get image from url";
 		}
 	
 		// Check if it is an image
 		if(@imagecreatefromstring($file)) {
-			echo"file:".$filename;
+
 			// check if file is not exist locally and didn't come from local host.
 			if (!file_exists($filename) && !strpos($filename, "hotprintcloud.com")) {
-				echo"// save image into temp file:".$filename;
 				file_put_contents($filename , $file);	
 			}	
 			

@@ -1,11 +1,11 @@
 <?php
 include "db.inc";
-
+include "setup.inc";
 	// Get the data
 	//$imageData=$GLOBALS['HTTP_RAW_POST_DATA'];
 	
 $db = new DB;
-$connkey = $db->link_sip( "localhost", "hotprint", "root", "tomorrow");
+$connkey = $db->link_sip( "localhost", $DB_NAME, "root", "tomorrow");
 if ($connkey) {
 
 	$sql = sprintf(
