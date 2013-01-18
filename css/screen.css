@@ -480,7 +480,11 @@ body.logged-in .tip { display: none; }
 	box-shadow: inset 0px 1px 0px 0px rgba(255,255,255, .1), 0px 1px 0px 0px rgba(0,0,0, .1);
 }
 
-.sub-menu li:hover a { background: #efefef; }
+.sub-menu li:hover a,
+.sub-menu li.hovered a { 
+	color: rgb(176,156,133); 
+	background: #efefef; 
+}
 
 .sub-menu li:last-child a { border: none; }
 

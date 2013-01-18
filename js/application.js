@@ -721,6 +721,8 @@ function menuLoadPhone(_phoneName) {
 	var change_phone = function(_phoneName) {
 		PHONE_NAME = _phoneName;
 		$.cookie('phone_name', PHONE_NAME);
+		$('.device').find('.hovered').toggleClass('hovered');
+		$('#'+_phoneName).parent().toggleClass('hovered');
 		if(_phoneName === 'iphone5') {
 			$('#menu_type').html('iPhone 5').fadeIn(300);
 			$('#white.color_item').parent().show();
@@ -758,6 +760,9 @@ function menuLoadPhone(_phoneName) {
 			$('#black.color_item').parent().hide();
 			$('#trans.color_item').parent().show();
 		}
+		// reset color for highlight
+		$('.color').find('.hovered').toggleClass('hovered');
+		$('#'+PHONE_COLOR).parent().toggleClass('hovered');
 		
 		setCanvas(_phoneName);
 	}
@@ -797,7 +802,8 @@ function menuLoadColor(_phoneColor) {
 		PHONE_COLOR = _phoneColor;
 		$.cookie('phone_color', PHONE_COLOR);
 		setCanvas(PHONE_NAME);
-		
+		$('.color').find('.hovered').toggleClass('hovered');
+		$('#'+_phoneColor).parent().toggleClass('hovered');
 		if(_phoneColor === 'white') {
 			$('#menu_color').html('白色').fadeIn(300);
 		}
