@@ -845,43 +845,10 @@ function menuLoadLayout(_layoutName) {
 		LAYOUT_NAME = _layoutName;
 		$.cookie('layout_name', LAYOUT_NAME)
 		loadLayout(maskImg, layout_ox, layout_oy, PHONE_NAME+'_'+LAYOUT_NAME);
-		
-		if(_layoutName === 'layout_1') {
-			$('#menu_layout').html('layout 1').fadeIn(300);
-		}
-		else if(_layoutName === 'layout_2') {
-			$('#menu_layout').html('layout 2').fadeIn(300);
-		}
-		else if(_layoutName === 'layout_3') {
-			$('#menu_layout').html('layout 3').fadeIn(300);
-		}
-		else if(_layoutName === 'layout_4') {
-			$('#menu_layout').html('layout 4').fadeIn(300);
-		}
-		else if(_layoutName === 'layout_5') {
-			$('#menu_layout').html('layout 5').fadeIn(300);
-		}
-		else if(_layoutName === 'layout_6') {
-			$('#menu_layout').html('layout 6').fadeIn(300);
-		}
-		else if(_layoutName === 'layout_7') {
-			$('#menu_layout').html('layout 7').fadeIn(300);
-		}
-		else if(_layoutName === 'layout_8') {
-			$('#menu_layout').html('layout 8').fadeIn(300);
-		}
-		else if(_layoutName === 'layout_9') {
-			$('#menu_layout').html('layout 9').fadeIn(300);
-		}
-		else if(_layoutName === 'layout_10') {
-			$('#menu_layout').html('layout 10').fadeIn(300);
-		}
-		else if(_layoutName === 'layout_11') {
-			$('#menu_layout').html('layout 11').fadeIn(300);
-		}
-		else if(_layoutName === 'layout_12') {
-			$('#menu_layout').html('layout 12').fadeIn(300);
-		}
+		// Display layout name in menu
+		$('#menu_layout').html(_layoutName.replace('_', ' ')).fadeIn(300);
+		$('.layout').find('.hovered').toggleClass('hovered');
+		$('#'+_layoutName).toggleClass('hovered');
 	}
 	
 	if ($('.canvas_appended').length != 0 ) {
