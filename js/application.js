@@ -923,15 +923,15 @@ function loadLayout(_maskImg, ox , oy, _layoutName){
 function setContainer(){  
     var winH=$(window).height();  
     var docH=$(document).height();  
-    $('#wrapper').css('height',winH-$('.recent').height()+'px');  
-    //$('#wrapper').css('width',$(document).width()+'px');  
+    $('#wrapper').css('height',winH-$('.recent').height()+'px');     
 }  
   
 function setFooterTop(){  
-    var winH=$(window).height();   
-    $('.recent').css('top',winH-$('.recent').height()+$(document).scrollTop()+'px');  
-    $('.recent').css('width',$(document).width()+'px');  
-	$('.ad-gallery').css('width',($(document).width()-50)+'px');
+	$('#tip1').css('left', Math.round(parseInt($('#popbox > .open').offset().left, 10))-60);
+	$('#tip3').css('left', Math.round(parseInt($('#popbox > .open').offset().left, 10))-60);
+    //$('.recent').css('width',$(document).width()+'px');
+	//$('.ad-gallery').css('width',($(document).width()-70)+'px');
+
 }
 
 function setCanvas(_phoneName) {

@@ -177,8 +177,8 @@ section {
 }
 
 .recent {
-	position:absolute;
-	top:0px;
+    position:fixed;	
+	bottom:0;
 	left:0px;  
 	background:#aaa;
 	width:100%;
@@ -306,12 +306,14 @@ body.not-logged-in #my-gallery { display: none; }
 body.not-logged-in #clear-design { display: none; }
 body.not-logged-in #logoutZone { display: none; }
 body.not-logged-in #loginZone { display: block; }
+body.not-logged-in .tip { display: block; }
 
 body.logged-in #save-design { display: block; }
 body.logged-in #random-design { display: block; }
 body.logged-in #clear-design { display: block; }
 body.logged-in #logoutZone { display: block; }
 body.logged-in #loginZone { display: none; }
+body.logged-in .tip { display: none; }
 
 #menubar {
 	position:absolute;
@@ -630,6 +632,42 @@ body.logged-in #loginZone { display: none; }
 	background-image: url(images/icons2.png);
 	background-position: -220px -184px;
 	z-index: 0;
+}
+
+#tip1 {
+	position: absolute;
+	height: 75px;
+	width: 110px;
+	left: 1200px;
+	top: 60px;
+	background-repeat: no-repeat;
+	background-image: url(images/icons2.png);
+	background-position: -63px -532px;
+	z-index: 999;
+}
+
+#tip2 {
+	position: absolute;
+	height: 50px;
+	width: 210px;
+	left: 260px;
+	top: 80px;
+	background-repeat: no-repeat;
+	background-image: url(images/icons2.png);
+	background-position: -2px -624px;
+	z-index: 999;
+}
+
+#tip3 {
+	position: fixed;
+	height: 80px;
+	width: 200px;
+	left: 1200px;
+	bottom: 180px;
+	background-repeat: no-repeat;
+	background-image: url(images/icons2.png);
+	background-position: -2px -690px;
+	z-index: 999;
 }
 
 .layout_item {
