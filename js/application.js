@@ -573,7 +573,8 @@ function setDnD(maskImg, ox, oy) {
 			// copy corner object
 			$(this).children(".draggable").data('corner', $(this).data('corner'));
 			// copy img url from gallery-pool object
-			if ($(this).children(".draggable").attr('src').indexOf('http://') >= 0) {
+			if ($(this).children(".draggable").attr('src').indexOf('http://') >= 0 ||
+				$(this).children(".draggable").attr('src').indexOf('https://') >= 0) {
 				// Fixed url to hotprintCloud server
 				var str = HOST_URL + TEMP_DIR + 
 								$(this).children(".draggable").attr('src').replace(/\//g, "+");
@@ -928,8 +929,14 @@ function loadLayout(_maskImg, ox , oy, _layoutName){
 
 function setContainer(){  
     var winH=$(window).height();  
-    var docH=$(document).height();  
-    $('#wrapper').css('height',winH-$('.recent').height()+'px');     
+    var docH=$(document).height(); 
+    $('#wrapper').css('height',winH-$('.recent').height()+'px');  
+	
+	// Fix width of mainmenu at 1224px
+    if ($(document).width() <= 1224)
+    	$(".mainmenu").css('width', '1224px');
+    else
+    	$(".mainmenu").css('width', '100%');
 }  
   
 function setFooterTop(){  
@@ -1092,7 +1099,7 @@ function newPage(page) {
 		}
 	}
 	else if (page == "Save") {
-		$('.buybutton').fadeIn(300);
+
 		$('#start-design').fadeIn(300);
 		$('#my-gallery').fadeIn(300);
 		//$('#cart').fadeIn(300);
@@ -1150,7 +1157,7 @@ function releasePage(page) {
 		$('#my-gallery').hide();
 		$('#galleryCanvas').remove();
 		$('#galleryCanvas')[0] = null;
-		$('.buybutton').hide()
+
 		$('#cart').hide();
 	}
 	else if (page == "Gallery") {
@@ -1209,26 +1216,25 @@ $(function(){
         LAYOUT_NAME = $.cookie('layout_name');
 	menuLoadPhone(PHONE_NAME);
 	
-	/*
-	var cart = $('#cart').DCAJAXPaypalCart({  
-            width:600,  
-            height:400,  
-            autoOpenWhenAdd:true,
-            openNewCheckOutWindow:true,
-            header:'Shopping Cart',
-            footer:'We accpet paypal, visa and master card.',
-            paypalOptions:{  
-                business:'will@camangi.com',
-                page_style:'digicrafts'
-            }  
-        }); 
-    cart.addBuyButton("#buy_onex_case",{
-            name:'One X',                  // Item name appear on the cart
-            thumbnail:'css/images/move.png',
-            price:'34.99',                // Cost of the item
-            shipping: '0'                 // Shipping cost for the item (Optional)
-        });
-	*/
+	// Init Shopping Cart
+	simpleCart({
+	    checkout: {
+	      type: "PayPal",
+	      email: "will@hotprintcloud.com"
+	    },
+	    cartColumns: [
+	        { view: function( item , column ){
+        		return item.id()+'<b>週漢倫<b>';
+  			} ,attr: "name" , label: "手機型號" } ,
+	        { attr: "price" , label: "價格", view: 'currency' } ,
+	        { view: "decrement" , label: false , text: "-" } ,
+	        { attr: "quantity" , label: "數量" } ,
+	        { view: "increment" , label: false , text: "+" } ,
+	        { attr: "total" , label: "小計", view: 'currency' } ,
+	        { view: "remove" , text: "全部清除" , label: false }
+	    ]
+  	});
+	
     $.instagramr();
     
     $('#start-design').hide();

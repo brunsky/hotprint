@@ -4,12 +4,25 @@
 // Create gallery page 
 
 function mod_gallery() {
+	/*
+	$('#my-gallery').after('<span class="simpleCart_quantity"></span> items - '+
+							'<span class="simpleCart_total"></span>'+
+							'<a href="javascript:;" class="simpleCart_checkout"> 結帳</a>');
+	simpleCart.update();*/
+	
 	$g = $('<div></div>');
 	$g.attr('id', 'gallery');
 	$g.html('<ul></ul>');
 	$('body').append($g);
 	$g.css('top', '100px');
 	$g.css('left', '100px');
+						
+	// Add deatail of cart
+	$('#gallery').after('<div class="shopping_cart">購物車<div class="simpleCart_items"></div></div>');
+	$('.shopping_cart').css('top','100px');
+	$('.shopping_cart').css('left',$('#gallery').width());
+	simpleCart.update();
+	
 	if($.cookie('user_id')) {
 		$.post("db/retrive_gallery.php", 
 				{ userid: $.cookie('user_id')
@@ -18,14 +31,19 @@ function mod_gallery() {
 					var json = $.parseJSON(data);
 					if ($.cookie('user_id') == '1587166409' || 
 						$.cookie('user_id') == '100004857218710' || 
-						$.cookie('user_id') == '527379830') { // Brunsky, Mark, James
+						$.cookie('user_id') == '527379830' ||
+						$.cookie('user_id') == '54327628') { // Brunsky, Mark, James
 						$.each(json, function(key, val) {
-							$('#gallery ul').append('<li><img src="'+val.orig_img+'" alt="image" /><br />'+
-							val.phone_type+' , '+
+							$('#gallery ul').append('<div class="simpleCart_shelfItem">'+
+							'<li><img src="'+val.orig_img+'" alt="image" /><br />'+
+							'<h2 class="item_name">'+val.phone_type+'</h2>'+
 							val.phone_color+'<br />'+
 							val.s_save+'<br />'+
-							'<input type="button" value="產生原圖" onClick="_send_factory(\''+val.s_save+'\')">'+'</li>');
+							'<span class="item_price">$35.99</span><br>'+
+							'<a class="item_add" href="javascript:;"> 加入購物車 </a></p>'+
+							'<input type="button" value="產生原圖" onClick="_send_factory(\''+val.s_save+'\')">'+'</li></div>');
 						});
+
 					}
 					else {
 						$.each(json, function(key, val) {
