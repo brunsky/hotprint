@@ -11,9 +11,8 @@ function mod_gallery() {
 	simpleCart.update();*/
 	
 	$g = $('<div></div>');
-	$g.attr('id', 'gallery');
-	$g.html('<ul></ul>');
 	$('body').append($g);
+	$g.attr('id', 'gallery');
 	$g.css('top', '100px');
 	$g.css('left', '100px');
 						
@@ -34,23 +33,26 @@ function mod_gallery() {
 						$.cookie('user_id') == '527379830' ||
 						$.cookie('user_id') == '54327628') { // Brunsky, Mark, James
 						$.each(json, function(key, val) {
-							$('#gallery ul').append('<div class="simpleCart_shelfItem">'+
-							'<li><img src="'+val.orig_img+'" alt="image" /><br />'+
+							$('#gallery').append('<div class="simpleCart_shelfItem">'+
+							'<div class="g_img_wrap"><img src="'+val.orig_img+'" alt="image" /></div><br />'+
 							'<h2 class="item_name">'+val.phone_type+'</h2>'+
 							val.phone_color+'<br />'+
 							val.s_save+'<br />'+
 							'<span class="item_price">$35.99</span><br>'+
 							'<a class="item_add" href="javascript:;"> 加入購物車 </a></p>'+
-							'<input type="button" value="產生原圖" onClick="_send_factory(\''+val.s_save+'\')">'+'</li></div>');
+							'<input type="button" value="產生原圖" onClick="_send_factory(\''+val.s_save+'\')">'+'</div>');
 						});
 
 					}
 					else {
 						$.each(json, function(key, val) {
-							$('#gallery ul').append('<li><img src="'+val.orig_img+'" alt="image" /><br />'+
-							val.phone_type+' , '+
+							$('#gallery').append('<div class="simpleCart_shelfItem">'+
+							'<img src="'+val.orig_img+'" alt="image" /><br />'+
+							'<h2 class="item_name">'+val.phone_type+'</h2>'+
 							val.phone_color+'<br />'+
-							val.s_save+'<br />'+'</li>');
+							val.s_save+'<br />'+
+							'<span class="item_price">$35.99</span><br>'+
+							'<a class="item_add" href="javascript:;"> 加入購物車 </a></p></div>');
 						});
 					}
 					

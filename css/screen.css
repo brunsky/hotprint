@@ -522,19 +522,19 @@ body.logged-in .tip { display: none; }
 	position: absolute;	
 	width: 1024px;
 }
-#gallery li {
-    display: inline;
-    list-style: none;
-    width: 180px;
-    min-height: 175px;
-    float: left;
-    margin: 0 80px 80px 0;
-    text-align: center;
+
+.simpleCart_shelfItem img{
+	width:120px;
+
+}
+.g_img_wrap {
+	height:220px;
 }
 
-#gallery li img{
-	width:70%;
-
+.simpleCart_shelfItem {
+	float: left;
+	min-width:220px; width: auto !important; width: 200px;
+	min-height:400px; height: auto !important; height: 400px;
 }
 
 .shopping_cart {
