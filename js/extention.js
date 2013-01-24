@@ -13,14 +13,21 @@ function mod_gallery() {
 	$g = $('<div></div>');
 	$('body').append($g);
 	$g.attr('id', 'gallery');
-	$g.css('top', '100px');
-	$g.css('left', '100px');
-						
+	
 	// Add deatail of cart
-	$('#gallery').after('<div class="shopping_cart">購物車<div class="simpleCart_items"></div></div>');
+	$('#gallery').before('<div class="shopping_cart">購物車<div> ----------- </div><div class="simpleCart_items"></div></div>');
 	$('.shopping_cart').css('top','100px');
-	$('.shopping_cart').css('left',$('#gallery').width());
+	$('.shopping_cart').css('left','100px');
+	simpleCart.bind( 'update' , function(){
+		$('.item-decrement').css('padding-right', '12px');
+		$('.item-quantity').css('padding-right', '12px');
+		$('.headerRow > .item-total').css('padding-left', '100px');	 
+		$('#gallery').css('top', Math.round(parseInt($('.shopping_cart').css('top')))+$('.shopping_cart').height()+'px');
+	});
+
 	simpleCart.update();
+	
+	$g.css('left', '100px');
 	
 	if($.cookie('user_id')) {
 		$.post("db/retrive_gallery.php", 
@@ -70,7 +77,7 @@ function _send_factory(savetime){
 			function(data) {
 				var json = $.parseJSON(data);
 				var Obj = $.parseJSON(json[0].saveimag);
-				_producing_for_factory(Obj);
+				_producing_for_factory(Obj, json[0].phone_type);
 
 				//_producing_for_factory_from_layout(json[0]);
 			});
@@ -188,7 +195,7 @@ function _show_save(resCanvas) {
 /*
  * HD ouput for factory 
  */
-function _producing_for_factory(json) {
+function _producing_for_factory(json, phone_type) {
 
 	$("body").append('<div class="modalOverlay"></div>');
 	$wDiv = $('.modalOverlay');
@@ -200,7 +207,8 @@ function _producing_for_factory(json) {
 	$( "#progress-bar" ).css('left', layout_ox+'px');
 	$status = $('#status');
 	var a = new Image();
-	a.src = "images/"+PHONE_NAME+"_mask2.png";
+	a.src = "images/"+phone_type+"_mask2.png";
+	console.log(a.src);
 	a.onload = function(){
 	
 		var resCanvas = document.createElement('canvas');
@@ -375,7 +383,8 @@ function _producing_for_factory_from_layout(json) {
 		$( "#progress-bar" ).css('left', layout_ox+'px');
 		$status = $('#status');
 		var a = new Image();
-		a.src = "images/"+PHONE_NAME+"_mask2.png";
+		a.src = "images/"+PHONE_NAME+"_mask3.png";
+		console.log('_producing:'+a.src)
 		a.onload = function(){
 		
 			var resCanvas = document.createElement('canvas');

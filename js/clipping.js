@@ -46,7 +46,7 @@ function autoClipper2(srcImgDom, dstCanvas, srcCorner, dstCorner) {
 	$(srcImgDom).data('zh', h);
 	var zdx = Math.round($(srcImgDom).data('zdx') * r);
 	var zdy = Math.round($(srcImgDom).data('zdy') * r);
-	
+
 	// Fix zdy & zdx
 	if (h - zdy < distDiv_h)
 		zdy = 0;

@@ -517,6 +517,33 @@ function clearCorner(pObj) {
 
 // Define Drag&Drop
 function setDnD(maskImg, ox, oy) {
+	
+	var _copyData = function(toObj, fromObj) {
+		// copy zoomer value
+		toObj.data('zdx', fromObj.data('zdx'));
+		toObj.data('zdy', fromObj.data('zdy'));
+		toObj.data('zw', fromObj.data('zw'));
+		toObj.data('zh', fromObj.data('zh'));
+		// copy corner object
+		toObj.data('corner', fromObj.data('corner'));
+		// copy img url from gallery-pool object
+		if (typeof toObj.attr('src') != 'undefined' && 
+			(toObj.attr('src').indexOf('http://') >= 0 ||
+			toObj.attr('src').indexOf('https://') >= 0)) {
+			// Fixed url to hotprintCloud server
+			var str = HOST_URL + TEMP_DIR + toObj.attr('src').replace(/\//g, "+");
+			toObj.data('src', str);
+		}
+		else {
+			toObj.data('src', fromObj.data('src'));
+		}
+		console.log('toObj zdx:'+toObj.data('zdx'));
+		console.log('toObj src:'+toObj.data('src'));
+		// copy original size
+		toObj.data('oh', fromObj.data('oh'));
+		toObj.data('ow', fromObj.data('ow'));
+	}
+			
 	$( ".layout_corner" ).droppable({
 		accept: ".draggable",
 		tolerance: "pointer",
@@ -542,17 +569,21 @@ function setDnD(maskImg, ox, oy) {
 				$(this).next().remove();
 				$(this).next()[0] = null;
 			}
-			console.log('Flight#'+$(ui.draggable).attr('id')+' from: '+$(ui.draggable).parent().attr('id')+' will drop at airport:'+$(this).attr('id'));
+			//console.log('Flight#'+$(ui.draggable).attr('id')+' from: '+$(ui.draggable).parent().attr('id')+' will drop at airport:'+$(this).attr('id'));
 			// Don't copy yourself...
 			if ($(ui.draggable).parent().attr('id') != $(this).attr('id')) {
 				$(this).html('');
 				$(this).append($(ui.draggable).clone());
+				_copyData( $(this).children(".draggable"), $(ui.draggable));
 				// clear source corner
 				clearCorner($(ui.draggable).parent());
 			}
 			else {
-				clearCorner($(ui.draggable).parent());
+				var $_tmpObj = $('<img>');
+				_copyData($_tmpObj, $(ui.draggable));
+				$(this).html('');
 				$(this).append($(ui.draggable).clone());
+				_copyData($(this).children(".draggable"), $_tmpObj);
 			}
 
 			$(this).children(".draggable").removeClass("gallery-pool");	
@@ -564,28 +595,6 @@ function setDnD(maskImg, ox, oy) {
 					} 
 				});
 			}
-			
-			// copy zoomer value
-			$(this).children(".draggable").data('zdx', $(this).data('zdx'));
-			$(this).children(".draggable").data('zdy', $(this).data('zdy'));
-			$(this).children(".draggable").data('zw', $(this).data('zw'));
-			$(this).children(".draggable").data('zh', $(this).data('zh'));
-			// copy corner object
-			$(this).children(".draggable").data('corner', $(this).data('corner'));
-			// copy img url from gallery-pool object
-			if ($(this).children(".draggable").attr('src').indexOf('http://') >= 0 ||
-				$(this).children(".draggable").attr('src').indexOf('https://') >= 0) {
-				// Fixed url to hotprintCloud server
-				var str = HOST_URL + TEMP_DIR + 
-								$(this).children(".draggable").attr('src').replace(/\//g, "+");
-				$(this).children(".draggable").data('src', str);
-			}
-			else {
-				$(this).children(".draggable").data('src', $(this).data('src'));
-			}
-			// copy original size
-			$(this).children(".draggable").data('oh', $(this).data('oh'));
-			$(this).children(".draggable").data('ow', $(this).data('ow'));
 
 			$(this).children(".draggable").css({
 				"position": "relative",
@@ -695,6 +704,7 @@ function setDnD(maskImg, ox, oy) {
 			}
 		},
 		over: function(event, ui) {
+			/*
 			$(this).data('zdx', $(ui.draggable).data('zdx'));
 			$(this).data('zdy', $(ui.draggable).data('zdy'));
 			$(this).data('zw', $(ui.draggable).data('zw'));
@@ -702,9 +712,10 @@ function setDnD(maskImg, ox, oy) {
 			$(this).data('src', $(ui.draggable).data('src'));
 			$(this).data('corner', $(ui.draggable).data('corner'));
 			$(this).data('ow', $(ui.helper)[0].width);
-			$(this).data('oh', $(ui.helper)[0].height);
+			$(this).data('oh', $(ui.helper)[0].height);*/
 		},
 		deactivate: function(event, ui) {
+			/*
 			$(this).removeData('zdx');
 			$(this).removeData('zdy');
 			$(this).removeData('zw');
@@ -712,7 +723,7 @@ function setDnD(maskImg, ox, oy) {
 			$(this).removeData('src');
 			$(this).removeData('corner');
 			$(this).removeData('ow');
-			$(this).removeData('oh');
+			$(this).removeData('oh');*/
 		}
 	});
 }
@@ -1164,6 +1175,8 @@ function releasePage(page) {
 		$('#start-design').hide();
 		$('#gallery').remove();
 		$('#gallery')[0] = null;
+		$('.shopping_cart').remove();
+		$('.shopping_cart')[0] = null;
 	}
 }
 
@@ -1224,13 +1237,17 @@ $(function(){
 	    },
 	    cartColumns: [
 	        { view: function( item , column ){
-        		return item.id()+'<b>週漢倫<b>';
-  			} ,attr: "name" , label: "手機型號" } ,
+        		return "<span>"+item.get('name')+"</span>"
+  				} , attr: "name" , label: "手機型號" } ,
 	        { attr: "price" , label: "價格", view: 'currency' } ,
 	        { view: "decrement" , label: false , text: "-" } ,
-	        { attr: "quantity" , label: "數量" } ,
+	        { view: function( item , column ){
+        		return "<span class='item_qty'>"+item.quantity()+"</span>"
+  				} , attr: "quantity" , label: "數量" } ,
 	        { view: "increment" , label: false , text: "+" } ,
-	        { attr: "total" , label: "小計", view: 'currency' } ,
+	        { view: function( item , column ){
+        		return "<span>"+simpleCart.toCurrency(item.get('total'))+"</span>"
+  				} ,attr: "total" , label: "小計" } ,
 	        { view: "remove" , text: "全部清除" , label: false }
 	    ]
   	});

@@ -522,6 +522,9 @@ body.logged-in .tip { display: none; }
 	position: absolute;	
 	width: 1024px;
 }
+.itemRow {
+	width: 1024px;
+}
 
 .simpleCart_shelfItem img{
 	width:120px;
@@ -539,8 +542,27 @@ body.logged-in .tip { display: none; }
 
 .shopping_cart {
 	position: absolute;	
-	width: 200px;
-	height: 500px;
+	width: 1024px;
+	height: 150px;
+}
+.simpleCart_items {
+	height: 150px;
+}
+
+.simpleCart_items div{
+	float: left;
+	padding-right: 100px;
+}
+
+.simpleCart_items span {
+	display:-moz-inline-box;
+	display:inline-block;
+	width:50px; 
+}
+.simpleCart_items .item_qty {
+	display:-moz-inline-box;
+	display:inline-block;
+	width:10px;
 }
 
 /* Gallery pool */
