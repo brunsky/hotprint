@@ -18,6 +18,7 @@
  var CORNER_OPT 	= 0.1;
  var isCornerFading = false;
  var PAGE			= 'Design';
+ var TITLE_NAME		= '';
  var maskImg;
   
   var _init
@@ -972,11 +973,16 @@ function setCanvas(_phoneName) {
 
 	var winH=$(window).height();
 	var winW=$(window).width(); 
-    layout_oy = Math.floor(winH * 0.1);
-    layout_ox = Math.floor(winW * 0.3);//410;
+    //layout_oy = Math.floor(winH * 0.1);
+    //layout_ox = Math.floor(winW * 0.3);//410;
+    layout_oy = 66;
+    layout_ox = 404;
     $("#mCanvas").css('top', layout_oy+'px');
     $("#mCanvas").css('left', layout_ox+'px'); 
-
+    
+    //Define title
+	$('.mTitle').fadeIn(3000);
+	
     var a = new Image();
 	a.src = "images/"+_phoneName+"_"+PHONE_COLOR+".png";
 	a.onload = function(){
@@ -1108,6 +1114,7 @@ function newPage(page) {
 		else if (source_type == 'instagram') {
 			_instaCrossLogin(access_token);
 		}
+		$('#mTitle').html(TITLE_NAME);
 	}
 	else if (page == "Save") {
 
@@ -1133,6 +1140,7 @@ function releasePage(page) {
 		$('#menubar').hide();
 		$('#mCanvas').remove();
 		$('#mCanvas')[0] = null;
+		$('#mTitle').html('');
 		
 		$('.recent').find('.draggable').each(function(index) {
 			$(this).remove();
@@ -1231,10 +1239,6 @@ $(function(){
 	
 	// Init Shopping Cart
 	simpleCart({
-	    checkout: {
-	      type: "PayPal",
-	      email: "will@hotprintcloud.com"
-	    },
 	    cartColumns: [
 	        { view: function( item , column ){
         		return "<span>"+item.get('name')+"</span>"
@@ -1251,6 +1255,16 @@ $(function(){
 	        { view: "remove" , text: "全部清除" , label: false }
 	    ]
   	});
+  	
+  	//Setup title
+	$('#mTitle').editable(function(value, settings) { 
+	     TITLE_NAME = $.trim(value);
+	     return(TITLE_NAME);
+	  },{
+	 	onblur : "submit",
+	 	placeholder : "未命名",
+	 	tooltip : "請輸入名稱"
+	 });
 	
     $.instagramr();
     

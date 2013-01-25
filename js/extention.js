@@ -15,16 +15,34 @@ function mod_gallery() {
 	$g.attr('id', 'gallery');
 	
 	// Add deatail of cart
-	$('#gallery').before('<div class="shopping_cart">購物車<div> ----------- </div><div class="simpleCart_items"></div></div>');
+	$('#gallery').before('<div class="shopping_cart">購物車<div> ----------- </div>'+
+		'<div class="simpleCart_items"></div><div style="float:left">總計：</div><div class="simpleCart_total"></div><div class="checkout">結帳</div></div>');
 	$('.shopping_cart').css('top','100px');
 	$('.shopping_cart').css('left','100px');
 	simpleCart.bind( 'update' , function(){
 		$('.item-decrement').css('padding-right', '12px');
 		$('.item-quantity').css('padding-right', '12px');
 		$('.headerRow > .item-total').css('padding-left', '100px');	 
-		$('#gallery').css('top', Math.round(parseInt($('.shopping_cart').css('top')))+$('.shopping_cart').height()+'px');
+		$('#gallery').css('top', Math.round(parseInt($('.shopping_cart').css('top')))+$('.shopping_cart').height()+50+'px');
 	});
-
+	$('.checkout').click(function(){
+		
+		// Set checkout information
+		simpleCart({
+		    checkout: { 
+		    	type: "SendForm" , 
+		        url: "http://sandbox.hotprintcloud.com/checkout/test.php" ,
+		        success: "success.html" , 
+		        cancel: "cancel.html",
+		        extra_data: {
+		          storename: $(".open").html(),
+		          userid: user_id
+		        }
+		    }
+	  	});
+	  	
+		simpleCart.checkout();
+	});
 	simpleCart.update();
 	
 	$g.css('left', '100px');
@@ -207,7 +225,7 @@ function _producing_for_factory(json, phone_type) {
 	$( "#progress-bar" ).css('left', layout_ox+'px');
 	$status = $('#status');
 	var a = new Image();
-	a.src = "images/"+phone_type+"_mask2.png";
+	a.src = "images/"+phone_type+"_mask3.png";
 	console.log(a.src);
 	a.onload = function(){
 	
