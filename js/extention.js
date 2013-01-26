@@ -60,7 +60,8 @@ function mod_gallery() {
 						$.each(json, function(key, val) {
 							$('#gallery').append('<div class="simpleCart_shelfItem">'+
 							'<div class="g_img_wrap"><img src="'+val.orig_img+'" alt="image" /></div><br />'+
-							'<h2 class="item_name">'+val.phone_type+'</h2>'+
+							'<h2 class="item_name">'+val.title_name+'</h2>'+
+							val.phone_type+', '+
 							val.phone_color+'<br />'+
 							val.s_save+'<br />'+
 							'<span class="item_price">$35.99</span><br>'+
@@ -117,7 +118,15 @@ function mod_saving(func_complete) {
 		$wDiv.remove();
 		return;
 	}
-	
+	// Check if did not set title yet
+	if (TITLE_NAME == '') {
+		Messi.alert('請輸入名稱 : <input type="text">', function(value, content){
+			TITLE_NAME = content;
+			saveImg();
+		},{title: '提醒您 !', modal: true});
+		$wDiv.remove();
+		return;
+	}
 	
 	$("body").append('<div id="progress-bar"><div id="status"></div></div>');
 	$( "#progress-bar" ).css('position','fixed');
@@ -163,12 +172,15 @@ function mod_saving(func_complete) {
 			$.post("db/save_image.php", 
 				{ userid: $.cookie('user_id'), 
 					user_type: $.cookie('user_type'),
+					title_name: TITLE_NAME,
 					saveimag: JSON.stringify(jsonObj),
 					phone_type: PHONE_NAME,
 					layout_no: LAYOUT_NAME,
 					phone_color: PHONE_COLOR,
 					orig_img: resCanvas.toDataURL()},  
 				function(data) {
+					// Empty title name
+					TITLE_NAME = '';
 					// release this resCanvas by 'releasePage()'
 					$(resCanvas).attr('id', 'galleryCanvas');
 					$(resCanvas).css('position', 'absolute');
@@ -601,7 +613,7 @@ function mod_randesign() {
 			{title: '隨機設計', 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 
-			 callback: function(val) {  
+			 callback: function(val, content) {  
 				if (val === 'Y') {
 					_randesign();
 				}
@@ -721,7 +733,8 @@ function clearDesign() {
 			{title: '清除內容', 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 
-			 callback: function(val) {  
+			 callback: function(val, content) {  
+			 	console.log(val+','+content);
 				if (val === 'Y') {
 					if ( $('.layout_corner').length ) {
 						$('.layout_corner').children('.draggable').each(function(index) {

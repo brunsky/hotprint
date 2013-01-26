@@ -12,9 +12,10 @@ if ($connkey) {
 	$time = getdateinfo(2);
 	$filename = dirname(__FILE__) . "/user/" . $_POST["userid"]."_".$time.".png";
 	$sql = sprintf(
-        "INSERT INTO gallery (userid, user_type, saveimag, phone_type, layout_no, phone_color, orig_img, s_save) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+        "INSERT INTO gallery (userid, user_type, title_name, saveimag, phone_type, layout_no, phone_color, orig_img, s_save) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
         mysql_real_escape_string($_POST["userid"]),
         mysql_real_escape_string($_POST["user_type"]),
+        mysql_real_escape_string($_POST["title_name"]),
         mysql_real_escape_string($_POST["saveimag"]),
         mysql_real_escape_string($_POST["phone_type"]),
         mysql_real_escape_string($_POST["layout_no"]),

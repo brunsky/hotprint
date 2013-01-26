@@ -1114,13 +1114,23 @@ function newPage(page) {
 		else if (source_type == 'instagram') {
 			_instaCrossLogin(access_token);
 		}
+		
+		// TITLE_NAME should be cleared here!
 		$('#mTitle').html(TITLE_NAME);
+		// Initialize title again
+		$('#mTitle').editable(function(value, settings) { 
+		     TITLE_NAME = $.trim(value);
+		     return(TITLE_NAME);
+		  },{
+		 	onblur : "submit",
+		 	placeholder : "未命名",
+		 	tooltip : "請輸入名稱"
+		 });
 	}
 	else if (page == "Save") {
 
 		$('#start-design').fadeIn(300);
 		$('#my-gallery').fadeIn(300);
-		//$('#cart').fadeIn(300);
 	}
 	else if (page == "Gallery") {
 		$('#start-design').fadeIn(300);
@@ -1176,8 +1186,6 @@ function releasePage(page) {
 		$('#my-gallery').hide();
 		$('#galleryCanvas').remove();
 		$('#galleryCanvas')[0] = null;
-
-		$('#cart').hide();
 	}
 	else if (page == "Gallery") {
 		$('#start-design').hide();
@@ -1242,7 +1250,7 @@ $(function(){
 	    cartColumns: [
 	        { view: function( item , column ){
         		return "<span>"+item.get('name')+"</span>"
-  				} , attr: "name" , label: "手機型號" } ,
+  				} , attr: "name" , label: "名稱" } ,
 	        { attr: "price" , label: "價格", view: 'currency' } ,
 	        { view: "decrement" , label: false , text: "-" } ,
 	        { view: function( item , column ){
