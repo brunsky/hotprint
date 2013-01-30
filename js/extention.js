@@ -1,14 +1,20 @@
 
+//////////////////////////////////////////////////
+// Create checkout page 
+
+function mod_checkout() {
+	$order = $('<div></div>');
+	$order.addClass('order');
+	$order.css('position', 'absolute');
+	$order.css('top', $('.mainmenu').height()+50+'px');
+	$order.load('checkout/checkout.html');
+	$('body').append($order);
+}
 
 //////////////////////////////////////////////////
 // Create gallery page 
 
 function mod_gallery() {
-	/*
-	$('#my-gallery').after('<span class="simpleCart_quantity"></span> items - '+
-							'<span class="simpleCart_total"></span>'+
-							'<a href="javascript:;" class="simpleCart_checkout"> 結帳</a>');
-	simpleCart.update();*/
 	
 	$g = $('<div></div>');
 	$('body').append($g);
@@ -25,9 +31,15 @@ function mod_gallery() {
 		$('.headerRow > .item-total').css('padding-left', '100px');	 
 		$('#gallery').css('top', Math.round(parseInt($('.shopping_cart').css('top')))+$('.shopping_cart').height()+50+'px');
 	});
+	
+	// Click chechout button
 	$('.checkout').click(function(){
 		
+		releasePage('Gallery');
+		newPage('Checkout');
+		
 		// Set checkout information
+		/*
 		simpleCart({
 		    checkout: { 
 		    	type: "SendForm" , 
@@ -41,8 +53,10 @@ function mod_gallery() {
 		    }
 	  	});
 	  	
-		simpleCart.checkout();
+		simpleCart.checkout();*/
 	});
+	
+	// Update Shopping Cart
 	simpleCart.update();
 	
 	$g.css('left', '100px');

@@ -1090,8 +1090,38 @@ function startDesign() {
  * Enter gallery page from save page
  */
 function openGallery() {
-	releasePage(PAGE);
-	newPage('Gallery');
+	if (PAGE == 'Checkout') {
+		$("body").append('<div class="modalOverlay"></div>');
+		new Messi('你確定要取消結帳嗎？', 
+			{title: 'Checkout', 
+			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
+						{id: 1, label: 'No', val: 'N'}], 
+			 callback: function(val, content) {  
+				if (val === 'Y') {
+					releasePage(PAGE);
+					newPage('Gallery');
+				}
+				$('.modalOverlay').remove();
+			}});
+	}
+	else if (PAGE == 'Design' && $('.canvas_appended').length != 0 ) {
+		$("body").append('<div class="modalOverlay"></div>');
+		new Messi('你確定要離開設計頁面嗎？所有的圖片將會被清空！', 
+			{title: 'Alert', 
+			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
+						{id: 1, label: 'No', val: 'N'}], 
+			 callback: function(val, content) {  
+				if (val === 'Y') {
+					releasePage(PAGE);
+					newPage('Gallery');
+				}
+				$('.modalOverlay').remove();
+			}});
+	}
+	else {
+		releasePage(PAGE);
+		newPage('Gallery');
+	}
 }
 
 
@@ -1135,6 +1165,9 @@ function newPage(page) {
 	else if (page == "Gallery") {
 		$('#start-design').fadeIn(300);
 		mod_gallery();
+	}
+	else if (page == "Checkout") {
+		mod_checkout();
 	}
 }
 
@@ -1193,6 +1226,9 @@ function releasePage(page) {
 		$('#gallery')[0] = null;
 		$('.shopping_cart').remove();
 		$('.shopping_cart')[0] = null;
+	}
+	else if (page == "Checkout") {
+		$('.order').remove();
 	}
 }
 
