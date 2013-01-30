@@ -7,8 +7,28 @@ function mod_checkout() {
 	$order.addClass('order');
 	$order.css('position', 'absolute');
 	$order.css('top', $('.mainmenu').height()+50+'px');
-	$order.load('checkout/checkout.html');
+	$order.load('checkout/checkout.html', function(){
+		$(".order a.preview").hover(function(e){
+			var parentOffset = $(this).parent().offset(); 
+			$(".order").append("<div id='preview'><img src='checkout/card.png'/></div>");	
+			$('#preview').css('position', 'relative');							 
+			$("#preview")
+				.css("top",e.pageY - parentOffset.top + "px")
+				.css("left",e.pageX - parentOffset.left + "px")
+				.fadeIn("fast");						
+	    },
+		function(){
+			$("#preview").remove();
+	    });	
+		$(".order a.preview").mousemove(function(e){
+			var parentOffset = $(this).parent().offset(); 
+			$("#preview")
+				.css("top",e.pageY - parentOffset.top + "px")
+				.css("left",e.pageX - parentOffset.left + "px");
+		});	
+	});
 	$('body').append($order);
+		
 }
 
 //////////////////////////////////////////////////
