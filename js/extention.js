@@ -8,6 +8,7 @@ function mod_checkout() {
 	$order.css('position', 'absolute');
 	$order.css('top', $('.mainmenu').height()+50+'px');
 	$order.load('checkout/checkout.html', function(){
+		// popup card tip when mouse hovering
 		$(".order a.preview").hover(function(e){
 			var parentOffset = $(this).parent().offset(); 
 			$(".order").append("<div id='preview'><img src='checkout/card.png'/></div>");	
@@ -643,7 +644,7 @@ function mod_randesign() {
 	
 	if ($('.canvas_appended').length != 0 ) {
 		$("body").append('<div class="modalOverlay"></div>');
-		new Messi('你確定要重新隨機設計嗎？之前的圖片將會被清空！', 
+		new Messi('您確定要重新隨機設計嗎？之前的圖片將會被清空！', 
 			{title: '隨機設計', 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 
@@ -763,7 +764,7 @@ function clearDesign() {
 	// Check if any design already
 	if ($('.canvas_appended').length != 0 ) {
 		$("body").append('<div class="modalOverlay"></div>');
-		new Messi('你確定要清除設計嗎？所有的圖片將會被清空！', 
+		new Messi('您確定要清除設計嗎？所有的圖片將會被清空！', 
 			{title: '清除內容', 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 

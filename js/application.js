@@ -781,7 +781,7 @@ function menuLoadPhone(_phoneName) {
 	}
 	if ($('.canvas_appended').length != 0 ) {
 		$("body").append('<div class="modalOverlay"></div>');
-		new Messi('你確定要切換手機嗎？所有的圖片將會被清空！', 
+		new Messi('您確定要切換手機嗎？所有的圖片將會被清空！', 
 			{title: '切換手機', 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 
@@ -829,7 +829,7 @@ function menuLoadColor(_phoneColor) {
 	}
 	if ($('.canvas_appended').length != 0 ) {
 		$("body").append('<div class="modalOverlay"></div>');
-		new Messi('你確定要切換背蓋顏色嗎？所有的圖片將會被清空！', 
+		new Messi('您確定要切換背蓋顏色嗎？所有的圖片將會被清空！', 
 			{title: '切換背蓋顏色', 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 
@@ -872,7 +872,7 @@ function menuLoadLayout(_layoutName) {
 	
 	if ($('.canvas_appended').length != 0 ) {
 		$("body").append('<div class="modalOverlay"></div>');
-		new Messi('你確定要切換版型嗎？所有的圖片將會被清空！', 
+		new Messi('您確定要切換版型嗎？所有的圖片將會被清空！', 
 			{title: '切換版型', 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 
@@ -1092,8 +1092,8 @@ function startDesign() {
 function openGallery() {
 	if (PAGE == 'Checkout') {
 		$("body").append('<div class="modalOverlay"></div>');
-		new Messi('你確定要取消結帳嗎？', 
-			{title: 'Checkout', 
+		new Messi('您尚未完成付款喔!確定要離開頁面嗎？', 
+			{title: 'Alert', 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 
 			 callback: function(val, content) {  
@@ -1106,7 +1106,7 @@ function openGallery() {
 	}
 	else if (PAGE == 'Design' && $('.canvas_appended').length != 0 ) {
 		$("body").append('<div class="modalOverlay"></div>');
-		new Messi('你確定要離開設計頁面嗎？所有的圖片將會被清空！', 
+		new Messi('您確定要離開設計頁面嗎？所有的圖片將會被清空！', 
 			{title: 'Alert', 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 
