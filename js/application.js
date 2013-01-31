@@ -1092,7 +1092,7 @@ function startDesign() {
 function openGallery() {
 	if (PAGE == 'Checkout') {
 		$("body").append('<div class="modalOverlay"></div>');
-		new Messi('您尚未完成付款喔!確定要離開頁面嗎？', 
+		new Messi('您尚未完成付款喔!確定要取消嗎？', 
 			{title: 'Alert', 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 

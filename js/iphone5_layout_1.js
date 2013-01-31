@@ -1,7 +1,7 @@
 var _x;
 var _y;
 var CORNER_OPT = 0.1;
-for (var i=1; i<=16; i++) {
+for (var i=1; i<=8; i++) {
 	//Create DIV 
 	$destDiv = $(document.createElement('div'));
 	$destDiv.attr('id', 'corner'+i);

@@ -552,7 +552,7 @@ body.logged-in .tip { display: none; }
 	height: 150px;
 }
 .simpleCart_items {
-	height: 150px;
+	height: 120px;
 }
 
 .simpleCart_items div{
@@ -560,10 +560,14 @@ body.logged-in .tip { display: none; }
 	padding-right: 100px;
 }
 
+.simpleCart_items .headerRow div {
+	width: 70px;
+}
+
 .simpleCart_items span {
 	display:-moz-inline-box;
 	display:inline-block;
-	width:50px; 
+	width:100px; 
 }
 .simpleCart_items .item_qty {
 	display:-moz-inline-box;
@@ -576,10 +580,146 @@ body.logged-in .tip { display: none; }
 }
 .checkout {
 	float: left;
-	padding-right: 80px;
 	cursor: pointer;
+	-moz-box-shadow:inset -1px 2px 0px -2px #fab3ad;
+	-webkit-box-shadow:inset -1px 2px 0px -2px #fab3ad;
+	box-shadow:inset -1px 2px 0px -2px #fab3ad;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #fa665a), color-stop(1, #d34639) );
+	background:-moz-linear-gradient( center top, #fa665a 5%, #d34639 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fa665a', endColorstr='#d34639');
+	background-color:#fa665a;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #d83526;
+	display:inline-block;
+	color:#ffffff;
+	font-family:arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:3px 32px;
+	text-decoration:none;
+	text-shadow:1px 0px 0px #98231a;
+}.checkout:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #d34639), color-stop(1, #fa665a) );
+	background:-moz-linear-gradient( center top, #d34639 5%, #fa665a 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#d34639', endColorstr='#fa665a');
+	background-color:#d34639;
+}.checkout:active {
+	position:relative;
+	top:1px;
 }
 
+/* Credit Card Module */
+.cards {
+  overflow: hidden;
+}
+.card ul {
+	list-style: none;
+}
+.cards li {
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -ms-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
+  background-image: url(images/card_logos.png);
+  background-position: 0 0;
+  float: left;
+  height: 32px;
+  margin-right: 8px;
+  text-indent: -9999px;
+  width: 51px;
+  list-style: none;
+}
+.cards li:last-child {
+  margin-right: 0;
+}
+.cards .visa_electron {
+  background-position: 204px 0;
+}
+.cards .mastercard {
+  background-position: 153px 0;
+}
+.cards .maestro {
+  background-position: 102px 0;
+}
+.cards .discover {
+  background-position: 51px 0;
+}
+.cards .visa.off {
+  background-position: 0 32px;
+}
+.cards .visa_electron.off {
+  background-position: 204px 32px;
+}
+.cards .mastercard.off {
+  background-position: 153px 32px;
+}
+.cards .maestro.off {
+  background-position: 102px 32px;
+}
+.cards .discover.off {
+  background-position: 51px 32px;
+}
+form {
+  -webkit-box-shadow: 0 1px 3px #bbbbbb;
+  -moz-box-shadow: 0 1px 3px #bbbbbb;
+  box-shadow: 0 1px 3px #bbbbbb;
+  background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#f5f5f5));
+  background: -webkit-linear-gradient(#ffffff, #f5f5f5);
+  background: -moz-linear-gradient(#ffffff, #f5f5f5);
+  background: -ms-linear-gradient(#ffffff, #f5f5f5);
+  background: -o-linear-gradient(#ffffff, #f5f5f5);
+  background: linear-gradient(#ffffff, #f5f5f5);
+  background-color: #f8f8f8;
+  border: 5px solid #fff;
+  margin: 0 auto 32px;
+  padding: 12px 24px 24px;
+  width: 380px;
+}
+form h2 {
+  color: #555;
+  font-family: "Helvetica Neue", Verdana, Geneva, Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  margin-bottom: 0;
+}
+form li {
+  margin: 8px 0;
+  list-style: none;
+}
+form ul {
+	list-style: none;
+}
+form label {
+  color: #555;
+  display: block;
+  font-size: 14px;
+}
+form label small {
+  color: #aaa;
+  font-size: 11px;
+  line-height: 11px;
+  text-transform: uppercase;
+}
+form input {
+  -webkit-box-shadow: inset 0 1px 3px -1px #aaaaaa;
+  -moz-box-shadow: inset 0 1px 3px -1px #aaaaaa;
+  box-shadow: inset 0 1px 3px -1px #aaaaaa;
+  border: 1px solid #aaa;
+  border-color: #aaa #ddd #ddd #aaa;
+  color: #333;
+  display: block;
+  font-size: 18px;
+  height: 30px;
+  padding: 0 5px;
+  width: 275px;
+  -moz-box-sizing: content-box;
+}
+form input.valid {
+  background: url(images/tick.png) 260px center no-repeat;
+}
 /* Gallery pool */
 #instagram-source-login {
 	width: 48px;

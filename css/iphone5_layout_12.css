@@ -1,45 +1,45 @@
 #corner1 {
     position: absolute;
-    width: 136px;
-    height: 201px;
-    top: 35px;
-    left: 27px;
+    width: 150px;
+    height: 200px;
+    top: 40px;
+    left: 37px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner2 {
     position: absolute;
-    width: 136px;
-    height: 201px;
-    top: 238px;
-    left: 27px;
+    width: 150px;
+    height: 200px;
+    top: 242px;
+    left: 37px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner3 {
     position: absolute;
-    width: 136px;
+    width: 150px;
     height: 200px;
-    top: 441px;
-    left: 27px;
+    top: 444px;
+    left: 37px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner4 {
     position: absolute;
-    width: 196px;
-    height: 302px;
-    top: 35px;
-    left: 165px;
+    width: 150px;
+    height: 300px;
+    top: 40px;
+    left: 189px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner5 {
     position: absolute;
-    width: 196px;
-    height: 302px;
-    top: 339px;
-    left: 165px;
+    width: 150px;
+    height: 300px;
+    top: 342px;
+    left: 189px;
     border: 2px solid silver;
     z-index: 999;
 }
