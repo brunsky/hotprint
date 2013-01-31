@@ -7,7 +7,54 @@ function mod_checkout() {
 	$order.addClass('order');
 	$order.css('position', 'absolute');
 	$order.css('top', $('.mainmenu').height()+50+'px');
-	$order.load('checkout/checkout.html', function(){
+	$order.load('checkout/checkout.html?v='+(new Date()).getTime(), function(){
+		
+		/* // 這是比較炫的信用卡輸入頁面
+		$('#card_number').validateCreditCard(function(result) {
+	      if (!(result.card_type != null)) {
+	        $('.cards li').removeClass('off');
+	        $('#card_number').removeClass('valid');
+	        $('.vertical.maestro').slideUp({
+	          duration: 200
+	        }).animate({
+	          opacity: 0
+	        }, {
+	          queue: false,
+	          duration: 200
+	        });
+	        return;
+	      }
+	      $('.cards li').addClass('off');
+	      $('.cards .' + result.card_type.name).removeClass('off');
+	      if (result.card_type.name === 'maestro') {
+	        $('.vertical.maestro').slideDown({
+	          duration: 200
+	        }).animate({
+	          opacity: 1
+	        }, {
+	          queue: false
+	        });
+	      } else {
+	        $('.vertical.maestro').slideUp({
+	          duration: 200
+	        }).animate({
+	          opacity: 0
+	        }, {
+	          queue: false,
+	          duration: 200
+	        });
+	      }
+	      if (result.length_valid && result.luhn_valid) {
+	        return $('#card_number').addClass('valid');
+	      } else {
+	        return $('#card_number').removeClass('valid');
+	      }
+	    });
+		
+		*/
+		
+		// Update Shopping Cart
+		simpleCart.update();
 		// popup card tip when mouse hovering
 		$(".order a.preview").hover(function(e){
 			var parentOffset = $(this).parent().offset(); 
@@ -27,6 +74,29 @@ function mod_checkout() {
 				.css("top",e.pageY - parentOffset.top + "px")
 				.css("left",e.pageX - parentOffset.left + "px");
 		});	
+		// event binding
+		$("#checkout_cancel").click(function() {
+			openGallery();	
+		});
+
+		$("#checkout_confirm").click(function() {
+			// Set checkout information
+			
+			simpleCart({
+			    checkout: { 
+			    	type: "SendForm" , 
+			        url: "http://sandbox.hotprintcloud.com/checkout/test.php" ,
+			        success: "success.html" , 
+			        cancel: "cancel.html",
+			        extra_data: {
+			          storename: $(".open").html(),
+			          userid: user_id
+			        }
+			    }
+		  	});
+		  	
+			simpleCart.checkout();	
+		});
 	});
 	$('body').append($order);
 		
@@ -58,23 +128,6 @@ function mod_gallery() {
 		
 		releasePage('Gallery');
 		newPage('Checkout');
-		
-		// Set checkout information
-		/*
-		simpleCart({
-		    checkout: { 
-		    	type: "SendForm" , 
-		        url: "http://sandbox.hotprintcloud.com/checkout/test.php" ,
-		        success: "success.html" , 
-		        cancel: "cancel.html",
-		        extra_data: {
-		          storename: $(".open").html(),
-		          userid: user_id
-		        }
-		    }
-	  	});
-	  	
-		simpleCart.checkout();*/
 	});
 	
 	// Update Shopping Cart

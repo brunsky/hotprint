@@ -1,27 +1,27 @@
 #corner1 {
     position: absolute;
-    width: 334px;
-    height: 193px;
-    top: 35px;
-    left: 27px;
+    width: 300px;
+    height: 185px;
+    top: 40px;
+    left: 37px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner2 {
     position: absolute;
-    width: 334px;
-    height: 193px;
-    top: 230px;
-    left: 27px;
+    width: 300px;
+    height: 185px;
+    top: 227px;
+    left: 37px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner3 {
     position: absolute;
-    width: 334px;
-    height: 193px;
-    top: 425px;
-    left: 27px;
+    width: 300px;
+    height: 185px;
+    top: 414px;
+    left: 37px;
     border: 2px solid silver;
     z-index: 999;
 }
