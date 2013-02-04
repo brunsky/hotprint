@@ -85,12 +85,14 @@ function mod_checkout() {
 			simpleCart({
 			    checkout: { 
 			    	type: "SendForm" , 
-			        url: "http://sandbox.hotprintcloud.com/checkout/test.php" ,
-			        success: "success.html" , 
-			        cancel: "cancel.html",
+			        url: "http://sandbox.hotprintcloud.com/checkout/bill.php" ,
+			        success: "index.html?b=succeed" , 
+			        cancel: "index.html?b=cancel",
 			        extra_data: {
 			          storename: $(".open").html(),
-			          userid: user_id
+			          userid: user_id,
+			          token: $.cookie('access_token'),
+			          type: $.cookie('source')
 			        }
 			    }
 		  	});
@@ -144,7 +146,8 @@ function mod_gallery() {
 					if ($.cookie('user_id') == '1587166409' || 
 						$.cookie('user_id') == '100004857218710' || 
 						$.cookie('user_id') == '527379830' ||
-						$.cookie('user_id') == '54327628') { // Brunsky, Mark, James
+						$.cookie('user_id') == '54327628' ||
+						$.cookie('user_id') == '1709821659') { // Brunsky, Mark, James. Mark's wife
 						$.each(json, function(key, val) {
 							$('#gallery').append('<div class="simpleCart_shelfItem">'+
 							'<div class="g_img_wrap"><img src="'+val.orig_img+'" alt="image" /></div><br />'+

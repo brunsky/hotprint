@@ -67,7 +67,7 @@
     $('.color_item').each(function(index) {
      	$(this).click({param: $(this).attr('id')}, _loadColor);
     });
-    // Check if instagram has login already
+    // Check if instagram or facebook has been login already
     if (location.hash != '') {
 	    var token_item = location.hash.split('&')[0];
 	    var source_item = location.hash.split('&')[1];
@@ -91,8 +91,18 @@
 		}
 	}
 	else {
-		$.removeCookie('source');
-  		$.removeCookie('access_token');
+		if ($.cookie('access_token') && $.cookie('source')) {
+			if ($.cookie('source') == 'instagram')
+			    _instaCrossLogin($.cookie('access_token'));
+			else if($.cookie('source') == 'facebook')
+				_fbCrossLogin($.cookie('access_token'));
+			else {
+				$.removeCookie('source');
+  				$.removeCookie('access_token');
+				parent.location.hash = '';
+				return;
+			}
+		}
 	}
   };
   
@@ -210,6 +220,15 @@
    * Instagram: Get user id
    */
   _displayUserData = function(json) {
+  	
+  	if (json.meta.code != '200') { // something wrong
+  		console.log('instagram token may be expired!');
+  		$.removeCookie('source');
+  		$.removeCookie('access_token');
+  		$('body').removeClass('logged-in');
+    	$('body').addClass('not-logged-in');
+  		return;
+  	}
     
 	user_id = json.data.id;
 	if ($.cookie('source') == 'instagram') {
@@ -301,8 +320,18 @@
     	$('body').addClass('logged-in');
 	  	bindFunc();
 	  	
-	  	// get album list
+	  	// get album list access_token
 		FB.api('/me?access_token='+access_token+'&fields=albums,id,name', function(response) {
+			
+			if (!response || response.error) {
+			    console.log('facebook token may be expired!');
+			    $.removeCookie('source');
+		  		$.removeCookie('access_token');
+		  		$('body').removeClass('logged-in');
+		    	$('body').addClass('not-logged-in');
+		    	return;
+			}
+  
 			user_id = response.id;
 			if ($.cookie('source') == 'facebook') {
 				$.cookie('user_id', user_id);
