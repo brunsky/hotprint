@@ -466,6 +466,14 @@
   
 })(jQuery);
 
+function show_price(phone_type) {
+	$.post('db/bom.php', {"part_name":phone_type},function(data) {
+		if(data.result == "ok") {
+			$("#price_no").html(data.value);
+		}	
+	}, "json");
+}
+
 /*
  * Put photos into gallery pool & make its draggable settings
  */
@@ -789,6 +797,7 @@ function setDnD(maskImg, ox, oy) {
 function menuLoadPhone(_phoneName) {
 	var change_phone = function(_phoneName) {
 		PHONE_NAME = _phoneName;
+		show_price(_phoneName);
 		$.cookie('phone_name', PHONE_NAME);
 		$('.device').find('.hovered').toggleClass('hovered');
 		$('#'+_phoneName).parent().toggleClass('hovered');

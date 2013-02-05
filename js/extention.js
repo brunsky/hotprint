@@ -55,6 +55,7 @@ function mod_checkout() {
 		
 		// Update Shopping Cart
 		simpleCart.update();
+		
 		// popup card tip when mouse hovering
 		$(".order a.preview").hover(function(e){
 			var parentOffset = $(this).parent().offset(); 
@@ -68,33 +69,48 @@ function mod_checkout() {
 		function(){
 			$("#preview").remove();
 	    });	
+	    
 		$(".order a.preview").mousemove(function(e){
 			var parentOffset = $(this).parent().offset(); 
 			$("#preview")
 				.css("top",e.pageY - parentOffset.top + "px")
 				.css("left",e.pageX - parentOffset.left + "px");
 		});	
+		
 		// event binding
 		$("#checkout_cancel").click(function() {
 			openGallery();	
 		});
 
 		$("#checkout_confirm").click(function() {
+			
 			// Set checkout information
 			if ($("#checkout_confirm").val() == '確認資料') {
-				$.post('checkout/coupon.php', {"code":$("#coupon_no").val()},function(data) {
-					console.log(data);
-					if(data.result == "ok") {
-						var _n = parseInt($(".simpleCart_total").html().replace('$', ''), 10);
-						$(".simpleCart_total").html("")
-			                .fadeIn(300)
-			                .append("$" + (_n - data.value).toString());
-					}
-					else {
-						$("#coupon_no").after('<font color="red">無效</font>');
-					}
-					$("#checkout_confirm").val("刷卡付款");
-				}, "json");
+				$.post('checkout/coupon.php', 
+				
+					{"code":$("#coupon_no").val(),
+					 "userid":$.cookie('user_id')},
+					 
+					function(data) {
+						if(data.result == "ok") {
+							var _n = parseFloat($(".simpleCart_total").html().replace('$', ''), 10).toFixed(2);
+							var _amount = parseFloat($(".simpleCart_quantity").html().replace('$', ''), 10).toFixed(2);
+							var discount = (_amount * data.value).toFixed(2);
+							$(".simpleCart_total").html("")
+				                .fadeIn(300)
+				                .append("$" + (_n - discount).toFixed(2).toString());
+				            $("#coupon_no").after('<font color="red">已折扣 $'+discount+'</font>');
+						}
+						else {
+							if (data.value == 'used')
+								$("#coupon_no").after('<font color="red">已經被使用</font>');
+							else if( (data.value == 'invalid'))
+								$("#coupon_no").after('<font color="red">無效的折扣碼</font>');
+							else
+								$("#coupon_no").after('<font color="red">稍後再試</font>');
+						}
+						$("#checkout_confirm").val("刷卡付款");
+					}, "json");
 			}
 			else {
 				simpleCart({
@@ -105,7 +121,7 @@ function mod_checkout() {
 				        cancel: "index.html?b=cancel",
 				        extra_data: {
 				          storename: $(".open").html(),
-				          userid: user_id,
+				          userid: $.cookie('user_id'),
 				          token: $.cookie('access_token'),
 				          type: $.cookie('source'),
 				          card_no: $("#card_no").val(),
@@ -176,7 +192,7 @@ function mod_gallery() {
 							val.phone_type+', '+
 							val.phone_color+'<br />'+
 							val.s_save+'<br />'+
-							'<span class="item_price">$35.99</span><br>'+
+							'<span class="item_price">$'+val.price+'</span><br>'+
 							'<a class="item_add" href="javascript:;"> 加入購物車 </a></p>'+
 							'<input type="button" value="產生原圖" onClick="_send_factory(\''+val.s_save+'\')">'+'</div>');
 						});
@@ -189,7 +205,7 @@ function mod_gallery() {
 							'<h2 class="item_name">'+val.phone_type+'</h2>'+
 							val.phone_color+'<br />'+
 							val.s_save+'<br />'+
-							'<span class="item_price">$35.99</span><br>'+
+							'<span class="item_price">$'+val.price+'</span><br>'+
 							'<a class="item_add" href="javascript:;"> 加入購物車 </a></p></div>');
 						});
 					}
