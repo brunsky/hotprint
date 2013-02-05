@@ -1,18 +1,18 @@
 #corner1 {
     position: absolute;
-    width: 334px;
+    width: 310px;
     height: 290px;
-    top: 35px;
-    left: 28px;
+    top: 36px;
+    left: 38px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner2 {
     position: absolute;
-    width: 334px;
+    width: 310px;
     height: 290px;
-    top: 327px;
-    left: 28px;
+    top: 328px;
+    left: 38px;
     border: 2px solid silver;
     z-index: 999;
 }

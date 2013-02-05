@@ -1,36 +1,36 @@
 #corner1 {
     position: absolute;
-    width: 110px;
-    height: 110px;
-    top: 85px;
-    left: 89px;
+    width: 90px;
+    height: 90px;
+    top: 70px;
+    left: 220px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner2 {
     position: absolute;
-    width: 70px;
-    height: 70px;
-    top: 85px;
-    left: 237px;
+    width: 130px;
+    height: 130px;
+    top: 80px;
+    left: 60px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner3 {
     position: absolute;
-    width: 80px;
-    height: 80px;
-    top: 171px;
-    left: 219px;
+    width: 130px;
+    height: 130px;
+    top: 175px;
+    left: 195px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner4 {
     position: absolute;
-    width: 110px;
-    height: 110px;
-    top: 204px;
-    left: 83px;
+    width: 90px;
+    height: 90px;
+    top: 225px;
+    left: 75px;
     border: 2px solid silver;
     z-index: 999;
 }
@@ -38,44 +38,35 @@
     position: absolute;
     width: 90px;
     height: 90px;
-    top: 340px;
-    left: 86px;
+    top: 325px;
+    left: 220px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner6 {
     position: absolute;
-    width: 90px;
-    height: 90px;
-    top: 382px;
-    left: 193px;
+    width: 130px;
+    height: 130px;
+    top: 330px;
+    left: 65px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner7 {
     position: absolute;
-    width: 100px;
-    height: 100px;
-    top: 270px;
-    left: 198px;
+    width: 130px;
+    height: 130px;
+    top: 435px;
+    left: 185px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner8 {
     position: absolute;
-    width: 80px;
-    height: 80px;
-    top: 496px;
-    left: 223px;
-    border: 2px solid silver;
-    z-index: 999;
-}
-#corner9 {
-    position: absolute;
-    width: 120px;
-    height: 120px;
-    top: 440px;
-    left: 82px;
+    width: 90px;
+    height: 90px;
+    top: 480px;
+    left: 75px;
     border: 2px solid silver;
     z-index: 999;
 }

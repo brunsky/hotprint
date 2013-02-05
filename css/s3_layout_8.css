@@ -1,9 +1,9 @@
 #corner1 {
     position: absolute;
-    width: 330px;
+    width: 310px;
     height: 580px;
-    top: 35px;
-    left: 30px;
+    top: 36px;
+    left: 38px;
     border: 2px solid silver;
     z-index: 999;
 }

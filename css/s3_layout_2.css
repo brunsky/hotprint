@@ -1,180 +1,135 @@
 #corner1 {
     position: absolute;
-    width: 126px;
-    height: 126px;
+    width: 160px;
+    height: 160px;
     top: 60px;
-    left: 60px;
+    left: 30px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner2 {
     position: absolute;
-    width: 59px;
-    height: 59px;
+    width: 79px;
+    height: 79px;
     top: 60px;
-    left: 196px;
+    left: 192px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner3 {
     position: absolute;
-    width: 59px;
-    height: 59px;
+    width: 79px;
+    height: 79px;
     top: 60px;
-    left: 264px;
+    left: 273px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner4 {
     position: absolute;
-    width: 59px;
-    height: 59px;
-    top: 127px;
-    left: 196px;
+    width: 79px;
+    height: 79px;
+    top: 141px;
+    left: 192px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner5 {
     position: absolute;
-    width: 59px;
-    height: 59px;
-    top: 127px;
-    left: 264px;
+    width: 79px;
+    height: 79px;
+    top: 141px;
+    left: 273px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner6 {
     position: absolute;
-    width: 59px;
-    height: 59px;
-    top: 194px;
-    left: 60px;
+    width: 79px;
+    height: 79px;
+    top: 245px;
+    left: 30px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner7 {
     position: absolute;
-    width: 59px;
-    height: 59px;
-    top: 194px;
-    left: 127px;
+    width: 79px;
+    height: 79px;
+    top: 245px;
+    left: 111px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner8 {
     position: absolute;
-    width: 59px;
-    height: 59px;
-    top: 261px;
-    left: 60px;
+    width: 79px;
+    height: 79px;
+    top: 326px;
+    left: 30px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner9 {
     position: absolute;
-    width: 59px;
-    height: 59px;
-    top: 261px;
-    left: 127px;
+    width: 79px;
+    height: 79px;
+    top: 326px;
+    left: 111px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner10 {
     position: absolute;
-    width: 127px;
-    height: 126px;
-    top: 194px;
-    left: 196px;
+    width: 160px;
+    height: 160px;
+    top: 245px;
+    left: 192px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner11 {
     position: absolute;
-    width: 126px;
-    height: 126px;
-    top: 328px;
-    left: 60px;
+    width: 160px;
+    height: 160px;
+    top: 430px;
+    left: 30px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner12 {
     position: absolute;
-    width: 59px;
-    height: 59px;
-    top: 328px;
-    left: 196px;
+    width: 79px;
+    height: 79px;
+    top: 430px;
+    left: 192px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner13 {
     position: absolute;
-    width: 59px;
-    height: 59px;
-    top: 328px;
-    left: 264px;
+    width: 79px;
+    height: 79px;
+    top: 430px;
+    left: 273px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner14 {
     position: absolute;
-    width: 59px;
-    height: 59px;
-    top: 395px;
-    left: 196px;
+    width: 79px;
+    height: 79px;
+    top: 511px;
+    left: 192px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner15 {
     position: absolute;
-    width: 59px;
-    height: 59px;
-    top: 395px;
-    left: 264px;
-    border: 2px solid silver;
-    z-index: 999;
-}
-#corner16 {
-    position: absolute;
-    width: 59px;
-    height: 59px;
-    top: 462px;
-    left: 60px;
-    border: 2px solid silver;
-    z-index: 999;
-}
-#corner17 {
-    position: absolute;
-    width: 59px;
-    height: 59px;
-    top: 462px;
-    left: 127px;
-    border: 2px solid silver;
-    z-index: 999;
-}
-#corner18 {
-    position: absolute;
-    width: 59px;
-    height: 59px;
-    top: 529px;
-    left: 60px;
-    border: 2px solid silver;
-    z-index: 999;
-}
-#corner19 {
-    position: absolute;
-    width: 59px;
-    height: 59px;
-    top: 529px;
-    left: 127px;
-    border: 2px solid silver;
-    z-index: 999;
-}
-#corner20 {
-    position: absolute;
-    width: 127px;
-    height: 126px;
-    top: 462px;
-    left: 196px;
+    width: 79px;
+    height: 79px;
+    top: 511px;
+    left: 273px;
     border: 2px solid silver;
     z-index: 999;
 }

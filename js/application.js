@@ -71,6 +71,8 @@
     if (location.hash != '') {
 	    var token_item = location.hash.split('&')[0];
 	    var source_item = location.hash.split('&')[1];
+	    var b_feedback = location.hash.split('&')[2];
+	    
 	    if (source_item) {
 		    if (source_item.split('=')[1] == 'instagram')
 			    _instaCrossLogin(token_item.split('=')[1]);
@@ -84,6 +86,31 @@
 			}
 			parent.location.hash = '';
 			$.cookie('access_token', token_item.split('=')[1]);
+				    
+		    // If feedback from billing module
+		    if (b_feedback && b_feedback.split('=')[0] == 'b') {
+				$("body").append('<div class="modalOverlay"></div>');
+		    	if ( b_feedback.split('=')[1]  == 'succeed') {
+		    		
+					new Messi('您已經付款成功! 可以隨時檢視出貨進度<br>或者繼續設計新的作品。', 
+						{title: '恭喜!', 
+						 buttons: [{id: 0, label: 'Close', val: 'C'}], 
+						 callback: function(val, content) {  
+							$('.modalOverlay').remove();
+							// Clear shopping cart
+							simpleCart.empty();
+						}});
+		    	}
+		    	else { // billing failed
+		    		
+		    		new Messi('剛剛的付款並未成功，您的信用卡沒有產生任何扣款記錄<br><br>請確認付款流程是否有誤，或稍後再試。', 
+						{title: '付款失敗', 
+						 buttons: [{id: 0, label: 'Close', val: 'C'}], 
+						 callback: function(val, content) {  
+							$('.modalOverlay').remove();
+						}});
+		    	}
+		    }
 		}
 		else {
 			$.removeCookie('source');
@@ -1197,6 +1224,9 @@ function newPage(page) {
 	}
 	else if (page == "Checkout") {
 		mod_checkout();
+	}
+	else if (page == "Order_History") {
+		
 	}
 }
 

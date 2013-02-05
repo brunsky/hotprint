@@ -81,23 +81,44 @@ function mod_checkout() {
 
 		$("#checkout_confirm").click(function() {
 			// Set checkout information
-			
-			simpleCart({
-			    checkout: { 
-			    	type: "SendForm" , 
-			        url: "http://sandbox.hotprintcloud.com/checkout/bill.php" ,
-			        success: "index.html?b=succeed" , 
-			        cancel: "index.html?b=cancel",
-			        extra_data: {
-			          storename: $(".open").html(),
-			          userid: user_id,
-			          token: $.cookie('access_token'),
-			          type: $.cookie('source')
-			        }
-			    }
-		  	});
-		  	
-			simpleCart.checkout();	
+			if ($("#checkout_confirm").val() == '確認資料') {
+				$.post('checkout/coupon.php', {"code":$("#coupon_no").val()},function(data) {
+					console.log(data);
+					if(data.result == "ok") {
+						var _n = parseInt($(".simpleCart_total").html().replace('$', ''), 10);
+						$(".simpleCart_total").html("")
+			                .fadeIn(300)
+			                .append("$" + (_n - data.value).toString());
+					}
+					else {
+						$("#coupon_no").after('<font color="red">無效</font>');
+					}
+					$("#checkout_confirm").val("刷卡付款");
+				}, "json");
+			}
+			else {
+				simpleCart({
+				    checkout: { 
+				    	type: "SendForm" , 
+				        url: "http://sandbox.hotprintcloud.com/checkout/bill.php" ,
+				        success: "index.html?b=succeed" , 
+				        cancel: "index.html?b=cancel",
+				        extra_data: {
+				          storename: $(".open").html(),
+				          userid: user_id,
+				          token: $.cookie('access_token'),
+				          type: $.cookie('source'),
+				          card_no: $("#card_no").val(),
+				          expiry_date: $("#expiry_date").val(),
+				          cvc_no: $("#cvc_no").val(),
+				          coupon_no: $("#coupon_no").val(),
+				          total: $(".simpleCart_total").html().replace('$', '')
+				        }
+				    }
+			  	});
+			  	
+				simpleCart.checkout();	
+			}
 		});
 	});
 	$('body').append($order);
