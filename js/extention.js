@@ -160,6 +160,11 @@ function mod_gallery() {
 		$('.item-quantity').css('padding-right', '12px');
 		$('.headerRow > .item-total').css('padding-left', '100px');	 
 		$('#gallery').css('top', Math.round(parseInt($('.shopping_cart').css('top')))+$('.shopping_cart').height()+50+'px');
+		// Check if anything in the cart
+		if ($('.simpleCart_total').html() == '$0.00')
+			$('.checkout').hide();
+		else
+			$('.checkout').show();
 	});
 	
 	// Click chechout button

@@ -579,6 +579,7 @@ body.logged-in .tip { display: none; }
 	padding-right: 80px;	
 }
 .checkout {
+	
 	float: left;
 	cursor: pointer;
 	-moz-box-shadow:inset -1px 2px 0px -2px #fab3ad;
@@ -592,7 +593,7 @@ body.logged-in .tip { display: none; }
 	-webkit-border-radius:6px;
 	border-radius:6px;
 	border:1px solid #d83526;
-	display:inline-block;
+	display:none;
 	color:#ffffff;
 	font-family:arial;
 	font-size:15px;
