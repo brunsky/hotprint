@@ -272,6 +272,12 @@ td.last {
 	font: bold 14px/32px Arial, sans-serif;
 	text-align: center;
 }
+#mTitle form {
+	height: 0px;
+	width: 250px;
+	padding: 0px;
+	margin: 0px;
+}
 
 body.not-logged-in #save-design { display: none; }
 body.not-logged-in #random-design { display: none; }

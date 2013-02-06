@@ -1219,7 +1219,7 @@ function newPage(page) {
 		  },{
 		 	onblur : "submit",
 		 	placeholder : "未命名",
-		 	tooltip : "請輸入名稱"
+		 	tooltip : "請輸入名稱",
 		 });
 	}
 	else if (page == "Save") {
@@ -1375,7 +1375,7 @@ $(function(){
 	  },{
 	 	onblur : "submit",
 	 	placeholder : "未命名",
-	 	tooltip : "請輸入名稱"
+	 	tooltip : "請輸入名稱",
 	 });
 	
     $.instagramr();

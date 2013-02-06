@@ -155,11 +155,12 @@ function mod_gallery() {
 		'<div class="simpleCart_items"></div><div style="float:left">總計：</div><div class="simpleCart_total"></div><div class="checkout">結帳</div></div>');
 	$('.shopping_cart').css('top','100px');
 	$('.shopping_cart').css('left','100px');
-	simpleCart.bind( 'update' , function(){
+	simpleCart.bind( 'update' , function() {
 		$('.item-decrement').css('padding-right', '12px');
 		$('.item-quantity').css('padding-right', '12px');
 		$('.headerRow > .item-total').css('padding-left', '100px');	 
 		$('#gallery').css('top', Math.round(parseInt($('.shopping_cart').css('top')))+$('.shopping_cart').height()+50+'px');
+		
 		// Check if anything in the cart
 		if ($('.simpleCart_total').html() == '$0.00')
 			$('.checkout').hide();
