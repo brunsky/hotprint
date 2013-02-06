@@ -10,7 +10,8 @@ if ($connkey) {
 
 	$sql = sprintf(
         "SELECT phone_type, phone_color, layout_no, orig_img, s_save, saveimag from gallery WHERE userid='%s' AND s_save='%s'", 
-        	mysql_real_escape_string($_POST["userid"]), $_POST["s_save"]
+        	mysql_real_escape_string($_POST["userid"]), 
+        	mysql_real_escape_string($_POST["s_save"])
 		);
 	
 	$result = $db->sql($sql);	

@@ -3,8 +3,8 @@
 include "db.inc";
 include "setup.inc";
 
-$userid = $_POST["userid"];
-$code 	= $_POST["code"];
+$userid = mysql_real_escape_string($_POST["userid"]);
+$code 	= mysql_real_escape_string($_POST["code"]);
 	
 $db = new DB;
 $connkey = $db->link_sip( "localhost", $DB_NAME, "root", "tomorrow");
@@ -14,7 +14,7 @@ if ($connkey) {
 
 	$sql = sprintf(
         "SELECT * from coupon WHERE code='%s'", 
-        	mysql_real_escape_string($code)
+        	$code
 		);
 	
 	$result = $db->sql($sql);	

@@ -9,19 +9,12 @@ $USD2TWD = 30;
 } 
 */
 
-$user_id = $_POST['userid'];
-$card_no = $_POST['card_no']; // 順子卡號
-$cvv2 = $_POST['cvc_no']; ; // 卡背3碼
-$expiry_date = $_POST['expiry_date']; //yymm
-$price = $_POST['total'];
+$user_id = mysql_real_escape_string($_POST['userid']);
+$card_no = mysql_real_escape_string($_POST['card_no']); // 順子卡號
+$cvv2 = mysql_real_escape_string($_POST['cvc_no']); // 卡背3碼
+$expiry_date = mysql_real_escape_string($_POST['expiry_date']); //yymm
+$price = mysql_real_escape_string($_POST['total']);
 $pay_user_email = "mark@camangi.com";
-/*
-$user_id = '123';
-$card_no = '123'; // 順子卡號
-$cvv2 = '123' ; // 卡背3碼
-$expiry_date = '123'; //yymm
-$price = '123';
-*/
 
 if (!$user_id || !$card_no || !$cvv2 || !$expiry_date) {
   header( $redirect_url.'#token='.$_POST['token'].'&source='.$_POST['type'].'&b=cancel' ) ;
