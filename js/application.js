@@ -20,6 +20,7 @@
  var PAGE			= 'Design';
  var TITLE_NAME		= '';
  var maskImg;
+ var isMenuEntry	= false;
   
   var _init
   ,   _getUserData
@@ -134,15 +135,24 @@
   };
   
   function _loadLayout(event) {
-  	menuLoadLayout(event.data.param);
+  	if (isMenuEntry == false) {
+  		isMenuEntry = true;
+  		menuLoadLayout(event.data.param);
+  	}
   }
   
   function _loadPhone(event) {
-  	menuLoadPhone(event.data.param);
+  	if (isMenuEntry == false) {
+  		isMenuEntry = true;
+  		menuLoadPhone(event.data.param);
+  	}
   }
   
   function _loadColor(event) {
-  	menuLoadColor(event.data.param);
+  	if (isMenuEntry == false) {
+  		isMenuEntry = true;
+  		menuLoadColor(event.data.param);
+  	}
   }
   
   function bindFunc() {
@@ -186,6 +196,13 @@
    * Instagram: User login
    */
   _instalogin = function(event) {
+  	
+  	$('.recent').find('.draggable').each(function(index) {
+		$(this).remove();
+	  	$(this)[0] = null;
+	});	
+	instaRes = '';
+  	
   	var url = 'https://instagram.com/oauth/authorize/?'+
   							'client_id=c4b0c9a61cc24efbb4cd5feb71be67b8'+
   							'&amp;redirect_uri='+HOST_URL+'instaredirect.html'+
@@ -265,6 +282,7 @@
                 .fadeIn(300)
                 .append(json.data.username);
 	}
+
 	instaRes = '';
 	_getUserRecent();
   };
@@ -301,7 +319,7 @@
   _displayUserRecent = function(json){
 	
 	for(var i=0; i<json.data.length; i++) {
-		instaRes += "<li><a><img src=\""+json.data[i].images.standard_resolution.url+"\" id='recent_instaimg"+i+"' class='draggable draggable-h draggable-w gallery-pool' /></a></li>";
+		instaRes += "<li><a><img src='loader.gif' delay_src=\""+json.data[i].images.standard_resolution.url+"\" id='recent_instaimg"+i+"' class='draggable draggable-h draggable-w gallery-pool' /></a></li>";
 	}
 	if (typeof json.pagination.next_url != 'undefined')
 		_getUserRecent(json.pagination.next_url);
@@ -319,6 +337,13 @@
    * facebook: Login process
    */
   _fblogin = function(event) {
+  	
+  	// Clear gallery pool at first
+	$('.recent').find('.draggable').each(function(index) {
+		$(this).remove();
+	  	$(this)[0] = null;
+	});		
+	fbRes = '';
   	
   	var url = 'http://www.facebook.com/dialog/oauth/?'+
 	    'client_id=290426614419964'+
@@ -446,9 +471,9 @@
 	        {
 	          var image = result.data[i];
 	          if (image.width > image.height)
-	          	fbRes += "<li><a><img src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-h gallery-pool'/></a></li>";
+	          	fbRes += "<li><a><img src='loader.gif' delay_src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-h gallery-pool'/></a></li>";
 	          else
-	          	fbRes += "<li><a><img src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-w gallery-pool'/></a></li>";
+	          	fbRes += "<li><a><img src='loader.gif' delay_src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-w gallery-pool'/></a></li>";
 	        }
 			// Check if any more photos to get
 			if (typeof result.paging != 'undefined') {
@@ -481,6 +506,13 @@ function gallery_bar_setting(res) {
 	$(".ad-thumb-list").html("")
                 .fadeIn(300)
                 .append(res);
+                
+    // change loading indicator 
+    $(".gallery-pool").one('load', function() {
+	  $(this).attr('src', $(this).attr('delay_src'));
+	}).each(function() {
+	  if(this.complete) $(this).load();
+	});
 				
 	$('.ad-gallery').adGallery({thumb_opacity: 1});
 	$('.ad-gallery').css('width',($(window).width()-50)+'px');
@@ -996,9 +1028,11 @@ function loadLayout(_maskImg, ox , oy, _layoutName){
 		$.getScript(layoutLocation)
 			.done(function(data, textStatus, jqxhr) {
 				setDnD(maskImg, ox, oy); // Define Drag&Drop
+				isMenuEntry = false;
 			})
 			.fail(function(data, textStatus, jqxhr) {
 				//console.log('load layout.js failed');
+				isMenuEntry = false;
 			});
 
 	});
