@@ -1,8 +1,11 @@
 <?
 
-//header( 'Location: http://sandbox.hotprintcloud.com/#token='.$_POST['token'].'&source='.$_POST['type'].'&b=succeed' ) ;
+//header( 'Location: http://sandbox.hotprintcloud.com/#token='.$token.'&source='.$type.'&b=succeed' ) ;
 $redirect_url = "Location: http://sandbox.hotprintcloud.com/";
 $USD2TWD = 30;
+
+$order_detail = json_encode($_POST);
+
 /*
  foreach ( $_POST as $key => $value ) { 
 	echo $key.":".$value."<br>";
@@ -15,11 +18,14 @@ $cvv2 = mysql_real_escape_string($_POST['cvc_no']); // 卡背3碼
 $expiry_date = mysql_real_escape_string($_POST['expiry_date']); //yymm
 $price = mysql_real_escape_string($_POST['total']);
 $pay_user_email = "mark@camangi.com";
+$token = $_POST['token'];
+$type = $_POST['type'];
 
 if (!$user_id || !$card_no || !$cvv2 || !$expiry_date) {
-  header( $redirect_url.'#token='.$_POST['token'].'&source='.$_POST['type'].'&b=cancel' ) ;
+  header( $redirect_url.'#token='.$token.'&source='.$type.'&b=cancel' ) ;
   exit();
 }
+
 
 // 固定資料
 $act = 'auth';
@@ -34,19 +40,20 @@ $connkey_billing = $db->link_sip( "localhost", $DB_NAME, "root", "tomorrow");
 if ($connkey_billing) {
 
   if (strlen($card_no) > 16) {
-    header( $redirect_url.'#token='.$_POST['token'].'&source='.$_POST['type'].'&b=cancel' ) ;
+    header( $redirect_url.'#token='.$token.'&source='.$type.'&b=cancel' ) ;
     exit();
   }
 
   if (strlen($expiry_date) != 4) {
-    header( $redirect_url.'#token='.$_POST['token'].'&source='.$_POST['type'].'&b=cancel' ) ;
+    header( $redirect_url.'#token='.$token.'&source='.$type.'&b=cancel' ) ;
     exit();
   }
 
   if (strlen($cvv2) != 3) {
-    header( $redirect_url.'#token='.$_POST['token'].'&source='.$_POST['type'].'&b=cancel' ) ;
+    header( $redirect_url.'#token='.$token.'&source='.$type.'&b=cancel' ) ;
     exit();
   }
+  
 
   // 卡號16位數, 右邊補大寫 X
   $card_no = str_pad($card_no, 16, "X", STR_PAD_RIGHT); // EX: "431195221111XXXX"
@@ -82,9 +89,10 @@ if ($connkey_billing) {
 	$ctime = getdateinfo(2);
 
   // 新增暫存訂單
-  $str = "INSERT INTO payment_data (od_sob, market_account, package_name, amount, TWD_amount, ip, ctime) VALUES ('$od_sob', '$account', '$package_name', '$apk_price', '$TWD_amount', '$ip', '$ctime')";
-  //echo $str;
-  //$db->sql($str);
+  $str = sprintf(
+  "INSERT INTO order_list (order_no, userid, detail, c_time, ip) VALUES ('%s', '%s', '%s', '%s', '%s')",
+   $od_sob,$user_id,$order_detail,$ctime,$ip);
+  $db->sql($str);
 
   /*
   簡易發動格式範例
@@ -156,7 +164,7 @@ if ($connkey_billing) {
   //echo $result.'<br>';
 
   if (substr($result,0,5)=='error') {
-    header( $redirect_url.'#token='.$_POST['token'].'&source='.$_POST['type'].'&b=cancel' ) ; // 回傳給 client 刷卡失敗錯誤訊息
+    header( $redirect_url.'#token='.$token.'&source='.$type.'&b=cancel' ) ; // 回傳給 client 刷卡失敗錯誤訊息
     //echo "連線 失敗:".$result;
     exit();
   }
@@ -188,6 +196,13 @@ if ($connkey_billing) {
         $pay_date = getdateinfo(8);
 
         // 完成付費, 記錄至 Leo 的收入表 payment_list
+        $sql = sprintf(
+        		"UPDATE order_list SET s_time='%s', payment='%s' WHERE order_no='%s'", 
+        		$pay_date,
+				$TWD_amount,
+				$od_sob
+			);
+		$result = $db->sql($sql);
         /*
         $str = "INSERT INTO payment_list (pay_type, pay_date, pay_user, pay_user_email, pay_apk_id, pay_apk_name, pay_apk_developer, pay_apk_email, pay_gross, pay_fee, pay_net_amount, pay_unit) ".
         "VALUES ('SELL', '$pay_date', '$pay_user', '$pay_user_email', '$pay_apk_id', '$pay_apk_name', '$pay_apk_developer', '$pay_apk_email', '$pay_gross', '$pay_fee', '$pay_net_amount', '$pay_unit')";
@@ -203,12 +218,12 @@ if ($connkey_billing) {
           //$db->sql($str);
           //echo $msg;
         } 
-		header( $redirect_url.'#token='.$_POST['token'].'&source='.$_POST['type'].'&b=succeed' ) ;
+		header( $redirect_url.'#token='.$token.'&source='.$type.'&b=succeed' ) ;
 
 	}
     else {
 			// 回傳給 client 付費失敗訊息
-      header( $redirect_url.'#token='.$_POST['token'].'&source='.$_POST['type'].'&b=cancel' ) ;
+      header( $redirect_url.'#token='.$token.'&source='.$type.'&b=cancel' ) ;
       //echo "解析回傳結果，失敗:".$result;
     }
 
@@ -223,7 +238,7 @@ if ($connkey_billing) {
 }
 else {
 	//echo "資料庫失敗";
-  header( $redirect_url.'#token='.$_POST['token'].'&source='.$_POST['type'].'&b=cancel' ) ;
+  header( $redirect_url.'#token='.$token.'&source='.$type.'&b=cancel' ) ;
 }
 
 function sendMail($_email, $_title, $_msg ) {

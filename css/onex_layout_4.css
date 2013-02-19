@@ -135,19 +135,19 @@
 }
 #corner16{
     position: absolute;
-    width: 90px;
-    height: 90px;
-    top: 501px;
-    left: 77px;
+    width: 85px;
+    height: 85px;
+    top: 496px;
+    left: 79px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner17 {
     position: absolute;
-    width: 90px;
-    height: 90px;
-    top: 501px;
-    left: 218px;
+    width: 85px;
+    height: 85px;
+    top: 496px;
+    left: 220px;
     border: 2px solid silver;
     z-index: 999;
 }

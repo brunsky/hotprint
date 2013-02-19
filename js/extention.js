@@ -128,7 +128,12 @@ function mod_checkout() {
 				          expiry_date: $("#expiry_date").val(),
 				          cvc_no: $("#cvc_no").val(),
 				          coupon_no: $("#coupon_no").val(),
-				          total: $(".simpleCart_total").html().replace('$', '')
+				          total: $(".simpleCart_total").html().replace('$', ''),
+				          shipping_email: $("#shipping_email").val(),
+				          shipping_name: $("#shipping_name").val(),
+				          shipping_addr: $("#shipping_address").val(),
+				          shipping_city: $("#shipping_city").val(),
+				          shipping_country: $("#countrySelect :selected").text()
 				        }
 				    }
 			  	});

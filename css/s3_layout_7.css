@@ -2,8 +2,8 @@
     position: absolute;
     width: 90px;
     height: 90px;
-    top: 136px;
-    left: 55px;
+    top: 135px;
+    left: 72px;
     border: 2px solid silver;
     z-index: 999;
 }
@@ -11,8 +11,8 @@
     position: absolute;
     width: 90px;
     height: 90px;
-    top: 140px;
-    left: 235px;
+    top: 135px;
+    left: 223px;
     border: 2px solid silver;
     z-index: 999;
 }
@@ -20,8 +20,8 @@
     position: absolute;
     width: 180px;
     height: 180px;
-    top: 196px;
-    left: 98px;
+    top: 204px;
+    left: 103px;
     border: 2px solid silver;
     z-index: 999;
 }
@@ -29,8 +29,8 @@
     position: absolute;
     width: 90px;
     height: 90px;
-    top: 475px;
-    left: 103px;
+    top: 468px;
+    left: 105px;
     border: 2px solid silver;
     z-index: 999;
 }
@@ -38,8 +38,8 @@
     position: absolute;
     width: 90px;
     height: 90px;
-    top: 368px;
-    left: 239px;
+    top: 379px;
+    left: 230px;
     border: 2px solid silver;
     z-index: 999;
 }
@@ -47,8 +47,8 @@
     position: absolute;
     width: 180px;
     height: 180px;
-    top: 460px;
-    left: 192px;
+    top: 470px;
+    left: 189px;
     border: 2px solid silver;
     z-index: 999;
 }

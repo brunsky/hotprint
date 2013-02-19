@@ -1,54 +1,72 @@
 #corner1 {
     position: absolute;
-    width: 160px;
-    height: 160px;
-    top: 60px;
-    left: 32px;
+    width: 150px;
+    height: 150px;
+    top: 23px;
+    left: 43px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner2 {
     position: absolute;
-    width: 160px;
-    height: 160px;
-    top: 75px;
-    left: 194px;
+    width: 150px;
+    height: 150px;
+    top: 23px;
+    left: 195px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner3 {
     position: absolute;
-    width: 160px;
-    height: 160px;
-    top: 237px;
-    left: 32px;
+    width: 150px;
+    height: 150px;
+    top: 175px;
+    left: 43px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner4 {
     position: absolute;
-    width: 160px;
-    height: 160px;
-    top: 252px;
-    left: 194px;
+    width: 150px;
+    height: 150px;
+    top: 175px;
+    left: 195px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner5 {
     position: absolute;
-    width: 160px;
-    height: 160px;
-    top: 414px;
-    left: 32px;
+    width: 150px;
+    height: 150px;
+    top: 327px;
+    left: 43px;
     border: 2px solid silver;
     z-index: 999;
 }
 #corner6 {
     position: absolute;
-    width: 160px;
-    height: 160px;
-    top: 429px;
-    left: 194px;
+    width: 150px;
+    height: 150px;
+    top: 327px;
+    left: 195px;
+    border: 2px solid silver;
+    z-index: 999;
+}
+#corner7 {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    top: 479px;
+    left: 43px;
+    border: 2px solid silver;
+    z-index: 999;
+}
+#corner8 {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    top: 479px;
+    left: 195px;
     border: 2px solid silver;
     z-index: 999;
 }
