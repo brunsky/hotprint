@@ -2,7 +2,7 @@
 	var a = location.hash.split('&')[0];
 	var access_token = a.split('=')[1];
 	if (window.opener == null)
-		window.location = 'http://sandbox.hotprintcloud.com/'+'#token='+access_token+'&source=facebook';
+		window.location = 'http://www.hotprintcloud.com/'+'#token='+access_token+'&source=facebook';
 	else {
 		window.opener._fbCrossLogin(access_token);
 		window.close();

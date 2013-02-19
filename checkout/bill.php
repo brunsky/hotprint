@@ -1,7 +1,7 @@
 <?
 
 //header( 'Location: http://sandbox.hotprintcloud.com/#token='.$token.'&source='.$type.'&b=succeed' ) ;
-$redirect_url = "Location: http://sandbox.hotprintcloud.com/";
+$redirect_url = "Location: http://www.hotprintcloud.com/";
 $USD2TWD = 30;
 
 $order_detail = json_encode($_POST);
@@ -17,7 +17,7 @@ $card_no = mysql_real_escape_string($_POST['card_no']); // 順子卡號
 $cvv2 = mysql_real_escape_string($_POST['cvc_no']); // 卡背3碼
 $expiry_date = mysql_real_escape_string($_POST['expiry_date']); //yymm
 $price = mysql_real_escape_string($_POST['total']);
-$pay_user_email = "mark@camangi.com";
+$pay_user_email = mysql_real_escape_string($_POST['shipping_email']);
 $token = $_POST['token'];
 $type = $_POST['type'];
 

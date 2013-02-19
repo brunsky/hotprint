@@ -54,18 +54,18 @@ function doClipping(srcImg, destDiv, clipper) {
 // return value: Canvas Object
 // (ox, oy) is the position of case image
 function doMasking(oriImg, maskImg, destDiv, ox, oy) {
-/* 	console.log("m.width:"+maskImg.width);
-	console.log("m.height:"+maskImg.height);
-	console.log("ox:"+ox);
-	console.log("oy:"+oy); */
+/* 	//console.log("m.width:"+maskImg.width);
+	//console.log("m.height:"+maskImg.height);
+	//console.log("ox:"+ox);
+	//console.log("oy:"+oy); */
     var b = Math.round(parseInt(destDiv.css('border-left-width'), 10));
     var x = Math.round(parseInt(destDiv.css('left'), 10)) + b - ox;
     var y = Math.round(parseInt(destDiv.css('top'), 10)) + b - oy;
     var w = Math.round(parseInt(destDiv.css('width'), 10)) + b;
     var h = Math.round(parseInt(destDiv.css('height'), 10)) + b;
     
-    //console.log("width:"+destDiv.css('width')+",height:"+destDiv.css('height')+",left:"+destDiv.css('left')+",top:"+destDiv.css('top'));
-	//console.log("w:"+w+",h:"+h+",x:"+x+",y:"+y+",b:"+b);
+    ////console.log("width:"+destDiv.css('width')+",height:"+destDiv.css('height')+",left:"+destDiv.css('left')+",top:"+destDiv.css('top'));
+	////console.log("w:"+w+",h:"+h+",x:"+x+",y:"+y+",b:"+b);
 	
     // adjust over position
     if (x+w > maskImg.width) w = maskImg.width - x;
@@ -98,7 +98,7 @@ function doMasking(oriImg, maskImg, destDiv, ox, oy) {
 		}
 	} 
 	
-	//console.log("_w:"+_w+",_h:"+_h);
+	////console.log("_w:"+_w+",_h:"+_h);
 	
 	var resizeCanvas = document.createElement('canvas');
 	resizeCanvas.width = _w;

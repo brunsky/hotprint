@@ -116,7 +116,7 @@ function mod_checkout() {
 				simpleCart({
 				    checkout: { 
 				    	type: "SendForm" , 
-				        url: "http://sandbox.hotprintcloud.com/checkout/bill.php" ,
+				        url: HOST_URL + "checkout/bill.php" ,
 				        success: "index.html?b=succeed" , 
 				        cancel: "index.html?b=cancel",
 				        extra_data: {
@@ -377,7 +377,7 @@ function _producing_for_factory(json, phone_type) {
 	$status = $('#status');
 	var a = new Image();
 	a.src = "images/"+phone_type+"_mask3.png";
-	console.log(a.src);
+	//console.log(a.src);
 	a.onload = function(){
 	
 		var resCanvas = document.createElement('canvas');
@@ -438,8 +438,8 @@ function _producing_for_factory(json, phone_type) {
 				if (typeof e.imgURL == 'undefined') {
 					alert(e.cornerId);
 				}
-				console.log(e.imgURL);
-				console.log(e.cornerId);
+				//console.log(e.imgURL);
+				//console.log(e.cornerId);
 		
 				b.load(function() {
 					var bb = new Image();
@@ -531,11 +531,11 @@ function _producing_for_factory_from_layout(json) {
 		var layoutLocation = "js/"+json.phone_type+"_"+json.layout_no+".js?v="+(new Date()).getTime();
 		$.getScript(layoutLocation)
 			.done(function(data, textStatus, jqxhr) {
-				console.log(json.saveimag);
+				//console.log(json.saveimag);
 				_producing($.parseJSON(json.saveimag));
 			})
 			.fail(function(data, textStatus, jqxhr) {
-				console.log('_producing_for_factory: load layout.js failed');
+				//console.log('_producing_for_factory: load layout.js failed');
 			});
 
 	});
@@ -553,7 +553,7 @@ function _producing_for_factory_from_layout(json) {
 		$status = $('#status');
 		var a = new Image();
 		a.src = "images/"+PHONE_NAME+"_mask3.png";
-		console.log('_producing:'+a.src)
+		//console.log('_producing:'+a.src)
 		a.onload = function(){
 		
 			var resCanvas = document.createElement('canvas');
@@ -596,7 +596,7 @@ function _producing_for_factory_from_layout(json) {
 				    	styles[$.trim(_c[0])] = $.trim(_c[1]);
 				    }
 			   
-			   		console.log('corner id:'+e.cornerId);
+			   		//console.log('corner id:'+e.cornerId);
 			   
 					var $c = $('<div></div>');
 					$c.css('position', 'absolute');
@@ -742,7 +742,7 @@ function setDragObj(divObj) {
 function mod_randesign() {
 
 	if($('.layout_corner').children('.spinner').length > 0) {
-		console.log('waiting spin stop');
+		//console.log('waiting spin stop');
 		return;
 	}
 	
@@ -849,7 +849,7 @@ function _randesign() {
 			},
 			error: function(xhr, text_status){
 				spinner.stop();
-				console.log("Fail to get image:"+imgSrc);
+				//console.log("Fail to get image:"+imgSrc);
 			}
 		});
 	});
@@ -861,7 +861,7 @@ function _randesign() {
 function clearDesign() {
 	
 	if($('.layout_corner').children('.spinner').length > 0) {
-		console.log('waiting spin stop');
+		//console.log('waiting spin stop');
 		return;
 	}
 	
@@ -873,7 +873,7 @@ function clearDesign() {
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 
 			 callback: function(val, content) {  
-			 	console.log(val+','+content);
+			 	//console.log(val+','+content);
 				if (val === 'Y') {
 					if ( $('.layout_corner').length ) {
 						$('.layout_corner').children('.draggable').each(function(index) {

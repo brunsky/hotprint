@@ -1,3 +1,3 @@
 <?
-$DB_NAME = "hotprint_sandbox";
+$DB_NAME = "hotprint";
 ?>

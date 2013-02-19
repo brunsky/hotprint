@@ -3,7 +3,7 @@
  */
  
  // Global settings
- var SANDBOX		= true;
+ var SANDBOX		= false;
  var HOST_URL		= '';
  if (SANDBOX)
  	HOST_URL		= 'http://sandbox.hotprintcloud.com/';
@@ -187,7 +187,7 @@
    */
   _instalogin = function(event) {
   	var url = 'https://instagram.com/oauth/authorize/?'+
-  							'client_id=48fb462fd1254631a2c63416a01eb3f0'+
+  							'client_id=c4b0c9a61cc24efbb4cd5feb71be67b8'+
   							'&amp;redirect_uri='+HOST_URL+'instaredirect.html'+
   							'&amp;response_type=token';
   	if (event.data.isPopup == true) {
@@ -249,7 +249,7 @@
   _displayUserData = function(json) {
   	
   	if (json.meta.code != '200') { // something wrong
-  		console.log('instagram token may be expired!');
+  		//console.log('instagram token may be expired!');
   		$.removeCookie('source');
   		$.removeCookie('access_token');
   		$('body').removeClass('logged-in');
@@ -321,7 +321,7 @@
   _fblogin = function(event) {
   	
   	var url = 'http://www.facebook.com/dialog/oauth/?'+
-	    'client_id=396030097155221'+
+	    'client_id=290426614419964'+
 	    '&redirect_uri='+HOST_URL+'fbredirect.html'+
 	    '&response_type=token'+
 	    '&scope=user_photos';
@@ -351,7 +351,7 @@
 		FB.api('/me?access_token='+access_token+'&fields=albums,id,name', function(response) {
 			
 			if (!response || response.error) {
-			    console.log('facebook token may be expired!');
+			    //console.log('facebook token may be expired!');
 			    $.removeCookie('source');
 		  		$.removeCookie('access_token');
 		  		$('body').removeClass('logged-in');
@@ -399,7 +399,7 @@
   	FB.getLoginStatus(function(response) {
   		if (response.status === 'connected') {
   			FB.logout(function(response) {
-		  		console.log('FB logout');
+		  		//console.log('FB logout');
 				if (typeof callback != 'undefined')
 		    		callback();
 			});
@@ -602,8 +602,8 @@ function setDnD(maskImg, ox, oy) {
 		else {
 			toObj.data('src', fromObj.data('src'));
 		}
-		console.log('toObj zdx:'+toObj.data('zdx'));
-		console.log('toObj src:'+toObj.data('src'));
+		//console.log('toObj zdx:'+toObj.data('zdx'));
+		//console.log('toObj src:'+toObj.data('src'));
 		// copy original size
 		toObj.data('oh', fromObj.data('oh'));
 		toObj.data('ow', fromObj.data('ow'));
@@ -622,7 +622,7 @@ function setDnD(maskImg, ox, oy) {
 			// Prevent from drop into if spinning
 			
 			if ($(this).children(".spinner").length > 0) {
-				console.log('spinning!');
+				//console.log('spinning!');
 				return;
 			}
 			
@@ -634,7 +634,7 @@ function setDnD(maskImg, ox, oy) {
 				$(this).next().remove();
 				$(this).next()[0] = null;
 			}
-			//console.log('Flight#'+$(ui.draggable).attr('id')+' from: '+$(ui.draggable).parent().attr('id')+' will drop at airport:'+$(this).attr('id'));
+			////console.log('Flight#'+$(ui.draggable).attr('id')+' from: '+$(ui.draggable).parent().attr('id')+' will drop at airport:'+$(this).attr('id'));
 			// Don't copy yourself...
 			if ($(ui.draggable).parent().attr('id') != $(this).attr('id')) {
 				$(this).html('');
@@ -757,7 +757,7 @@ function setDnD(maskImg, ox, oy) {
 					error: function(xhr, text_status){
 						spinner.stop();
 						divObj.droppable( "enable" );
-						console.log("Fail to get image:"+imgSrc);
+						//console.log("Fail to get image:"+imgSrc);
 					}
 				});
 			}
@@ -998,7 +998,7 @@ function loadLayout(_maskImg, ox , oy, _layoutName){
 				setDnD(maskImg, ox, oy); // Define Drag&Drop
 			})
 			.fail(function(data, textStatus, jqxhr) {
-				console.log('load layout.js failed');
+				//console.log('load layout.js failed');
 			});
 
 	});
@@ -1064,13 +1064,13 @@ function setCanvas(_phoneName) {
         	// Load Layout
         	//layout_oy = parseInt($("#mCanvas").css('top'), 10);
         	//layout_ox = parseInt($("#mCanvas").css('left'), 10);
-        	console.log("Get "+_phoneName+", "+layout_ox+', '+layout_oy);
+        	//console.log("Get "+_phoneName+", "+layout_ox+', '+layout_oy);
         	maskImg = image;
         	menuLoadLayout(LAYOUT_NAME);
         	loadPriceTag(true);
         },
         error: function(xhr, text_status){
-            console.log("Failed to get "+_phoneName+": "+text_status);
+            //console.log("Failed to get "+_phoneName+": "+text_status);
         }
     });
 }
@@ -1111,10 +1111,10 @@ function loadLib(path) {
 	var layoutLocation = path;
 	$.getScript(layoutLocation)
 		.done(function(data, textStatus, jqxhr) {
-			console.log('load '+path+' OK');
+			//console.log('load '+path+' OK');
 		})
 		.fail(function(data, textStatus, jqxhr) {
-			console.log('load '+path+' failed');
+			//console.log('load '+path+' failed');
 		})
 }
 */
