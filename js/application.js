@@ -1028,7 +1028,7 @@ function setCanvas(_phoneName) {
 	
 	if($('#mCanvas').length > 0) {
 		$('#mCanvas').remove();
-		$('#mCanvas')[0];
+		$('#mCanvas')[0] = null;
 	}
 	
     var canvas = document.createElement('Canvas');
@@ -1219,7 +1219,7 @@ function newPage(page) {
 		  },{
 		 	onblur : "submit",
 		 	placeholder : "未命名",
-		 	tooltip : "請輸入名稱",
+		 	tooltip : "請輸入名稱"
 		 });
 	}
 	else if (page == "Save") {
@@ -1235,7 +1235,7 @@ function newPage(page) {
 		mod_checkout();
 	}
 	else if (page == "Order_History") {
-		
+		mode_history();
 	}
 }
 
@@ -1375,7 +1375,7 @@ $(function(){
 	  },{
 	 	onblur : "submit",
 	 	placeholder : "未命名",
-	 	tooltip : "請輸入名稱",
+	 	tooltip : "請輸入名稱"
 	 });
 	
     $.instagramr();

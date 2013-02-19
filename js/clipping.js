@@ -110,7 +110,7 @@ var ori_ratio;
 		this.iCSize = [this.csize, this.csize, this.csize, this.csize]; // resize cubes sizes
 		this.bDrag = [false, false, false, false]; // drag statuses
 		this.bDragAll = false; // drag whole selection
-		this.oImg;
+		this.oImg = null;
 	}
 
 	Selection.prototype.draw = function(){
@@ -378,10 +378,10 @@ var ori_ratio;
 			$('body').css('cursor', 'default');
 		}
 		
-		
+		/*
         if (theSelection.bDrag[0]) {
 			// moving process has been mentioned in 'Drag All'
-        }
+        }*/
         
 		// resize in circle way
 		if (theSelection.bDrag[1]) { // in case of dragging of resize cubes
