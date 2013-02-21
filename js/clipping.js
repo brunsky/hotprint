@@ -242,7 +242,35 @@ var ori_ratio;
 									cornerDiv.children(".draggable").data('zh')-bdr); 
 	}	
 	else {
-		theSelection = new Selection(cornerX, cornerY, cornerW, cornerH); 
+		
+		// Try to center corner when create clipping at fitsr time
+		var _w, _h, _x, _y;
+		if (cornerW >= cornerH) {
+			_w = cornerW + bdr;
+			_h = Math.round(srcImg.height * (cornerW / srcImg.width)) + bdr;
+			if (_h < cornerH) {
+				_h = cornerH + bdr;
+				_w = Math.round(srcImg.width * (cornerH / srcImg.height)) + bdr;
+			}
+		}
+		else if (cornerW < cornerH){
+			_w = Math.round(srcImg.width * (cornerH / srcImg.height)) + bdr;
+			_h = cornerH + bdr;
+			if (_w <  cornerW) {
+				_w = cornerW + bdr;
+				_h = Math.round(srcImg.height * (_w / srcImg.width)) + bdr;
+			}
+		}
+		if (_w > _h) {
+			_x = cornerX - (_w - cornerW)/2;
+			_y = cornerY;
+		}
+		else if(_h > _w) {
+			_x = cornerX;
+			_y = cornerY - (_h - cornerH)/2;
+		}
+		
+		theSelection = new Selection(_x, _y, _w, _h); 
 	}
 	drawScene();
 
