@@ -804,7 +804,13 @@ function _randesign() {
 			"opacity": "0"
 		});
 		
-		var imgSrc = $(this).children(".draggable").attr('src');
+		// Select high resolution photo if corner.width or corner.height larger than 100 
+		var imgSrc;
+		if (parseInt($(this).css('width'), 10) > 100 || parseInt($(this).css('height'), 10) > 100 )
+			imgSrc = $(this).children(".draggable").attr('delay_src_h');
+		else
+			imgSrc = $(this).children(".draggable").attr('src');
+			
 		var divObj = $(this);
 		// copy img url from gallery-pool object
 		// Fixed url to hotprintCloud server

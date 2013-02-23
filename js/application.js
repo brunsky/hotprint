@@ -319,7 +319,7 @@
   _displayUserRecent = function(json){
 	
 	for(var i=0; i<json.data.length; i++) {
-		instaRes += "<li><a><img src='loader.gif' delay_src=\""+json.data[i].images.standard_resolution.url+"\" id='recent_instaimg"+i+"' class='draggable draggable-h draggable-w gallery-pool' /></a></li>";
+		instaRes += "<li><a><img src='loader.gif' delay_src=\""+json.data[i].images.standard_resolution.url+"\" delay_src_h=\""+json.data[i].images.standard_resolution.url+"\" id='recent_instaimg"+i+"' class='draggable draggable-h draggable-w gallery-pool' /></a></li>";
 	}
 	if (typeof json.pagination.next_url != 'undefined')
 		_getUserRecent(json.pagination.next_url);
@@ -471,9 +471,9 @@
 	        {
 	          var image = result.data[i];
 	          if (image.width > image.height)
-	          	fbRes += "<li><a><img src='loader.gif' delay_src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-h gallery-pool'/></a></li>";
+	          	fbRes += "<li><a><img src='loader.gif' delay_src=\""+image.source+"\" delay_src_h=\""+image.images[0].source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-h gallery-pool'/></a></li>";
 	          else
-	          	fbRes += "<li><a><img src='loader.gif' delay_src=\""+image.source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-w gallery-pool'/></a></li>";
+	          	fbRes += "<li><a><img src='loader.gif' delay_src=\""+image.source+"\" delay_src_h=\""+image.images[0].source+"\" id='recent_fbimg"+albumId+i+"' class='draggable draggable-w gallery-pool'/></a></li>";
 	        }
 			// Check if any more photos to get
 			if (typeof result.paging != 'undefined') {
@@ -509,9 +509,9 @@ function gallery_bar_setting(res) {
                 
     // change loading indicator 
     $(".gallery-pool").one('load', function() {
-	  $(this).attr('src', $(this).attr('delay_src'));
+		$(this).attr('src', $(this).attr('delay_src'));
 	}).each(function() {
-	  if(this.complete) $(this).load();
+		if(this.complete) $(this).load();
 	});
 				
 	$('.ad-gallery').adGallery({thumb_opacity: 1});
@@ -576,7 +576,12 @@ function gallery_bar_setting(res) {
 			isCornerFading = true;
 			$('.layout_corner').animate({ opacity: CORNER_OPT},
 				{complete:  function() { 
-					$('.layout_corner > .draggable').parent().css('opacity', '0');
+					//$('.layout_corner > .draggable').parent().css('opacity', '0');
+					// check if no spinning then hide corner
+					$('.layout_corner').each(function(){
+						if ($(this).children('.spinning').length > 0)
+							$(this).css('opacity', '0');
+					});
 					isCornerFading = false;
 				} 
 			});
@@ -702,7 +707,12 @@ function setDnD(maskImg, ox, oy) {
 				"opacity": "0"
 			});
 			
-			var imgSrc = $(this).children(".draggable").attr('src');
+			// Select high resolution photo if corner.width or corner.height larger than 100 
+			var imgSrc;
+			if (parseInt($(this).css('width'), 10) > 100 || parseInt($(this).css('height'), 10) > 100 )
+				imgSrc = $(this).children(".draggable").attr('delay_src_h');
+			else
+				imgSrc = $(this).children(".draggable").attr('src');
 			var divObj = $(this);
 			
 			if ($(this).children(".draggable").attr("class").indexOf("cached") >= 0) {
