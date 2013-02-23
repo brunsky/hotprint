@@ -836,6 +836,7 @@ function _randesign() {
 			success: function(image){
 				divObj.children(".draggable").attr('src', image.src);
 				divObj.children(".draggable").addClass("cached");
+				/*
 				if (divObj.attr("class").indexOf("layout_circle") >= 0) {
 					doClipping( 
 						doMasking(image, maskImg, divObj, layout_ox, layout_oy), 
@@ -847,7 +848,10 @@ function _randesign() {
 						doMasking(image, maskImg, divObj, layout_ox, layout_oy), 
 						divObj, 
 						boxClipper);
-				}
+				}*/
+				
+				autoCentered(divObj, image);
+				
 				// set corner div to invisible
 				divObj.css('opacity','0');
 				spinner.stop();

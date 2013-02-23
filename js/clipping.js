@@ -246,28 +246,28 @@ var ori_ratio;
 		// Try to center corner when create clipping at fitsr time
 		var _w, _h, _x, _y;
 		if (cornerW >= cornerH) {
-			_w = cornerW + bdr;
-			_h = Math.round(srcImg.height * (cornerW / srcImg.width)) + bdr;
+			_w = cornerW;
+			_h = Math.round(srcImg.height * (cornerW / srcImg.width));
 			if (_h < cornerH) {
-				_h = cornerH + bdr;
-				_w = Math.round(srcImg.width * (cornerH / srcImg.height)) + bdr;
+				_h = cornerH;
+				_w = Math.round(srcImg.width * (cornerH / srcImg.height));
 			}
 		}
 		else if (cornerW < cornerH){
-			_w = Math.round(srcImg.width * (cornerH / srcImg.height)) + bdr;
-			_h = cornerH + bdr;
+			_w = Math.round(srcImg.width * (cornerH / srcImg.height));
+			_h = cornerH;
 			if (_w <  cornerW) {
-				_w = cornerW + bdr;
-				_h = Math.round(srcImg.height * (_w / srcImg.width)) + bdr;
+				_w = cornerW;
+				_h = Math.round(srcImg.height * (_w / srcImg.width));
 			}
 		}
 		if (_w > _h) {
-			_x = cornerX - (_w - cornerW)/2;
+			_x = cornerX - Math.round((_w - cornerW)/2);
 			_y = cornerY;
 		}
 		else if(_h > _w) {
 			_x = cornerX;
-			_y = cornerY - (_h - cornerH)/2;
+			_y = cornerY - Math.round((_h - cornerH)/2);
 		}
 		
 		theSelection = new Selection(_x, _y, _w, _h); 
@@ -563,4 +563,229 @@ var ori_ratio;
         theSelection.px = 0;
         theSelection.py = 0;
     }
+}
+
+function autoCentered(cornerDiv, srcImg) {
+var theSelection;
+var canvas;
+var ctx;
+var cornerX = Math.round(parseInt(cornerDiv.css('left'), 10));
+var cornerY = Math.round(parseInt(cornerDiv.css('top'), 10));
+var cornerW = Math.round(parseInt(cornerDiv.css('width'), 10));
+var cornerH = Math.round(parseInt(cornerDiv.css('height'), 10));
+var $cDiv;
+var $wDiv;
+var bdr = Math.round(parseInt(cornerDiv.css('border-left-width'), 10));
+var draw_w;
+var draw_h;
+var ori_ratio;
+
+	function Selection(x, y, w, h){
+		this.x = x; // initial positions
+		this.y = y;
+		this.w = w; // and size
+		this.h = h;
+		this.px = x; // extra variables to dragging calculations
+		this.py = y;
+		this.csize = 15; // resize cubes size
+		this.bHow = [false, false, false, false]; // hover statuses
+		this.iCSize = [this.csize, this.csize, this.csize, this.csize]; // resize cubes sizes
+		this.bDrag = [false, false, false, false]; // drag statuses
+		this.bDragAll = false; // drag whole selection
+		this.oImg = null;
+	}
+
+	Selection.prototype.draw = function(){
+		if (theSelection.w >= theSelection.h) {
+			draw_w = theSelection.w + bdr;
+			draw_h = Math.round(srcImg.height * (theSelection.w / srcImg.width)) + bdr;
+			if (draw_h < theSelection.h) {
+				draw_h = theSelection.h + bdr;
+				draw_w = Math.round(srcImg.width * (draw_h / srcImg.height)) + bdr;
+			}
+		}
+		else if (theSelection.w < theSelection.h){
+			draw_w = Math.round(srcImg.width * (theSelection.h / srcImg.height)) + bdr;
+			draw_h = theSelection.h + bdr;
+			if (draw_w <  theSelection.w) {
+				draw_w = theSelection.w + bdr;
+				draw_h = Math.round(srcImg.height * (draw_w / srcImg.width)) + bdr;
+			}
+		}
+
+		ctx.drawImage(srcImg, 0, 0, srcImg.width, srcImg.height, 
+						theSelection.x + bdr, theSelection.y + bdr, 
+						draw_w, draw_h);
+
+		// storing bright region
+		theSelection.oImg = ctx.getImageData(cornerX + bdr, cornerY + bdr, cornerW + bdr, cornerH + bdr); 
+		
+		// covering dark region
+		ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+		ctx.fillRect(theSelection.x + bdr, theSelection.y + bdr, 
+					 draw_w, draw_h);   
+
+		// drawing stroke rect of whole image
+		ctx.strokeStyle = '#fff';
+		ctx.lineWidth = bdr;
+		ctx.strokeRect(theSelection.x-theSelection.iCSize[0],
+					   theSelection.y-theSelection.iCSize[0], 
+					   draw_w+bdr*2+theSelection.iCSize[0]*2,
+					   draw_h+bdr*2+theSelection.iCSize[0]*2);
+
+		// resoring bright zone 
+		
+		var c1 = $('<canvas>');
+		var c2 = $('<canvas>');
+
+		c2.attr('id', 'clipper.temp');
+		c2[0].setAttribute('style', 'position: absolute; z-index:1002;');
+		c2[0].style.top = cornerY + bdr + 'px';
+		c2[0].style.left = cornerX + bdr + 'px';
+		c2[0].width = cornerW + bdr;
+		c2[0].height = cornerH + bdr;
+		
+		c1[0].width = cornerW + bdr;
+		c1[0].height = cornerH + bdr;
+		
+		var _ctx1 = c1[0].getContext('2d');
+		var _ctx2 = c2[0].getContext('2d');
+		_ctx1.putImageData(theSelection.oImg, 0, 0);
+		if ($cDiv.attr("class").indexOf("layout_circle") >= 0) {
+			cirClipper(_ctx2, c1[0], cornerW);	
+		}
+		else if ($cDiv.attr("class").indexOf("layout_square") >= 0) {
+			boxClipper(_ctx2, c1[0], cornerW, cornerH);
+		}
+		
+		if (typeof $cDiv.next()[0] != 'undefined' && 
+					$cDiv.next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
+			$cDiv.next()[0] = null;
+			$cDiv.next().remove();
+		}
+		$cDiv.after(c2);
+	
+	}
+			
+	function drawScene(){ 
+
+		ctx.clearRect(-theSelection.csize/2, -theSelection.csize/2,
+						ctx.canvas.width+theSelection.csize,
+						ctx.canvas.height+theSelection.csize);
+
+		// draw selection
+		theSelection.draw();
+	}
+	
+	function saveImg() {
+		
+		if (cornerDiv.next()[0].tagName.toLowerCase() == 'canvas'.toLowerCase()) {
+			cornerDiv.next()[0] = null;
+			cornerDiv.next().remove();
+		}
+		if (cornerDiv.attr("class").indexOf("layout_circle") >= 0) { // for circle corner
+			var c = $('<canvas>');
+			c[0].width = cornerW + bdr;
+			c[0].height = cornerH + bdr;
+			var _ctx = c[0].getContext('2d');
+			_ctx.putImageData(theSelection.oImg, 0, 0);
+			doClipping( 
+				doMasking(c[0], maskImg, cornerDiv, layout_ox, layout_oy), 
+				cornerDiv, 
+				cirClipper);
+		}
+		else if (cornerDiv.attr("class").indexOf("layout_square") >= 0) {
+			var c = $('<canvas>');
+			c[0].width = cornerW + bdr;
+			c[0].height = cornerH + bdr;
+			var _ctx = c[0].getContext('2d');
+			_ctx.putImageData(theSelection.oImg, 0, 0);
+			doClipping( 
+				doMasking(c[0], maskImg, cornerDiv, layout_ox, layout_oy), 
+				cornerDiv, 
+				boxClipper);
+		}
+		// once mouse enter canvas, lower all the other corner div & higher itself
+		cornerDiv.next().mouseenter(function() {
+			$('.layout_corner').css('z-index', '996');
+			$(this).prev().css('z-index', '998');
+		});
+		cornerDiv.children(".draggable").data('zdx', cornerX - theSelection.x);
+		cornerDiv.children(".draggable").data('zdy', cornerY - theSelection.y);
+		cornerDiv.children(".draggable").data('zw', draw_w);
+		cornerDiv.children(".draggable").data('zh', draw_h);
+		
+		canvas.unbind();
+		$cDiv.unbind();
+		
+		canvas.remove(); // remove main canvas
+		canvas[0] = null;
+		$wDiv.remove(); // remove block div
+		$wDiv[0] = null;
+		$cDiv.next().remove();
+		$cDiv.next()[0] = null;
+		$cDiv.remove(); // remove div cloned from layout
+		$cDiv[0] = null;
+		
+		$('body').css('cursor', 'default');
+	}
+	
+	$("body").append('<div class="modalOverlay"></div>');
+	$wDiv = $('.modalOverlay');
+	canvas = $('<canvas>');
+	canvas[0].width = Math.round(parseInt($('body').css('width'), 10)); 
+	canvas[0].height = Math.round(parseInt($(document).height(), 10));
+	canvas.css('position', 'absolute');
+	canvas.css('left', '0px');
+	canvas.css('top', '0px');
+	canvas.css('z-index', '1001');
+	$("body").append(canvas);
+	
+	$cDiv = cornerDiv.clone();
+	$cDiv.css('z-index', '1003');
+	$cDiv.css('opacity', 1);
+	$("body").append($cDiv);
+	
+	ctx = canvas[0].getContext('2d');
+	if (typeof cornerDiv.children(".draggable").data('zdx') != 'undefined') {
+		theSelection = new Selection(Math.round(parseInt(cornerDiv.css('left'), 10)) - cornerDiv.children(".draggable").data('zdx'), 
+									Math.round(parseInt(cornerDiv.css('top'), 10)) - cornerDiv.children(".draggable").data('zdy'), 
+									cornerDiv.children(".draggable").data('zw')-bdr, 
+									cornerDiv.children(".draggable").data('zh')-bdr); 
+	}	
+	else {
+		
+		// Try to center corner when create clipping at fitsr time
+		var _w, _h, _x, _y;
+		if (cornerW >= cornerH) {
+			_w = cornerW;
+			_h = Math.round(srcImg.height * (cornerW / srcImg.width));
+			if (_h < cornerH) {
+				_h = cornerH;
+				_w = Math.round(srcImg.width * (cornerH / srcImg.height));
+			}
+		}
+		else if (cornerW < cornerH){
+			_w = Math.round(srcImg.width * (cornerH / srcImg.height));
+			_h = cornerH;
+			if (_w <  cornerW) {
+				_w = cornerW;
+				_h = Math.round(srcImg.height * (_w / srcImg.width));
+			}
+		}
+		if (_w > _h) {
+			_x = cornerX - Math.round((_w - cornerW)/2);
+			_y = cornerY;
+		}
+		else if(_h > _w) {
+			_x = cornerX;
+			_y = cornerY - Math.round((_h - cornerH)/2);
+		}
+		
+		theSelection = new Selection(_x, _y, _w, _h); 
+	}
+	
+	drawScene();
+	
+	saveImg();
 }

@@ -769,6 +769,7 @@ function setDnD(maskImg, ox, oy) {
 					success: function(image){
 						divObj.children(".draggable").attr('src', image.src);
 						divObj.children(".draggable").addClass("cached");
+						/*
 						if (divObj.attr("class").indexOf("layout_circle") >= 0) {
 							doClipping( 
 								doMasking(image, maskImg, divObj, ox, oy), 
@@ -781,6 +782,9 @@ function setDnD(maskImg, ox, oy) {
 								divObj, 
 								boxClipper);
 						}
+						*/
+						autoCentered(divObj, image);
+						
 						spinner.stop();
 						divObj.css('opacity', '0');
 						setDragObj(divObj);				
