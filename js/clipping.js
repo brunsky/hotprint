@@ -1,8 +1,43 @@
+
 //////////////////////////////////////////////////
-// autoClipper
+// Image uncleared warning: original (w0, h0), sized (w1, h1) 
+var IS_UNCLEAR = false;
+var COUNTER_UNCLEAR = 0;
+function isImageUnclear(w0, h0, w1, h1, divObj) {
+	if (IS_UNCLEAR == false) {
+		if ( w1 > w0 || h1 > h0 ) {
+			IS_UNCLEAR = true;
+			COUNTER_UNCLEAR++;
+			console.log("圖片失真, w0:"+w0+" h0:"+h0+" w1:"+w1+" h1:"+h1);
+			$warning = $("<div></div>");
+			$warning.addClass("warning"+divObj.attr("id"));
+			$warning.addClass("warning");
+			$warning.css("position", "absolute");
+			$warning.css("top", divObj.css("top"));
+			$warning.css("left", divObj.css("left"));
+			$warning.css("z-index", "998");
+			$warning.html('<img src="../css/images/warning.png" />');
+			$warning.children("img")[0].width = 32;
+			$warning.children("img")[0].height = 32;
+			$('body').append($warning);
+		}
+	}
+	else if (IS_UNCLEAR == true) {
+		if ( w1 <= w0 && h1 <= h0 ) {
+			IS_UNCLEAR = false;
+			COUNTER_UNCLEAR--;
+			console.log("圖片已恢復正常範圍");
+			$(".warning"+divObj.attr("id")).remove();
+		}
+	}
+}
+
+//////////////////////////////////////////////////
+// autoClipper: deprecated
 function autoClipper(srcImgDom, dstCanvas) {
 	var $canvas = $('<canvas>');
 	var ctx = $canvas[0].getContext('2d'); 
+	IS_UNCLEAR = false;
 	$canvas[0].width = $(srcImgDom).data('zw');
 	$canvas[0].height = $(srcImgDom).data('zh');
 	ctx.drawImage(srcImgDom, 0, 0, $(srcImgDom).data('zw'), $(srcImgDom).data('zh')); 	
@@ -24,22 +59,34 @@ function autoClipper2(srcImgDom, dstCanvas, srcCorner, dstCorner) {
 	// getting ratio from the width/height
 	var bdr = Math.round(parseInt(dstCorner.css('border-left-width'), 10));
 	var distDiv_w = Math.round(parseInt(dstCorner.css('width'), 10)) + bdr;
-	var distDiv_h = Math.round(parseInt(dstCorner.css('height'), 10)) + bdr;;
-	var srcDiv_w = Math.round(parseInt(srcCorner.css('width'), 10)) + bdr;;
-	var srcDiv_h = Math.round(parseInt(srcCorner.css('height'), 10)) + bdr;;
+	var distDiv_h = Math.round(parseInt(dstCorner.css('height'), 10)) + bdr;
+	var srcDiv_w = Math.round(parseInt(srcCorner.css('width'), 10)) + bdr;
+	var srcDiv_h = Math.round(parseInt(srcCorner.css('height'), 10)) + bdr;
 	
 	var r = max(distDiv_w, distDiv_h) / max(srcDiv_w, srcDiv_h);
 	// Calculate width & height after scaling
 	var w = Math.round($(srcImgDom).data('zw') * r);
 	var h = Math.round($(srcImgDom).data('zh') * r);
 	if (w < dstCanvas[0].width) {
-		w = Math.round(dstCanvas[0].width) + bdr;;
-		h = Math.round($(srcImgDom).data('zh') * (w/$(srcImgDom).data('zw'))) + bdr;;
+		w = Math.round(dstCanvas[0].width) + bdr;
+		h = Math.round($(srcImgDom).data('zh') * (w/$(srcImgDom).data('zw'))) + bdr;
 	}
 	if (h < dstCanvas[0].height) {
-		h = Math.round(dstCanvas[0].height) + bdr;;
-		w = Math.round($(srcImgDom).data('zw') * (h/$(srcImgDom).data('zh'))) + bdr;;
+		h = Math.round(dstCanvas[0].height) + bdr;
+		w = Math.round($(srcImgDom).data('zw') * (h/$(srcImgDom).data('zh'))) + bdr;
 	}
+	
+	if ($(srcImgDom).data('is_unclear') == 'true') {
+		
+		console.log("此圖已失真");
+		IS_UNCLEAR = true;
+	}
+	else
+		IS_UNCLEAR = false;
+	// Check Image is uncleared and then show warning if any.
+	var _img = new Image(); // Get original size
+	_img.src = dstCorner.children(".draggable").attr('src');
+	isImageUnclear(_img.width, _img.height, w, h, dstCorner);
 	
 	// store new value
 	$(srcImgDom).data('zw', w);
@@ -130,6 +177,9 @@ var ori_ratio;
 				draw_h = Math.round(srcImg.height * (draw_w / srcImg.width)) + bdr;
 			}
 		}
+		
+		// Check Image is uncleared and then show warning if any.
+		isImageUnclear(srcImg.width, srcImg.height, draw_w, draw_h, cornerDiv);
 
 		ctx.drawImage(srcImg, 0, 0, srcImg.width, srcImg.height, 
 						theSelection.x + bdr, theSelection.y + bdr, 
@@ -214,6 +264,13 @@ var ori_ratio;
 		theSelection.draw();
 	}
 	
+	if (cornerDiv.children(".draggable").data('is_unclear') == 'true') {
+		console.log("此圖已失真");
+		IS_UNCLEAR = true;
+	}
+	else
+		IS_UNCLEAR = false;
+	
 	$("body").append('<div class="modalOverlay"></div>');
 	$wDiv = $('.modalOverlay');
 	canvas = $('<canvas>');
@@ -268,6 +325,10 @@ var ori_ratio;
 		else if(_h > _w) {
 			_x = cornerX;
 			_y = cornerY - Math.round((_h - cornerH)/2);
+		}
+		else {
+			_x = cornerX;
+			_y = cornerY;
 		}
 		
 		theSelection = new Selection(_x, _y, _w, _h); 
@@ -612,6 +673,9 @@ var ori_ratio;
 				draw_h = Math.round(srcImg.height * (draw_w / srcImg.width)) + bdr;
 			}
 		}
+		
+		// Check Image is uncleared and then show warning if any.
+		isImageUnclear(srcImg.width, srcImg.height, draw_w, draw_h, cornerDiv);
 
 		ctx.drawImage(srcImg, 0, 0, srcImg.width, srcImg.height, 
 						theSelection.x + bdr, theSelection.y + bdr, 
@@ -730,6 +794,13 @@ var ori_ratio;
 		$('body').css('cursor', 'default');
 	}
 	
+	if (cornerDiv.children(".draggable").data('is_unclear') == 'true') {
+		console.log("此圖已失真");
+		IS_UNCLEAR = true;
+	}
+	else
+		IS_UNCLEAR = false;
+	
 	$("body").append('<div class="modalOverlay"></div>');
 	$wDiv = $('.modalOverlay');
 	canvas = $('<canvas>');
@@ -780,6 +851,10 @@ var ori_ratio;
 		else if(_h > _w) {
 			_x = cornerX;
 			_y = cornerY - Math.round((_h - cornerH)/2);
+		}
+		else {
+			_x = cornerX;
+			_y = cornerY;
 		}
 		
 		theSelection = new Selection(_x, _y, _w, _h); 

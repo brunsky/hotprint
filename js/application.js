@@ -607,6 +607,9 @@ function clearCorner(pObj) {
 				pObj.next().remove();
 				pObj.next()[0] = null;
 			}
+			
+		$(".warning"+pObj.attr('id')).remove();
+			
 		pObj.removeClass("removed");
 		pObj.css('z-index','998');
 		$('.layout_corner').animate({ opacity: CORNER_OPT},
@@ -1024,6 +1027,8 @@ function loadLayout(_maskImg, ox , oy, _layoutName){
 	  	$(this).remove();
 	  	$(this)[0] = null;
 	});
+	
+	$('.warning').remove();
 
     $("link[type='text/css']#layout_css").remove();
     //Import CSS
@@ -1078,6 +1083,8 @@ function setCanvas(_phoneName) {
 		$('#mCanvas').remove();
 		$('#mCanvas')[0] = null;
 	}
+	
+	$('.warning').remove();
 	
     var canvas = document.createElement('Canvas');
     canvas.setAttribute('id', 'mCanvas');
@@ -1300,6 +1307,7 @@ function releasePage(page) {
 		$('#mCanvas').remove();
 		$('#mCanvas')[0] = null;
 		$('#mTitle').html('');
+		$('.warning').remove();
 		
 		$('.recent').find('.draggable').each(function(index) {
 			$(this).remove();
