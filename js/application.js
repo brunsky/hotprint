@@ -608,8 +608,6 @@ function clearCorner(pObj) {
 				pObj.next()[0] = null;
 			}
 			
-		$(".warning"+pObj.attr('id')).remove();
-			
 		pObj.removeClass("removed");
 		pObj.css('z-index','998');
 		$('.layout_corner').animate({ opacity: CORNER_OPT},
@@ -679,6 +677,13 @@ function setDnD(maskImg, ox, oy) {
 			if ($(ui.draggable).parent().attr('id') != $(this).attr('id')) {
 				$(this).html('');
 				$(this).append($(ui.draggable).clone());
+				
+				// Clear warning mark if come from layout_corner and local layout_corner
+				if ($(ui.draggable).parent().hasClass('layout_corner')) {
+					$(".warning"+$(ui.draggable).parent().attr('id')).remove();
+				}
+				$(".warning"+$(this).attr('id')).remove();
+				
 				_copyData( $(this).children(".draggable"), $(ui.draggable));
 				// clear source corner
 				clearCorner($(ui.draggable).parent());
@@ -688,6 +693,10 @@ function setDnD(maskImg, ox, oy) {
 				_copyData($_tmpObj, $(ui.draggable));
 				$(this).html('');
 				$(this).append($(ui.draggable).clone());
+				
+				// Clear warning mark
+				$(".warning"+$(this).attr('id')).remove();
+				
 				_copyData($(this).children(".draggable"), $_tmpObj);
 			}
 

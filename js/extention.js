@@ -730,6 +730,8 @@ function setDragObj(divObj) {
 		stop: function( event, ui ) { // It's triggered once drag out of corner 
 			enable_scroll();
 			if ($(this).parent().attr("class").indexOf("removed") >= 0) {
+				// Clear warning mark
+				$(".warning"+$(this).parent().attr('id')).remove();
 				clearCorner($(this).parent());
 			}
 		}
