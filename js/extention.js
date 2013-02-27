@@ -208,7 +208,6 @@ function mod_gallery() {
 							'<h2 class="item_name">'+val.title_name+'</h2>'+
 							val.phone_type+', '+
 							val.phone_color+'<br />'+
-							val.s_save+'<br />'+
 							'<span class="item_price">$'+val.price+'</span><br>'+
 							'<a class="item_add" href="javascript:;"> 加入購物車 </a></p>'+
 							'<input type="button" value="產生原圖" onClick="_send_factory(\''+val.s_save+'\')">'+'</div>');
@@ -221,7 +220,6 @@ function mod_gallery() {
 							'<img src="'+val.orig_img+'" alt="image" /><br />'+
 							'<h2 class="item_name">'+val.phone_type+'</h2>'+
 							val.phone_color+'<br />'+
-							val.s_save+'<br />'+
 							'<span class="item_price">$'+val.price+'</span><br>'+
 							'<a class="item_add" href="javascript:;"> 加入購物車 </a></p></div>');
 						});
