@@ -20,6 +20,7 @@ $price = mysql_real_escape_string($_POST['total']);
 $pay_user_email = mysql_real_escape_string($_POST['shipping_email']);
 $token = $_POST['token'];
 $type = $_POST['type'];
+$c_time_local = $_POST['c_time'];
 
 if (!$user_id || !$card_no || !$cvv2 || !$expiry_date) {
   header( $redirect_url.'#token='.$token.'&source='.$type.'&b=cancel' ) ;
@@ -90,8 +91,8 @@ if ($connkey_billing) {
 
   // 新增暫存訂單
   $str = sprintf(
-  "INSERT INTO order_list (order_no, userid, detail, c_time, ip) VALUES ('%s', '%s', '%s', '%s', '%s')",
-   $od_sob,$user_id,$order_detail,$ctime,$ip);
+  "INSERT INTO order_list (order_no, userid, detail, c_time,c_time_local, ip) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
+   $od_sob,$user_id,$order_detail,$ctime,$c_time_local,$ip);
   $db->sql($str);
 
   /*
