@@ -288,8 +288,8 @@ function mod_saving(func_complete) {
 	$("body").append('<div id="progress-bar"><div id="status"></div></div>');
 	$( "#progress-bar" ).css('position','fixed');
 	$( "#progress-bar" ).css('z-index', '1001');
-	$( "#progress-bar" ).css('top', '300px');
-	$( "#progress-bar" ).css('left', layout_ox+'px');
+	$( "#progress-bar" ).css('top', '337px');
+	$( "#progress-bar" ).css('left', layout_ox+40+'px');
 	$status = $('#status');
 	var jsonObj = []; // json array for storing layout&image information
 	// counting for progress bar

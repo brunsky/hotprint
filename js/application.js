@@ -1454,7 +1454,6 @@ $(function(){
     $('#my-gallery').hide();
     
     $('#popbox').popbox();
-
 });
 
 $(window).resize(function() { setContainer();setFooterTop()}); 

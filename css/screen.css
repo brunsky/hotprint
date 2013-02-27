@@ -510,7 +510,7 @@ body.logged-in .tip { display: none; }
 #progress-bar {
 	border:1px solid #bebebe; 
 	background:#ffffff; 
-	width:300px; 
+	width:310px; 
 	height:14px; 
 	text-align: center;
 	-moz-border-radius:10px; 
