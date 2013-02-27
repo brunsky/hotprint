@@ -766,6 +766,10 @@ function setDnD(maskImg, ox, oy) {
 				
 			}
 			else {		// get image from original URL
+				
+				var spinner_color = '#000';
+				if(PHONE_COLOR == 'black')
+					spinner_color = '#FFF';
 			
 				var opts = {
 				  lines: 13, // The number of lines to draw
@@ -774,7 +778,7 @@ function setDnD(maskImg, ox, oy) {
 				  radius: 10, // The radius of the inner circle
 				  corners: 1, // Corner roundness (0..1)
 				  rotate: 0, // The rotation offset
-				  color: '#000', // #rgb or #rrggbb
+				  color: spinner_color, // #rgb or #rrggbb
 				  speed: 1, // Rounds per second
 				  trail: 60, // Afterglow percentage
 				  shadow: false, // Whether to render a shadow
