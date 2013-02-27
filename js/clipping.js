@@ -8,7 +8,8 @@ function isImageUnclear(w0, h0, w1, h1, divObj) {
 		if ( w1 > w0 || h1 > h0 ) {
 			IS_UNCLEAR = true;
 			COUNTER_UNCLEAR++;
-			console.log("圖片失真, w0:"+w0+" h0:"+h0+" w1:"+w1+" h1:"+h1);
+			//console.log("圖片失真, w0:"+w0+" h0:"+h0+" w1:"+w1+" h1:"+h1);
+			// show warning mark over distination corner
 			$warning = $("<div></div>");
 			$warning.addClass("warning"+divObj.attr("id"));
 			$warning.addClass("warning");
@@ -20,16 +21,26 @@ function isImageUnclear(w0, h0, w1, h1, divObj) {
 			$warning.children("img")[0].width = 32;
 			$warning.children("img")[0].height = 32;
 			$('body').append($warning);
+			
+			// show big warning if not exist
+			if ($('.warning_big').length <= 0) {
+				$warning_big = $("<div></div>");
+				$warning.addClass("warning_big");
+			}
 		}
 	}
 	else if (IS_UNCLEAR == true) {
 		if ( w1 <= w0 && h1 <= h0 ) {
 			IS_UNCLEAR = false;
-			COUNTER_UNCLEAR--;
-			console.log("圖片已恢復正常範圍");
-			$(".warning"+divObj.attr("id")).remove();
+			//console.log("圖片已恢復正常範圍");
+			removeUnclearWarning(divObj.attr("id"));
 		}
 	}
+}
+
+function removeUnclearWarning(id) {
+	$(".warning"+id).remove();
+	COUNTER_UNCLEAR--;
 }
 
 //////////////////////////////////////////////////
@@ -853,8 +864,18 @@ var ori_ratio;
 			_y = cornerY - Math.round((_h - cornerH)/2);
 		}
 		else {
-			_x = cornerX;
-			_y = cornerY;
+			if (cornerW > cornerH) {
+				_x = cornerX;
+				_y = cornerY - Math.round((_h - cornerH)/2);
+			}
+			else if (cornerW < cornerH) {
+				_x = cornerX - Math.round((_w - cornerW)/2);
+				_y = cornerY;
+			}
+			else {
+				_x = cornerX;
+				_y = cornerY;
+			}
 		}
 		
 		theSelection = new Selection(_x, _y, _w, _h); 

@@ -678,11 +678,12 @@ function setDnD(maskImg, ox, oy) {
 				$(this).html('');
 				$(this).append($(ui.draggable).clone());
 				
-				// Clear warning mark if come from layout_corner and local layout_corner
+				// Remove warning mark if come from layout_corner and local layout_corner
 				if ($(ui.draggable).parent().hasClass('layout_corner')) {
-					$(".warning"+$(ui.draggable).parent().attr('id')).remove();
+					// Remove warning mark
+					removeUnclearWarning($(ui.draggable).parent().attr('id'));
 				}
-				$(".warning"+$(this).attr('id')).remove();
+				removeUnclearWarning($(this).attr('id'));
 				
 				_copyData( $(this).children(".draggable"), $(ui.draggable));
 				// clear source corner
@@ -694,8 +695,8 @@ function setDnD(maskImg, ox, oy) {
 				$(this).html('');
 				$(this).append($(ui.draggable).clone());
 				
-				// Clear warning mark
-				$(".warning"+$(this).attr('id')).remove();
+				// Remove warning mark
+				removeUnclearWarning($(this).attr('id'));
 				
 				_copyData($(this).children(".draggable"), $_tmpObj);
 			}
