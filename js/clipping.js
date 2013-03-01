@@ -294,14 +294,17 @@ var ori_ratio;
 	$("body").append(canvas);
 	
 	$cDiv = cornerDiv.clone();
+	$cDiv.removeClass('ui-droppable');
 	$cDiv.css('z-index', '1003');
 	$cDiv.css('opacity', 1);
+	$cDiv.css('cursor', 'default');
 	$("body").append($cDiv);
 	
+	/*
 	$cDiv.mousemove(eventMousemove);
     $cDiv.mousedown(eventMousedown);
     $cDiv.mouseup(eventMouseup);
-	
+	*/
 	ctx = canvas[0].getContext('2d');
 	if (typeof cornerDiv.children(".draggable").data('zdx') != 'undefined') {
 		theSelection = new Selection(Math.round(parseInt(cornerDiv.css('left'), 10)) - cornerDiv.children(".draggable").data('zdx'), 
