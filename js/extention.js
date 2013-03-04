@@ -78,22 +78,22 @@ function mod_checkout() {
 		// popup card tip when mouse hovering
 		$(".order a.preview").hover(function(e){
 			var parentOffset = $(this).parent().offset(); 
-			$(".order").append("<div id='preview'><img src='checkout/card.png'/></div>");	
-			$('#preview').css('position', 'relative');							 
-			$("#preview")
-				.css("top",e.pageY - parentOffset.top + "px")
-				.css("left",e.pageX - parentOffset.left + "px")
+			$(".order").append("<div id='cvc'><img src='checkout/card.png'/></div>");	
+			$('#cvc').css('position', 'absolute');							 
+			$("#cvc")
+				.css("top",e.pageY  - parentOffset.top + "px")
+				.css("left",e.pageX  - parentOffset.left + "px")
 				.fadeIn("fast");						
 	    },
 		function(){
-			$("#preview").remove();
+			$("#cvc").remove();
 	    });	
 	    
 		$(".order a.preview").mousemove(function(e){
 			var parentOffset = $(this).parent().offset(); 
-			$("#preview")
-				.css("top",e.pageY - parentOffset.top + "px")
-				.css("left",e.pageX - parentOffset.left + "px");
+			$("#cvc")
+				.css("top",e.pageY  - parentOffset.top + "px")
+				.css("left",e.pageX  - parentOffset.left + "px");
 		});	
 		
 		// event binding
