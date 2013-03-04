@@ -2,12 +2,10 @@
 //////////////////////////////////////////////////
 // Image uncleared warning: original (w0, h0), sized (w1, h1) 
 var IS_UNCLEAR = false;
-var COUNTER_UNCLEAR = 0;
 function isImageUnclear(w0, h0, w1, h1, divObj) {
 	if (IS_UNCLEAR == false) {
 		if ( w1 > w0 || h1 > h0 ) {
 			IS_UNCLEAR = true;
-			COUNTER_UNCLEAR++;
 			//console.log("圖片失真, w0:"+w0+" h0:"+h0+" w1:"+w1+" h1:"+h1);
 			// show warning mark over distination corner
 			$warning = $("<div></div>");
@@ -24,8 +22,12 @@ function isImageUnclear(w0, h0, w1, h1, divObj) {
 			
 			// show big warning if not exist
 			if ($('.warning_big').length <= 0) {
-				$warning_big = $("<div></div>");
-				$warning.addClass("warning_big");
+				$warning_big = $("<div class='warning_big'></div>");
+				$warning_big.css("position", "absolute");
+				$warning_big.css("top", $('#mCanvas').css("top"));
+				$warning_big.css("left", 370+layout_ox+'px');
+				$warning_big.html('<img src="../css/images/warning.png" /><span style="font-size: 16px; color: grey">注意！有些圖片可能已經失真囉</span>');
+				$('body').append($warning_big);
 			}
 		}
 	}
@@ -40,7 +42,9 @@ function isImageUnclear(w0, h0, w1, h1, divObj) {
 
 function removeUnclearWarning(id) {
 	$(".warning"+id).remove();
-	COUNTER_UNCLEAR--;
+	if ($('.warning_big').length > 0 && $('.warning').length <= 0) {
+		$('.warning_big').remove();
+	}
 }
 
 //////////////////////////////////////////////////
@@ -649,7 +653,7 @@ var cornerY = Math.round(parseInt(cornerDiv.css('top'), 10));
 var cornerW = Math.round(parseInt(cornerDiv.css('width'), 10));
 var cornerH = Math.round(parseInt(cornerDiv.css('height'), 10));
 var $cDiv;
-var $wDiv;
+//var $wDiv;
 var bdr = Math.round(parseInt(cornerDiv.css('border-left-width'), 10));
 var draw_w;
 var draw_h;
@@ -716,7 +720,7 @@ var ori_ratio;
 		var c1 = $('<canvas>');
 		var c2 = $('<canvas>');
 
-		c2.attr('id', 'clipper.temp');
+		c2.attr('id', 'clipper.temp.auto');
 		c2[0].setAttribute('style', 'position: absolute; z-index:1002;');
 		c2[0].style.top = cornerY + bdr + 'px';
 		c2[0].style.left = cornerX + bdr + 'px';
@@ -798,8 +802,8 @@ var ori_ratio;
 		
 		canvas.remove(); // remove main canvas
 		canvas[0] = null;
-		$wDiv.remove(); // remove block div
-		$wDiv[0] = null;
+		//$wDiv.remove(); // remove block div
+		//$wDiv[0] = null;
 		$cDiv.next().remove();
 		$cDiv.next()[0] = null;
 		$cDiv.remove(); // remove div cloned from layout
@@ -815,8 +819,8 @@ var ori_ratio;
 	else
 		IS_UNCLEAR = false;
 	
-	$("body").append('<div class="modalOverlay"></div>');
-	$wDiv = $('.modalOverlay');
+	//$("body").append('<div class="modalOverlay"></div>');
+	//$wDiv = $('.modalOverlay');
 	canvas = $('<canvas>');
 	canvas[0].width = Math.round(parseInt($('body').css('width'), 10)); 
 	canvas[0].height = Math.round(parseInt($(document).height(), 10));
