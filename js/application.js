@@ -1194,6 +1194,7 @@ function loadLib(path) {
 function saveImg() {
 	
 	mod_saving(function() {		
+		removeUnclearWarning("_big");   // tricky for removing big warning...
 		releasePage('Design');
 		newPage('Save');
 	});
@@ -1288,7 +1289,8 @@ function newPage(page) {
 		  },{
 		 	onblur : "submit",
 		 	placeholder : "未命名",
-		 	tooltip : "請輸入名稱"
+		 	tooltip : "請輸入名稱",
+		 	style : "display: inline"
 		 });
 	}
 	else if (page == "Save") {
@@ -1445,7 +1447,8 @@ $(function(){
 	  },{
 	 	onblur : "submit",
 	 	placeholder : "未命名",
-	 	tooltip : "請輸入名稱"
+	 	tooltip : "請輸入名稱",
+	 	style : "display: inline"
 	 });
 	
     $.instagramr();

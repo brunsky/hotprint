@@ -24,9 +24,9 @@ function isImageUnclear(w0, h0, w1, h1, divObj) {
 			if ($('.warning_big').length <= 0) {
 				$warning_big = $("<div class='warning_big'></div>");
 				$warning_big.css("position", "absolute");
-				$warning_big.css("top", $('#mCanvas').css("top"));
+				$warning_big.css("top", 20+layout_oy+'px');
 				$warning_big.css("left", 370+layout_ox+'px');
-				$warning_big.html('<img src="../css/images/warning.png" /><span style="font-size: 16px; color: grey">注意！有些圖片可能已經失真囉</span>');
+				$warning_big.html('<img src="../css/images/warning.png" align="absmiddle"><span style="font-size: 16px; color: grey">注意！有些圖片可能已經失真囉</span></img>');
 				$('body').append($warning_big);
 			}
 		}

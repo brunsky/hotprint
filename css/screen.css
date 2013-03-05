@@ -274,7 +274,7 @@ td.last {
 }
 #mTitle form {
 	height: 0px;
-	width: 250px;
+	width: 220px;
 	padding: 0px;
 	margin: 0px;
 }
@@ -669,7 +669,8 @@ body.logged-in .tip { display: none; }
 .cards .discover.off {
   background-position: 51px 32px;
 }
-form {
+
+.cards form {
   -webkit-box-shadow: 0 1px 3px #bbbbbb;
   -moz-box-shadow: 0 1px 3px #bbbbbb;
   box-shadow: 0 1px 3px #bbbbbb;
@@ -685,32 +686,32 @@ form {
   padding: 12px 24px 24px;
   width: 380px;
 }
-form h2 {
+.cards form h2 {
   color: #555;
   font-family: "Helvetica Neue", Verdana, Geneva, Arial, Helvetica, sans-serif;
   font-size: 16px;
   font-style: normal;
   margin-bottom: 0;
 }
-form li {
+.cards form li {
   margin: 8px 0;
   list-style: none;
 }
-form ul {
+.cards form ul {
 	list-style: none;
 }
-form label {
+.cards form label {
   color: #555;
   display: block;
   font-size: 14px;
 }
-form label small {
+.cards form label small {
   color: #aaa;
   font-size: 11px;
   line-height: 11px;
   text-transform: uppercase;
 }
-form input {
+.cards form input {
   -webkit-box-shadow: inset 0 1px 3px -1px #aaaaaa;
   -moz-box-shadow: inset 0 1px 3px -1px #aaaaaa;
   box-shadow: inset 0 1px 3px -1px #aaaaaa;
@@ -724,9 +725,10 @@ form input {
   width: 275px;
   -moz-box-sizing: content-box;
 }
-form input.valid {
+.cards form input.valid {
   background: url(images/tick.png) 260px center no-repeat;
 }
+
 /* Gallery pool */
 #instagram-source-login {
 	width: 48px;
