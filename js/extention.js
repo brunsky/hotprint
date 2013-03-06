@@ -174,6 +174,10 @@ function mod_gallery() {
 	$g = $('<div></div>');
 	$('body').append($g);
 	$g.attr('id', 'gallery');
+
+	$.get('/js/template/shopping_cart.html?v='+(new Date()).getTime(), function(template) {
+		$('#gallery').before(template);
+	});
 	
 	// Add deatail of cart
 	$('#gallery').before('<div class="shopping_cart">購物車<div> ----------- </div>'+
@@ -203,14 +207,24 @@ function mod_gallery() {
 	// Update Shopping Cart
 	simpleCart.update();
 	
-	$g.css('left', '100px');
-	
 	if($.cookie('user_id')) {
 		$.post("db/retrive_gallery.php", 
 				{ userid: $.cookie('user_id')
 				},  
 				function(data) {
+					$('#gallery').append('<p align="center" style="font-size:20px;"><strong>我的設計</strong></p>')
+					
 					var json = $.parseJSON(data);
+					$.each(json, function(key, val) {
+							$('#gallery').append('<div class="simpleCart_shelfItem">'+
+							'<div class="list_pic"><img src="'+val.orig_img+'" alt="image" width="120" height="202"/></div>'+
+							'<div class="list_txt item_name"><p><strong>'+val.title_name+'</strong></p>'+
+							'<p>'+val.phone_type+' / '+val.phone_color+'</p>'+
+							'<p><span class="item_price">$'+val.price+'</span></p>'+
+							'<a class="item_add" href="javascript:;"><img src="css/images/add_shoppingcar.png" width="18" height="18" /></a></div>');
+
+						});
+					/*
 					if ($.cookie('user_id') == '1587166409' || 
 						$.cookie('user_id') == '100004857218710' || 
 						$.cookie('user_id') == '527379830' ||
@@ -218,12 +232,11 @@ function mod_gallery() {
 						$.cookie('user_id') == '1709821659') { // Brunsky, Mark, James. Mark's wife
 						$.each(json, function(key, val) {
 							$('#gallery').append('<div class="simpleCart_shelfItem">'+
-							'<div class="g_img_wrap"><img src="'+val.orig_img+'" alt="image" /></div><br />'+
-							'<h2 class="item_name">'+val.title_name+'</h2>'+
-							val.phone_type+', '+
-							val.phone_color+'<br />'+
-							'<span class="item_price">$'+val.price+'</span><br>'+
-							'<a class="item_add" href="javascript:;"> 加入購物車 </a></p>'+
+							'<div class="list_pic"><img src="'+val.orig_img+'" alt="image" width="120" height="202"/></div>'+
+							'<div class="list_txt item_name"><p><strong>'+val.phone_type+'</strong></p>'+
+							'<p>'+val.phone_color+' / '+
+							'<span class="item_price">$'+val.price+'</span></p>'+
+							'<a class="item_add" href="javascript:;"><img src="css/images/add_shoppingcar.png" width="18" height="18" /></a>'+
 							'<input type="button" value="產生原圖" onClick="_send_factory(\''+val.s_save+'\')">'+'</div>');
 						});
 
@@ -231,13 +244,15 @@ function mod_gallery() {
 					else {
 						$.each(json, function(key, val) {
 							$('#gallery').append('<div class="simpleCart_shelfItem">'+
-							'<img src="'+val.orig_img+'" alt="image" /><br />'+
-							'<h2 class="item_name">'+val.phone_type+'</h2>'+
-							val.phone_color+'<br />'+
-							'<span class="item_price">$'+val.price+'</span><br>'+
-							'<a class="item_add" href="javascript:;"> 加入購物車 </a></p></div>');
+							'<div class="list_pic"><img src="'+val.orig_img+'" alt="image" width="120" height="202"/></div>'+
+							'<div class="list_txt item_name"><p><strong>'+val.phone_type+'</strong></p>'+
+							'<p>'+val.phone_color+' / '+
+							'<span class="item_price">$'+val.price+'</span></p>'+
+							'<a class="item_add" href="javascript:;"><img src="css/images/add_shoppingcar.png" width="18" height="18" /></a></div>');
+
 						});
 					}
+					*/
 					
 		});
 	}

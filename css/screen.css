@@ -530,32 +530,51 @@ body.logged-in .tip { display: none; }
 }
 
 /* Gallery page */
+
+#table_sty td{ border-bottom:dashed #600 1px; height:30px; text-align:center}
+#table_sty td.title{ border-bottom: solid #600 2px; height:30px; text-align:center}
+#table_sty td.amount{ border-bottom: none; height:30px; text-align:right; font-size:15px; color:#000; font-weight:bold; b}
+
+.list_pic{
+	-moz-box-shadow: 1px 1px 5px #999; /* Firefox */
+	-webkit-box-shadow: 1px 1px 5px #999; /* Safari 和 Chrome */
+	box-shadow: 1px 1px 3px #999; /* Opera 10.5 + */
+	width:150px;
+	background-color:#FFF;
+	text-align:center;
+	margin:0 10px 5px 10px;
+}
+.list_txt{
+	width:150px;
+	text-align:center;
+	margin:0 10px;
+	padding-bottom:20px
+}
+
 #gallery {
 	position: absolute;	
-	width: 1024px;
+	width:900px; 
+	margin:auto; 
+	float:none;
+	left: 16%;
 }
 .itemRow {
 	width: 1024px;
 }
 
-.simpleCart_shelfItem img{
-	width:120px;
-
-}
 .g_img_wrap {
 	height:220px;
 }
 
 .simpleCart_shelfItem {
 	float: left;
-	min-width:220px; width: auto !important; width: 200px;
-	min-height:400px; height: auto !important; height: 400px;
 }
 
 .shopping_cart {
 	position: absolute;	
 	width: 1024px;
 	height: 150px;
+	display: none;
 }
 .simpleCart_items {
 	height: 120px;
