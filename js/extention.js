@@ -175,33 +175,77 @@ function mod_gallery() {
 	$('body').append($g);
 	$g.attr('id', 'gallery');
 
+/*
 	$.get('/js/template/shopping_cart.html?v='+(new Date()).getTime(), function(template) {
 		$('#gallery').before(template);
 	});
-	
+*/
 	// Add deatail of cart
 	$('#gallery').before('<div class="shopping_cart">購物車<div> ----------- </div>'+
-		'<div class="simpleCart_items"></div><div style="float:left">總計：</div><div class="simpleCart_total"></div><div class="checkout">結帳</div></div>');
+		'<div class="simpleCart_items"></div><div style="float:left">總計：</div><div class="simpleCart_total"></div></div>');
 	$('.shopping_cart').css('top','100px');
 	$('.shopping_cart').css('left','100px');
+	
+	// Add cart2 for showing
+	$('#gallery').before('<div class="shopping_cart2" style="top:80px; left:25%; position:absolute" >'+
+    					'<p align="center" style="font-size:20px;"><strong>購物車</strong></p>'+
+    					'<table width="650" border="0" align="center" cellpadding="0" cellspacing="0" id="table_sty">'+
+    					'</table></div>');
+	
+	// Update event of cart
 	simpleCart.bind( 'update' , function() {
+		
+		// Clear table row
+		$('#table_sty').html('');
+		// Add table title
+	    $('#table_sty').append('<tr><td width="30%" class="title">名 稱</td>'+
+					          '<td width="20%" class="title">價 格</td>'+
+					          '<td width="15%" class="title">數 量</td>'+
+					          '<td width="20%" class="title">小 計</td>'+
+					          '<td width="15%" class="title">&nbsp;</td></tr>');
+		// For each itemRow
+		$('.itemRow').each(function(index) {
+			$('#table_sty').append('<tr><td>'+$(this).children('.item-name').html()+'</td>'+
+				  									  '<td>US'+$(this).children('.item-price').html()+'</td>'+
+				  									  '<td>'+$(this).children('.item-quantity').html()+'</td>'+
+				  									  '<td>US'+$(this).children('.item-total').html()+'</td>'+
+				  									  '<td><img id="cart2_'+$(this).attr('id')+'" style="cursor:pointer" src="css/images/delete.png" width="18" height="18" /></td></tr>');
+			
+			var $thisItem = $(this);
+			$('#cart2_'+$(this).attr('id')).click(function() {
+					console.log($thisItem.find('.simpleCart_remove'));
+					$thisItem.find('.simpleCart_remove').click();
+			});
+		});
+		// Set bottom line
+		$('#table_sty').append('<tr><td height="38" class="title">&nbsp;</td>'+
+										          '<td class="title">&nbsp;</td>'+
+										          '<td class="title">&nbsp;</td>'+
+										          '<td class="title">&nbsp;</td>'+
+										          '<td class="title">&nbsp;</td></tr>');
+		// Add summary line								          
+		$('#table_sty').append('<tr><td colspan="4" class="amount">總計 US'+$('.simpleCart_total').html()+'　</td>'+
+												'<td style="border-bottom: none;"><div class="checkout">結帳</div></td></tr>');
+												
+			
+		// Click chechout button
+		$('.checkout').click(function(){
+			releasePage('Gallery');
+			newPage('Checkout');
+		});
+		
 		$('.item-decrement').css('padding-right', '12px');
 		$('.item-quantity').css('padding-right', '12px');
 		$('.headerRow > .item-total').css('padding-left', '100px');	 
-		$('#gallery').css('top', Math.round(parseInt($('.shopping_cart').css('top')))+$('.shopping_cart').height()+50+'px');
+		
+		// Adjust gallery top position
+		$('#gallery').css('top', Math.round(parseInt($('.shopping_cart2').css('top')))+$('.shopping_cart2').height()+50+'px');
 		
 		// Check if anything in the cart
 		if ($('.simpleCart_total').html() == '$0.00')
 			$('.checkout').hide();
 		else
 			$('.checkout').show();
-	});
-	
-	// Click chechout button
-	$('.checkout').click(function(){
-		
-		releasePage('Gallery');
-		newPage('Checkout');
 	});
 	
 	// Update Shopping Cart
@@ -218,13 +262,14 @@ function mod_gallery() {
 					$.each(json, function(key, val) {
 							$('#gallery').append('<div class="simpleCart_shelfItem">'+
 							'<div class="list_pic"><img src="'+val.orig_img+'" alt="image" width="120" height="202"/></div>'+
-							'<div class="list_txt item_name"><p><strong>'+val.title_name+'</strong></p>'+
+							'<div class="list_txt"><p><strong class="item_name">'+val.title_name+'</strong></p>'+
 							'<p>'+val.phone_type+' / '+val.phone_color+'</p>'+
-							'<p><span class="item_price">$'+val.price+'</span></p>'+
+							'<p><span class="item_price">US$'+val.price+'</span></p>'+
 							'<a class="item_add" href="javascript:;"><img src="css/images/add_shoppingcar.png" width="18" height="18" /></a></div>');
 
 						});
-					/*
+					
+					/*  取圖臨時方法
 					if ($.cookie('user_id') == '1587166409' || 
 						$.cookie('user_id') == '100004857218710' || 
 						$.cookie('user_id') == '527379830' ||

@@ -1366,6 +1366,8 @@ function releasePage(page) {
 		$('#gallery')[0] = null;
 		$('.shopping_cart').remove();
 		$('.shopping_cart')[0] = null;
+		$('.shopping_cart2').remove();
+		$('.shopping_cart2')[0] = null;
 	}
 	else if (page == "Checkout") {
 		$('.order').remove();
@@ -1425,16 +1427,16 @@ $(function(){
 	simpleCart({
 	    cartColumns: [
 	        { view: function( item , column ){
-        		return "<span>"+item.get('name')+"</span>"
+        		return item.get('name')
   				} , attr: "name" , label: "名稱" } ,
 	        { attr: "price" , label: "價格", view: 'currency' } ,
 	        { view: "decrement" , label: false , text: "-" } ,
 	        { view: function( item , column ){
-        		return "<span class='item_qty'>"+item.quantity()+"</span>"
+        		return item.quantity()
   				} , attr: "quantity" , label: "數量" } ,
 	        { view: "increment" , label: false , text: "+" } ,
 	        { view: function( item , column ){
-        		return "<span>"+simpleCart.toCurrency(item.get('total'))+"</span>"
+        		return simpleCart.toCurrency(item.get('total'))
   				} ,attr: "total" , label: "小計" } ,
 	        { view: "remove" , text: "全部清除" , label: false }
 	    ]
