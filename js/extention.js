@@ -102,34 +102,33 @@ function mod_checkout() {
 		});
 
 		$("#checkout_confirm").click(function() {
-			
 			// Set checkout information
-			if ($("#checkout_confirm").val() == '確認資料') {
-				$.post('checkout/coupon.php', 
-				
-					{"code":$("#coupon_no").val(),
-					 "userid":$.cookie('user_id')},
-					 
-					function(data) {
-						if(data.result == "ok") {
-							var _n = parseFloat($(".simpleCart_total").html().replace('$', ''), 10).toFixed(2);
-							var _amount = parseFloat($(".simpleCart_quantity").html().replace('$', ''), 10).toFixed(2);
-							var discount = (_amount * data.value).toFixed(2);
-							$(".simpleCart_total").html("")
-				                .fadeIn(300)
-				                .append("$" + (_n - discount).toFixed(2).toString());
-				            $("#coupon_no").after('<font color="red">已折扣 $'+discount+'</font>');
-						}
-						else {
-							if (data.value == 'used')
-								$("#coupon_no").after('<font color="red">已經被使用</font>');
-							else if( (data.value == 'invalid'))
-								$("#coupon_no").after('<font color="red">無效的折扣碼</font>');
-							else
-								$("#coupon_no").after('<font color="red">稍後再試</font>');
-						}
-						$("#checkout_confirm").val("刷卡付款");
-					}, "json");
+			if ($("#checkout_confirm").val() == '確認資料' && $("#coupon_no").val() != '') {
+					$.post('checkout/coupon.php', 
+					
+						{"code":$("#coupon_no").val(),
+						 "userid":$.cookie('user_id')},
+						 
+						function(data) {
+							if(data.result == "ok") {
+								var _n = parseFloat($(".simpleCart_total").html().replace('$', ''), 10).toFixed(2);
+								var _amount = parseFloat($(".simpleCart_quantity").html().replace('$', ''), 10).toFixed(2);
+								var discount = (_amount * data.value).toFixed(2);
+								$(".simpleCart_total").html("")
+					                .fadeIn(300)
+					                .append("$" + (_n - discount).toFixed(2).toString());
+					            $("#coupon_no").after('<font color="red">已折扣 $'+discount+'</font>');
+							}
+							else {
+								if (data.value == 'used')
+									$("#coupon_no").after('<font color="red">已經被使用</font>');
+								else if( (data.value == 'invalid'))
+									$("#coupon_no").after('<font color="red">無效的折扣碼</font>');
+								else
+									$("#coupon_no").after('<font color="red">稍後再試</font>');
+							}
+							$("#checkout_confirm").val("刷卡付款");
+						}, "json");
 			}
 			else {
 				simpleCart({
@@ -194,31 +193,34 @@ function mod_gallery() {
 	
 	// Update event of cart
 	simpleCart.bind( 'update' , function() {
-		
+		console.log("cart update:"+$('.itemRow').length);
 		// Clear table row
 		$('#table_sty').html('');
 		// Add table title
-	    $('#table_sty').append('<tr><td width="30%" class="title">名 稱</td>'+
+	    $('#table_sty').append('<tr><td width="5%" class="title">　</td>'+
+	    					  '<td width="30%" class="title">名 稱</td>'+
 					          '<td width="20%" class="title">價 格</td>'+
-					          '<td width="15%" class="title">數 量</td>'+
+					          '<td width="10%" class="title">數 量</td>'+
 					          '<td width="20%" class="title">小 計</td>'+
 					          '<td width="15%" class="title">&nbsp;</td></tr>');
 		// For each itemRow
 		$('.itemRow').each(function(index) {
-			$('#table_sty').append('<tr><td>'+$(this).children('.item-name').html()+'</td>'+
-				  									  '<td>US'+$(this).children('.item-price').html()+'</td>'+
-				  									  '<td>'+$(this).children('.item-quantity').html()+'</td>'+
-				  									  '<td>US'+$(this).children('.item-total').html()+'</td>'+
-				  									  '<td><img id="cart2_'+$(this).attr('id')+'" style="cursor:pointer" src="css/images/delete.png" width="18" height="18" /></td></tr>');
+
+			$('#table_sty').append('<tr><td><img src="'+$(this).children('.item-image').html()+'" width="40" height="68" /></td>'+
+								  '<td>'+$(this).children('.item-title').html()+'</td>'+
+								  '<td>US'+$(this).children('.item-price').html()+'</td>'+
+								  '<td>'+$(this).children('.item-quantity').html()+'</td>'+
+								  '<td>US'+$(this).children('.item-total').html()+'</td>'+
+								  '<td><img id="cart2_'+$(this).attr('id')+'" style="cursor:pointer" src="css/images/delete.png" width="18" height="18" /></td></tr>');
 			
 			var $thisItem = $(this);
 			$('#cart2_'+$(this).attr('id')).click(function() {
-					console.log($thisItem.find('.simpleCart_remove'));
 					$thisItem.find('.simpleCart_remove').click();
 			});
 		});
 		// Set bottom line
 		$('#table_sty').append('<tr><td height="38" class="title">&nbsp;</td>'+
+												  '<td class="title">&nbsp;</td>'+
 										          '<td class="title">&nbsp;</td>'+
 										          '<td class="title">&nbsp;</td>'+
 										          '<td class="title">&nbsp;</td>'+
@@ -242,7 +244,7 @@ function mod_gallery() {
 		$('#gallery').css('top', Math.round(parseInt($('.shopping_cart2').css('top')))+$('.shopping_cart2').height()+50+'px');
 		
 		// Check if anything in the cart
-		if ($('.simpleCart_total').html() == '$0.00')
+		if ($('.simpleCart_total').html() == '$0.00' || $('.simpleCart_total').html() == '')
 			$('.checkout').hide();
 		else
 			$('.checkout').show();
@@ -262,7 +264,8 @@ function mod_gallery() {
 					$.each(json, function(key, val) {
 							$('#gallery').append('<div class="simpleCart_shelfItem">'+
 							'<div class="list_pic"><img src="'+val.orig_img+'" alt="image" width="120" height="202"/></div>'+
-							'<div class="list_txt"><p><strong class="item_name">'+val.title_name+'</strong></p>'+
+							'<span class="item_image" style="display:none">'+val.orig_img+'</span>'+
+							'<div class="list_txt"><p><strong class="item_title">'+val.title_name+'</strong><span class="item_name" style="display:none">'+val.s_name+'</span></p>'+
 							'<p>'+val.phone_type+' / '+val.phone_color+'</p>'+
 							'<p><span class="item_price">US$'+val.price+'</span></p>'+
 							'<a class="item_add" href="javascript:;"><img src="css/images/add_shoppingcar.png" width="18" height="18" /></a></div>');

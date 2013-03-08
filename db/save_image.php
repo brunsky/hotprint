@@ -23,11 +23,20 @@ if ($connkey) {
 	
 	$time = getdateinfo(2);
 	$filename = dirname(__FILE__) . "/user/" . $userid ."_".$time.".png";
+	
+	// 隨機配出額外的編號
+ 	$nkey_array = array("A","m","3","B","n","6","C","o","x","1","D","p","5","E","q","y","0","F","r","8","G","s","z","7","H","t","4","I","u","9","J","v","2","K","l","w");
+ 	srand();
+ 	for ($k=1;$k<=7;$k++) $random = $random.$nkey_array[rand(0,34)];
+ 	// 製成訂單號碼 = 年月日時分秒 + 7碼亂碼
+ 	$s_name = $title_name."_".$time.$random;
+	
 	$sql = sprintf(
-        "INSERT INTO gallery (userid, user_type, title_name, saveimag, phone_type, layout_no, phone_color, orig_img, price, s_save) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+        "INSERT INTO gallery (userid, user_type, title_name, s_name, saveimag, phone_type, layout_no, phone_color, orig_img, price, s_save) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
         mysql_real_escape_string($userid ),
         mysql_real_escape_string($user_type),
         mysql_real_escape_string($title_name),
+        mysql_real_escape_string($s_name),
         mysql_real_escape_string($saveimag),
         mysql_real_escape_string($phone_type),
         mysql_real_escape_string($layout_no),

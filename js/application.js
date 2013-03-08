@@ -1247,6 +1247,7 @@ function openGallery() {
 						{id: 1, label: 'No', val: 'N'}], 
 			 callback: function(val, content) {  
 				if (val === 'Y') {
+					removeUnclearWarning("_big");   // tricky for removing big warning...
 					releasePage(PAGE);
 					newPage('Gallery');
 				}
@@ -1434,6 +1435,8 @@ $(function(){
         		return item.get('name')
   				} , attr: "name" , label: "名稱" } ,
 	        { attr: "price" , label: "價格", view: 'currency' } ,
+	        { attr: "title" , label: "Title" },
+	        { attr: "image" , label: "Image" },
 	        { view: "decrement" , label: false , text: "-" } ,
 	        { view: function( item , column ){
         		return item.quantity()

@@ -7,7 +7,7 @@ $connkey = $db->link_sip( "localhost", $DB_NAME, "root", "tomorrow");
 if ($connkey) {
 
 	$sql = sprintf(
-        "SELECT title_name, phone_type, phone_color, orig_img, s_save, saveimag, price from gallery WHERE userid='%s'", 
+        "SELECT title_name, s_name, phone_type, phone_color, orig_img, s_save, saveimag, price from gallery WHERE userid='%s'", 
         	mysql_real_escape_string($_POST["userid"])
 		);
 	
@@ -16,6 +16,7 @@ if ($connkey) {
 	for ($i=0; $i<count($result); $i++) {
 		$pieces = explode(dirname(__FILE__), $result[$i]['orig_img']);
 		$a = array( 'title_name'=> $result[$i]['title_name'],
+					's_name'=> $result[$i]['s_name'],
 					'phone_type'=> $result[$i]['phone_type'],
 					'phone_color'=>$result[$i]['phone_color'],
 					'orig_img'=>"/db".$pieces[1],
