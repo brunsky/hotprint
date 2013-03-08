@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>UMORFIL Beauty Fiber</title>
+<link rel="shortcut icon" href="images/favicon.ico">
+<link href="css/reset.css" rel="stylesheet" type="text/css" />
+<link href="css/layout.css" rel="stylesheet" type="text/css" />
+<link href="css/txt.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+<!--
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+//-->
+</script>
+</head>
+
+<body onload="MM_preloadImages('images/item01_o.png','images/item02_o.png','images/item03_o.png','images/btn01_o.png','images/btn02_o.png')">
+<div class="index_title">
+	<div class=" up_area">
+	<!-- Start item -->
+	<div class="item">
+    <p style="height:38px">&nbsp;</p>
+    <!--<a href="#"><div class="shopping_car" align="center">10</div></a>
+    <p id="login_link" align="right"><a href="#">登入</a>&nbsp;&nbsp;&nbsp;</p> -->
+    
+	<a href="http://www.hotprintcloud.com/index.html" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image2','','images/item01_o.png',1)"><img src="images/item01.png" name="Image2" border="0" id="Image2" /></a>
+	<a href="https://www.facebook.com/pages/Hotprintcloud/532450930112692" target="_blank" onmouseover="MM_swapImage('Image3','','images/item02_o.png',1)" onmouseout="MM_swapImgRestore()"><img src="images/item02.png" name="Image3" border="0" id="Image3" /></a>
+	<a href="faq.php" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image4','','images/item03_o.png',1)"><img src="images/item03.png" name="Image4" border="0" id="Image4" /></a></div>
+	<!-- End item -->
+	<a href="index.php"><img src="images/logo.png" style="margin-top:10px; margin-left:10px"></a>
+	</div>
+</div>
+
+</body>
+</html>
+<script type="text/javascript">
+window.onload= function () {
+	var str = top.window.location.pathname;
+	spStr = str.split("/");
+	
+	//alert(spStr[spStr.length-1]);
+	
+	if(spStr[spStr.length-1]=='' || spStr[spStr.length-1]=='index.php') {
+		document.getElementById('item01').src = 'images/item01_o.png';
+	}
+	else if(spStr[spStr.length-1]=='rayon.php' || spStr[spStr.length-1]=='milkfish.php' || spStr[spStr.length-1]=='feature.php' || spStr[spStr.length-1]=='whats.php') {
+		document.getElementById('item02').src = 'images/item02_o.png';
+	}	
+	else if(spStr[spStr.length-1]=='application.php') {
+		document.getElementById('item03').src = 'images/item03_o.png';
+	}		
+	else if(spStr[spStr.length-1]=='report.php') {
+		document.getElementById('item04').src = 'images/item04_o.png';
+	}	
+	else if(spStr[spStr.length-1]=='inquiry.php') {
+		document.getElementById('item05').src = 'images/item05_o.png';
+	}
+	
+}
+
+</script>

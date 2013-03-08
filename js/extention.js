@@ -193,7 +193,6 @@ function mod_gallery() {
 	
 	// Update event of cart
 	simpleCart.bind( 'update' , function() {
-		console.log("cart update:"+$('.itemRow').length);
 		// Clear table row
 		$('#table_sty').html('');
 		// Add table title
