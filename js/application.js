@@ -1196,7 +1196,7 @@ function saveImg() {
 	mod_saving(function() {		
 		removeUnclearWarning("_big");   // tricky for removing big warning...
 		releasePage('Design');
-		newPage('Save');
+		newPage('Gallery');
 	});
 	/*
 	mod_saving_for_host(function() {		
@@ -1228,7 +1228,7 @@ function openGallery() {
 	if (PAGE == 'Checkout') {
 		$("body").append('<div class="modalOverlay"></div>');
 		new Messi('您尚未完成付款喔!確定要取消嗎？', 
-			{title: 'Alert', 
+			{title: '取消付款', 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 
 			 callback: function(val, content) {  
@@ -1242,7 +1242,7 @@ function openGallery() {
 	else if (PAGE == 'Design' && $('.canvas_appended').length != 0 ) {
 		$("body").append('<div class="modalOverlay"></div>');
 		new Messi('您確定要離開設計頁面嗎？所有的圖片將會被清空！', 
-			{title: 'Alert', 
+			{title: '離開設計頁面', 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 
 			 callback: function(val, content) {  
@@ -1352,6 +1352,10 @@ function releasePage(page) {
 			  	$(this).remove();
 			  	$(this)[0] = null;
 			});
+		}
+		if ($('#galleryCanvas').length) {
+			$('#galleryCanvas').remove();
+			$('#galleryCanvas')[0] = null;
 		}
 	}
 	else if (page == "Save") {
