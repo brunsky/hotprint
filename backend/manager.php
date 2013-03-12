@@ -42,9 +42,9 @@
   	.script("../js/mapping.min.js?v="+(new Date()).getTime())
   	.script("../js/clipping.min.js?v="+(new Date()).getTime())
   	.script("../js/extention.min.js?v="+(new Date()).getTime());
-  	
+
   	// Generating image
-  	function init(obj, phone_type, item_name) {
+  	function init(obj, phone_type, color, item_name) {
   		UNCLEAR_DETECTING = false;	
   		var saveimag = $.parseJSON(obj);
   		layout_oy = 66;
@@ -52,8 +52,10 @@
     	$("#comment").remove();
     	$("#galleryCanvas").remove();
     	$("#galleryCanvas")[0] = null;
-    	$('body').append('<span id="comment">設計編號：'+item_name+', 機殼型號：'+phone_type+'</span>');
+    	$('body').append('<span id="comment">設計編號：'+item_name+', 機殼型號：'+phone_type+', 顏色：'+color+'</span>');
+  		
   		_producing_for_factory(saveimag, phone_type);
+
   	}
   	
   </script>
@@ -108,9 +110,11 @@
 					$result = $db->sql($sql);
 					
 					$phone_type = $result[0]['phone_type'];
+					$color = $result[0]['phone_color'];
 					$saveimg = json_encode($result[0]['saveimag']);
 					
-					echo '<tr><td><input type="submit" value="產生原圖" onClick=\'init('.$saveimg.',"'.$phone_type.'","'.$item_name.'")\'></td>'
+					echo '<tr><td><input type="submit" value="產生原圖" onClick=\'init('.$saveimg.',"'
+						 .$phone_type.'","'.$color.'","'.$item_name.'")\'></td>'
 						 .'<td>'.$item_name .'</td>'
 						 .'<td>'.$item_quantity .'</td>'
 						 .'<td>'.$item_price.'</td>'
