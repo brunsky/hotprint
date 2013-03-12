@@ -43,10 +43,17 @@
   	.script("../js/clipping.min.js?v="+(new Date()).getTime())
   	.script("../js/extention.min.js?v="+(new Date()).getTime());
   	
-  	// Preparing UI
-  	function init(obj) {
-  		var detail = $.parseJSON(obj);
-  		console.log(detail);
+  	// Generating image
+  	function init(obj, phone_type, item_name) {
+  		UNCLEAR_DETECTING = false;	
+  		var saveimag = $.parseJSON(obj);
+  		layout_oy = 66;
+    	layout_ox = 404;
+    	$("#comment").remove();
+    	$("#galleryCanvas").remove();
+    	$("#galleryCanvas")[0] = null;
+    	$('body').append('<span id="comment">設計編號：'+item_name+', 機殼型號：'+phone_type+'</span>');
+  		_producing_for_factory(saveimag, phone_type);
   	}
   	
   </script>
@@ -54,7 +61,7 @@
 </head>
 <html>
 <body>
-	
+<p align="center"><font size="6">hotprintCloud 後台管理系統 </font> beta</p>
 <?php
 	if ($_SESSION['login'] == 'yes') {
 		include "db.inc";
@@ -77,8 +84,8 @@
 						<td width="5%" class="title"> </td>
 		    			<td width="15%" class="title">設計編號</td>
 						<td width="5%" class="title">數量</td>
-						<td width="15%" class="title">小計</td>
-						<td width="30%" class="title">寄送資訊</td>
+						<td width="7%" class="title">單位價格</td>
+						<td width="38%" class="title">寄送資訊</td>
 						<td width="10%" class="title">登入型態</td>
 						<td width="10%" class="title">帳號名稱</td>
 						<td width="10%" class="title">帳號 id</td>
@@ -97,7 +104,13 @@
 					$account_id = $obj->{'userid'};
 					$total_price = $obj->{'total'};
 					
-					echo '<tr><td><input type="radio" name="s_name" value="'.$item_name.'"><br></td>'
+					$sql = "SELECT * from gallery where s_name='$item_name'";
+					$result = $db->sql($sql);
+					
+					$phone_type = $result[0]['phone_type'];
+					$saveimg = json_encode($result[0]['saveimag']);
+					
+					echo '<tr><td><input type="submit" value="產生原圖" onClick=\'init('.$saveimg.',"'.$phone_type.'","'.$item_name.'")\'></td>'
 						 .'<td>'.$item_name .'</td>'
 						 .'<td>'.$item_quantity .'</td>'
 						 .'<td>'.$item_price.'</td>'
@@ -107,7 +120,6 @@
 						 .'<td>'.$account_id.'</td></tr>';
 				}
 				echo '</table>總計：'.$total_price.'<br>'; 
-				echo '<input type="submit" value="產生原圖" onClick=\'init('.json_encode($result[0]['detail']).')\'>';
 				echo '<form action="manager.php"><input type="submit" value="回到列表"></form>';
 				
 				

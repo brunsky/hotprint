@@ -1,6 +1,8 @@
 
 //////////////////////////////////////////////////
 // Image uncleared warning: original (w0, h0), sized (w1, h1) 
+
+var UNCLEAR_DETECTING = true; // Detecting unclear flag
 var IS_UNCLEAR = false;
 function isImageUnclear(w0, h0, w1, h1, divObj) {
 	if (IS_UNCLEAR == false) {
@@ -91,17 +93,20 @@ function autoClipper2(srcImgDom, dstCanvas, srcCorner, dstCorner) {
 		w = Math.round($(srcImgDom).data('zw') * (h/$(srcImgDom).data('zh'))) + bdr;
 	}
 	
-	if ($(srcImgDom).data('is_unclear') == 'true') {
-		
-		console.log("此圖已失真");
-		IS_UNCLEAR = true;
+	if (UNCLEAR_DETECTING == true) {
+	
+		if ($(srcImgDom).data('is_unclear') == 'true') {
+			
+			console.log("此圖已失真");
+			IS_UNCLEAR = true;
+		}
+		else
+			IS_UNCLEAR = false;
+		// Check Image is uncleared and then show warning if any.
+		var _img = new Image(); // Get original size
+		_img.src = dstCorner.children(".draggable").attr('src');
+		isImageUnclear(_img.width, _img.height, w, h, dstCorner);
 	}
-	else
-		IS_UNCLEAR = false;
-	// Check Image is uncleared and then show warning if any.
-	var _img = new Image(); // Get original size
-	_img.src = dstCorner.children(".draggable").attr('src');
-	isImageUnclear(_img.width, _img.height, w, h, dstCorner);
 	
 	// store new value
 	$(srcImgDom).data('zw', w);
