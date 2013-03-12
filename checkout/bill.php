@@ -4,7 +4,7 @@
 $redirect_url = "Location: http://www.hotprintcloud.com/index.html";
 $USD2TWD = 30;
 
-$order_detail = json_encode($_POST);
+$order_detail = addslashes(json_encode($_POST));
 
 /*
  foreach ( $_POST as $key => $value ) { 
