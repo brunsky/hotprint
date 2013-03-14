@@ -27,6 +27,21 @@ function switchNum(str){
    return result;
 }
 
+// Check if all the input is blnk or invalid 
+function checkValid() {
+	var isValid = true;
+	$('.fillcheck').remove();
+	
+	$('.order :input').each(function() {
+		if ($(this).val() == "" && $(this).attr('id') != 'coupon_no') {
+			$(this).after("<span class='fillcheck'><font color='red'>請填寫！<font></span>");
+			isValid = false;
+		}
+	}); 
+	
+	return isValid;
+}
+
 function mod_checkout() {
 	$order = $('<div></div>');
 	$order.addClass('order');
@@ -137,6 +152,9 @@ function mod_checkout() {
 						}, "json");
 			}
 			else {
+				if (checkValid() == false) {
+					return;
+				}
 				simpleCart({
 				    checkout: { 
 				    	type: "SendForm" , 
