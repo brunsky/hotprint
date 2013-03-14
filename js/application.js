@@ -3,12 +3,18 @@
  */
  
  // Global settings
- var SANDBOX		= false;
+ var SANDBOX		= true;
  var HOST_URL		= '';
- if (SANDBOX)
+ if (SANDBOX) {
  	HOST_URL		= 'http://sandbox.hotprintcloud.com/';
- else
+ 	FBREDIRECT_URL	= 'sandbox_fbredirect.html';
+ 	INSTAREDIRECT_URL	= 'sandbox_instaredirect.html';
+ }
+ else {
  	HOST_URL		= 'http://www.hotprintcloud.com/';
+ 	FBREDIRECT_URL	= 'fbredirect.html';
+ 	INSTAREDIRECT_URL	= 'instaredirect.html';
+ }
  var TEMP_DIR		= 'proxy/tmp/'
  var PHONE_NAME 	= 'iphone5';
  var LAYOUT_NAME 	= 'layout_3';
@@ -204,8 +210,8 @@
 	instaRes = '';
   	
   	var url = 'https://instagram.com/oauth/authorize/?'+
-  							'client_id=c4b0c9a61cc24efbb4cd5feb71be67b8'+
-  							'&amp;redirect_uri='+HOST_URL+'instaredirect.html'+
+  							'client_id=48fb462fd1254631a2c63416a01eb3f0'+
+  							'&amp;redirect_uri='+HOST_URL+INSTAREDIRECT_URL+
   							'&amp;response_type=token';
   	if (event.data.isPopup == true) {
   		window.open(url,'hotprintCloud', 
@@ -346,8 +352,8 @@
 	fbRes = '';
   	
   	var url = 'http://www.facebook.com/dialog/oauth/?'+
-	    'client_id=290426614419964'+
-	    '&redirect_uri='+HOST_URL+'fbredirect.html'+
+	    'client_id=396030097155221'+
+	    '&redirect_uri='+HOST_URL+FBREDIRECT_URL+
 	    '&response_type=token'+
 	    '&scope=user_photos';
 	if (event.data.isPopup == true) {
