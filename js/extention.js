@@ -30,7 +30,6 @@ function switchNum(str){
 // Check if all the input is blnk or invalid 
 function checkValid() {
 	var isValid = true;
-	$('.fillcheck').remove();
 	
 	$('.order :input').each(function() {
 		if ($(this).val() == "" && $(this).attr('id') != 'coupon_no') {
@@ -123,6 +122,8 @@ function mod_checkout() {
 		});
 
 		$("#checkout_confirm").click(function() {
+			// Remove valid checker if any
+			$('.fillcheck').remove();
 			// Set checkout information
 			if ($("#checkout_confirm").val() == '確認資料' && $("#coupon_no").val() != '') {
 					$.post('checkout/coupon.php', 
