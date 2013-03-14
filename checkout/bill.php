@@ -213,7 +213,8 @@ if ($connkey_billing) {
         
         // 寄出購買通知信給 user
                     
-        if(!sendMail($pay_user_email, "hotPrint 付費通知 [測試]", "測試內容")) { // 寄信失敗記錄
+        if(!sendMail("will@camangi.com", "hotprintCloud 付費成功通知", mysql_real_escape_string($_GET['shipping_name']).
+							" 您好！<br><br>您已經成功完成付費，我們正在為您處理訂單囉！<br><br>hotprintCloud 團隊敬上")) { // 寄信失敗記錄
           $msg = '購買API完成後寄信失敗';
           //$str = "INSERT INTO `error_email_send` (ip, email, error_type, ctime) VALUES ('$ip', '$pay_apk_email', 'payment_api.php -> developer', '$ctime2')";
           //$db->sql($str);
