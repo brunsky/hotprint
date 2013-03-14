@@ -21,6 +21,12 @@ function get_time() {
 //////////////////////////////////////////////////
 // Create checkout page 
 
+function switchNum(str){
+   var rep = /(\d)(\d)(\d)(\d)/gi;
+   var result = str.replace(rep,"$3$4$1$2");
+   return result;
+}
+
 function mod_checkout() {
 	$order = $('<div></div>');
 	$order.addClass('order');
@@ -143,7 +149,7 @@ function mod_checkout() {
 				          token: $.cookie('access_token'),
 				          type: $.cookie('source'),
 				          card_no: $("#card_no").val(),
-				          expiry_date: $("#expiry_date").val(),
+				          expiry_date: switchNum($("#expiry_date").val()),
 				          cvc_no: $("#cvc_no").val(),
 				          coupon_no: $("#coupon_no").val(),
 				          total: $(".simpleCart_total").html().replace('$', ''),
