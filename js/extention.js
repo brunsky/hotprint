@@ -1,8 +1,68 @@
 //////////////////////////////////////////////////
 // Show order history
 
+function check_detail(id) {
+		$('#detail_'+id).toggle();
+}
+
 function mode_history() {
-	
+	$.post("db/retrive_order.php", 
+			{ userid: $.cookie('user_id')},  
+			function(data) {
+				var order = $.parseJSON(data);
+				console.log(order);
+				
+				$('body').append('<div class="order_history" style="top:80px; left:20%; position:absolute" >'+
+    					'<p align="center" style="font-size:20px;"><strong>訂單記錄</strong></p>'+
+    					'<table width="800" border="0" align="center" cellpadding="0" cellspacing="0" id="table_sty">'+
+    					'<tr><td width="28%" class="title">編號</td>'+
+					        '<td width="27%" class="title">時間</td>'+
+					        '<td width="10%" class="title">數量</td>'+
+					        '<td width="10%" class="title">已付款</td>'+
+					        '<td width="15%" class="title">信用卡</td>'+
+					        '<td width="10%" class="title"> </td></tr>'+
+    					'</table></div>');
+				
+				$.each(order, function(i, item){
+					var detail = $.parseJSON(order[i].detail);
+					console.log(detail);
+					
+					$('#table_sty').append('<tr><td>'+order[i].order_no+'</td>'+
+									        '<td>'+order[i].c_time_local+'</td>'+
+									        '<td>'+detail.itemCount+'</td>'+
+									        '<td>'+order[i].payment+'</td>'+
+									        '<td>'+detail.card_no.replace(/.(?=.{4})/g, 'x')+'</td>'+
+									        '<td><a href="#" onClick="check_detail(\''+order[i].order_no+'\')">詳細</a></td></tr>');
+					// Detail information
+					var _info = '';
+					for(var j=1; j<=detail.itemCount; j++) {
+						
+						var img_path = detail['item_options_'+j].split(',')[0].split(': ')[1];
+						var title = detail['item_options_'+j].split(',')[1].split(': ')[1];
+						_info += '<img src="'+img_path+'" width="40" height="68" align="absmiddle"/> '+
+								title+', 單價：'+detail['item_price_'+j]+' x'+detail['item_quantity_'+j]+'</img>';
+						if (j%4 == 0)	_info += '<br>';
+					}					
+					
+					// Insert detail into row
+					$('#table_sty').append('<tr id="detail_'+order[i].order_no+'" style="display: none">'+
+											'<td colspan="6" style="text-align: left">'+'<br>'+_info+
+											'<br><br> 運送地址： '+ detail.shipping_addr+','+detail.shipping_city+
+											','+detail.shipping_country+'<br>'+
+											'<br>收件者： '+detail.shipping_name+'<br>'+
+											'<br>email： '+detail.shipping_email+'<br><br>'+
+											'</td></tr>');
+				});
+				
+				// Set bottom line
+				$('#table_sty').append('<tr><td height="38" class="title">&nbsp;</td>'+
+												  '<td class="title">&nbsp;</td>'+
+										          '<td class="title">&nbsp;</td>'+
+										          '<td class="title">&nbsp;</td>'+
+										          '<td class="title">&nbsp;</td>'+
+										          '<td class="title">&nbsp;</td></tr>');
+				
+			});
 }
 
 //////////////////////////////////////////////////
