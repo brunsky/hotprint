@@ -200,7 +200,7 @@ if ($connkey_billing) {
         $sql = sprintf(
         		"UPDATE order_list SET s_time='%s', payment='%s' WHERE order_no='%s'", 
         		$pay_date,
-				$TWD_amount,
+				$price,
 				$od_sob
 			);
 		$result = $db->sql($sql);
