@@ -7,7 +7,7 @@ $connkey = $db->link_sip( "localhost", $DB_NAME, "root", "tomorrow");
 if ($connkey) {
 
 	$sql = sprintf(
-        "SELECT * from order_list WHERE userid='%s'", 
+        "SELECT * from order_list WHERE userid='%s' AND payment IS NOT NULL", 
         	mysql_real_escape_string($_POST["userid"])
 		);
 	
