@@ -5,10 +5,16 @@
  // Global settings
  var SANDBOX		= false;
  var HOST_URL		= '';
- if (SANDBOX)
+ if (SANDBOX) {
  	HOST_URL		= 'http://sandbox.hotprintcloud.com/';
- else
+ 	FBREDIRECT_URL	= 'sandbox_fbredirect.html';
+ 	INSTAREDIRECT_URL	= 'sandbox_instaredirect.html';
+ }
+ else {
  	HOST_URL		= 'http://www.hotprintcloud.com/';
+ 	FBREDIRECT_URL	= 'fbredirect.html';
+ 	INSTAREDIRECT_URL	= 'instaredirect.html';
+ }
  var TEMP_DIR		= 'proxy/tmp/'
  var PHONE_NAME 	= 'iphone5';
  var LAYOUT_NAME 	= 'layout_3';
@@ -161,8 +167,10 @@
 	$('#clear-design').unbind('click');
 	$('#start-design').unbind('click');
 	$('#my-gallery').unbind('click');
+	$('#my-order-history').unbind('click');
 	$('#logout').unbind('click');
 	$('#go-to-my-gallery').unbind('click');
+	$('#go-to-my-order-history').unbind('click');
 	
   	$('#save-design').bind('click',saveImg);
 	$('#random-design').bind('click',randomDesign);
@@ -171,6 +179,7 @@
 	$('#my-gallery').bind('click',openGallery);
 	$('#logout').bind('click',_logout);
 	$('#go-to-my-gallery').bind('click',openGallery);
+	$('#go-to-my-order-history').bind('click',openHistory);
   }
   
   _logout = function() {
@@ -205,7 +214,7 @@
   	
   	var url = 'https://instagram.com/oauth/authorize/?'+
   							'client_id=c4b0c9a61cc24efbb4cd5feb71be67b8'+
-  							'&amp;redirect_uri='+HOST_URL+'instaredirect.html'+
+  							'&amp;redirect_uri='+HOST_URL+INSTAREDIRECT_URL+
   							'&amp;response_type=token';
   	if (event.data.isPopup == true) {
   		window.open(url,'hotprintCloud', 
@@ -347,7 +356,7 @@
   	
   	var url = 'http://www.facebook.com/dialog/oauth/?'+
 	    'client_id=290426614419964'+
-	    '&redirect_uri='+HOST_URL+'fbredirect.html'+
+	    '&redirect_uri='+HOST_URL+FBREDIRECT_URL+
 	    '&response_type=token'+
 	    '&scope=user_photos';
 	if (event.data.isPopup == true) {
@@ -1222,9 +1231,26 @@ function startDesign() {
 }
 
 /*
- * Enter gallery page from save page
+ * Enter gallery page from other page
  */
-function openGallery() {
+
+function openGallery() {	
+	openFromMainMenu('Gallery');
+}
+
+/*
+ * Enter order history page from other page
+ */
+
+function openHistory() {	
+	openFromMainMenu('Order_History');
+}
+
+/*
+ * General open page
+ */
+
+function openFromMainMenu(pagename) {
 	if (PAGE == 'Checkout') {
 		$("body").append('<div class="modalOverlay"></div>');
 		new Messi('您尚未完成付款喔!確定要取消嗎？', 
@@ -1234,7 +1260,7 @@ function openGallery() {
 			 callback: function(val, content) {  
 				if (val === 'Y') {
 					releasePage(PAGE);
-					newPage('Gallery');
+					newPage(pagename);
 				}
 				$('.modalOverlay').remove();
 			}});
@@ -1249,17 +1275,16 @@ function openGallery() {
 				if (val === 'Y') {
 					removeUnclearWarning("_big");   // tricky for removing big warning...
 					releasePage(PAGE);
-					newPage('Gallery');
+					newPage(pagename);
 				}
 				$('.modalOverlay').remove();
 			}});
 	}
 	else {
 		releasePage(PAGE);
-		newPage('Gallery');
+		newPage(pagename);
 	}
 }
-
 
 /*
  * Create Page from given page name
@@ -1307,6 +1332,7 @@ function newPage(page) {
 		mod_checkout();
 	}
 	else if (page == "Order_History") {
+		$('#start-design').fadeIn(300);
 		mode_history();
 	}
 }
@@ -1376,6 +1402,10 @@ function releasePage(page) {
 	}
 	else if (page == "Checkout") {
 		$('.order').remove();
+	}
+	else if (page == "Order_History") {
+		$('#start-design').hide();
+		$('.order_history').remove();
 	}
 }
 
