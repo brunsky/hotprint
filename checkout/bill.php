@@ -163,6 +163,11 @@ if ($connkey_billing) {
   //$result = '1*15689*'.$TWD_amount.'*'.$od_sob.'*'.$ctime2.'*777777';
   //$result = 'error_3D_STOP';
   //echo $result.'<br>';
+  
+  // 特殊零元刷卡 (ex. VIP coupon)
+  if ($result == 'error_amount' && $price == 0) {
+  	$result = '1*77777*0*'.$od_sob.'*'.$ctime2.'*777777';
+  }
 
   if (substr($result,0,5)=='error') {
     header( $redirect_url.'#token='.$token.'&source='.$type.'&b=cancel' ) ; // 回傳給 client 刷卡失敗錯誤訊息
@@ -224,8 +229,9 @@ if ($connkey_billing) {
 
 	}
     else {
-			// 回傳給 client 付費失敗訊息
-      header( $redirect_url.'#token='.$token.'&source='.$type.'&b=cancel' ) ;
+    	// 回傳給 client 付費失敗訊息
+      	header( $redirect_url.'#token='.$token.'&source='.$type.'&b=cancel' ) ;
+			
       //echo "解析回傳結果，失敗:".$result;
     }
 
