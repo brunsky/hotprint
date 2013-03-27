@@ -1,0 +1,9 @@
+<script>
+	var access_token = location.hash.split('=')[1];
+	if(window.opener == null)
+		window.location.replace('http://sandbox.hotprintcloud.com/index.html'+'#token='+access_token+'&source=instagram');
+	else {
+		window.opener._instaCrossLogin(access_token);
+		window.close();
+	}
+</script>

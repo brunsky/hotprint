@@ -1,0 +1,71 @@
+@charset "utf-8";
+/* CSS Document */
+.copyright{
+	margin:auto;
+	float:none;
+font-family: Calibri;
+font-size:12px;
+line-height:30px;
+color: #CCC;
+background-color: #1c1c1c;
+}
+#content_link a {
+	text-decoration: none;
+	color: #333;
+	line-height:20px;
+	font-size:12px;
+}
+#content_link a:hover {
+	text-decoration: underline;
+	color: #036;
+}
+#login_link a {
+	text-decoration: underline;
+	color: #666;
+	line-height:35px;
+	font-size:13px;
+}
+#login_link a:hover {
+	text-decoration: underline;
+	color: #09C;
+}
+.t14{
+font-family: Calibri;
+color: #333;
+font-size:14px;
+font-weight:normal;
+}
+.t12{
+font-family: Calibri;
+color: #333;
+font-size:12px;
+}
+.t12_gray{
+font-family: Calibri;
+color: #999;
+font-size:12px;
+}
+.t13{
+font-family: Calibri;
+color: #333;
+font-size:13px;
+font-weight:normal;
+}
+.txt_green{font-family: Calibri;
+color: #360;
+font-size:16px;
+font-weight:bold;
+}
+.t20{
+font-family: Calibri;
+color: #600;
+font-size:20px;
+font-weight:bold;
+}
+.notice{
+font-family: Calibri;
+color: #F36;
+font-size:13px;
+}
+.faq_q{font-size:16px; color:#C33; font-weight:bold; font-family: Calibri}
+.faq_a{font-size:13px; color: #333; font-family: Calibri; margin-left:30px}
