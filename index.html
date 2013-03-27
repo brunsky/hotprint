@@ -35,10 +35,10 @@
   	.script("lib/simpleCart.js")
   	.script("lib/jquery.jeditable.js")
   	.script("lib/jquery.creditCardValidator.js")
-  	.script("js/mapping.min.js?v="+(new Date()).getTime())
-  	.script("js/clipping.min.js?v="+(new Date()).getTime())
-  	.script("js/extention.min.js?v="+(new Date()).getTime())
-  	.script("js/application.min.js?v="+(new Date()).getTime());
+  	.script("js/mapping.js?v="+(new Date()).getTime())
+  	.script("js/clipping.js?v="+(new Date()).getTime())
+  	.script("js/extention.js?v="+(new Date()).getTime())
+  	.script("js/application.js?v="+(new Date()).getTime());
   	
   </script>
 
@@ -48,7 +48,7 @@
 <table id="maintable">
 <tr>
 <td width="180px">
-	<div id="logo" title="hotprintCloud 雲端手機殼設計" style="cursor: pointer;" onclick="window.location='http://www.hotprintcloud.com';"></div>
+	<div id="logo" title="hotprintCloud 雲端手機殼設計" style="cursor: pointer;" onclick="window.location='http://sandbox.hotprintcloud.com';"></div>
 </td>
 <td width="280px">
 	<div id="start-design" title="Enter design page">繼續設計新款式</div>
@@ -76,10 +76,10 @@
 		  </div>
 		  <div id="logoutZone">
 		  	<a id="go-to-my-gallery" href="#" style="color: #454545">瀏覽我的設計</a>
-            <br>
-            <a id="go-to-my-order-history" href="#" style="color: #454545">瀏覽我的訂單</a>
-            <br>
-            <a id="logout" href="#" style="color: #454545">登出</a>	
+		  	<br>
+		  	<a id="go-to-my-order-history" href="#" style="color: #454545">瀏覽我的訂單</a>
+		  	<br>
+		  	<a id="logout" href="#" style="color: #454545">登出</a>
 		  </div>
 	    </div>
 	  </div>
@@ -165,7 +165,7 @@
 </div>
 </div>
 
-<div id="price_tag"><div id='price'>US$<span id='price_no'>---</span><br><span style="font-size: 16px; color: grey">免運費</span></div></div>
+<div id="price_tag"><div id='price'><span>$</span></span><span id='price_no'>---</span><br><span style="font-size: 16px; color: grey">免運費</span></div></div>
 <div id="tip1" class="tip"></div>
 <div id="tip2" class="tip"></div>
 <div id="tip3" class="tip"></div>
@@ -174,9 +174,10 @@
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
   js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/zh_TW/all.js#xfbml=1&appId=290426614419964";
+  js.src = "//connect.facebook.net/zh_TW/all.js#xfbml=1&appId=396030097155221";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
+
 <script type="text/javascript">
 
   var _gaq = _gaq || [];

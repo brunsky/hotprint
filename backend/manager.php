@@ -99,7 +99,7 @@
 					$item_name = $obj->{'item_name_'.(string)($i+1)};
 					$item_quantity = $obj->{'item_quantity_'.(string)($i+1)};
 					$item_price = $obj->{'item_price_'.(string)($i+1)};
-					$shipping = $obj->{'shipping_addr'}.','.$obj->{'shipping_city'}.','.$obj->{'shipping_country'}
+					$shipping = $obj->{'shipping_addr'}.','.$obj->{'shipping_zip'}.','.$obj->{'shipping_city'}.','.$obj->{'shipping_country'}
 								.','.$obj->{'shipping_name'}.','.$obj->{'shipping_email'};
 					$login_from = $obj->{'type'};
 					$name = $obj->{'storename'};

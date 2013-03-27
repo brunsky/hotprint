@@ -1,7 +1,7 @@
 <?
 
 //header( 'Location: http://sandbox.hotprintcloud.com/#token='.$token.'&source='.$type.'&b=succeed' ) ;
-$redirect_url = "Location: http://www.hotprintcloud.com/index.html";
+$redirect_url = "Location: http://sandbox.hotprintcloud.com/index.html";
 $USD2TWD = 30;
 
 $order_detail = addslashes(json_encode($_POST));
@@ -21,7 +21,6 @@ $pay_user_email = mysql_real_escape_string($_POST['shipping_email']);
 $token = $_POST['token'];
 $type = $_POST['type'];
 $c_time_local = $_POST['c_time'];
-$coupon_no = mysql_real_escape_string($_POST['coupon_no']);
 
 if (!$user_id || !$card_no || !$cvv2 || !$expiry_date) {
   header( $redirect_url.'#token='.$token.'&source='.$type.'&b=cancel' ) ;
@@ -164,11 +163,6 @@ if ($connkey_billing) {
   //$result = '1*15689*'.$TWD_amount.'*'.$od_sob.'*'.$ctime2.'*777777';
   //$result = 'error_3D_STOP';
   //echo $result.'<br>';
-  
-  // 特殊零元刷卡 (ex. VIP coupon)
-  if ($result == 'error_amount' && $price == 0) {
-  	$result = '1*77777*0*'.$od_sob.'*'.$ctime2.'*777777';
-  }
 
   if (substr($result,0,5)=='error') {
     header( $redirect_url.'#token='.$token.'&source='.$type.'&b=cancel' ) ; // 回傳給 client 刷卡失敗錯誤訊息
@@ -210,14 +204,6 @@ if ($connkey_billing) {
 				$od_sob
 			);
 		$result = $db->sql($sql);
-		
-		$sql = sprintf(
-        		"UPDATE coupon SET userid='%s', date='%s' WHERE code='%s'", 
-        		$user_id,
-				$pay_date,
-				$coupon_no
-			);
-		$result = $db->sql($sql);
         /*
         $str = "INSERT INTO payment_list (pay_type, pay_date, pay_user, pay_user_email, pay_apk_id, pay_apk_name, pay_apk_developer, pay_apk_email, pay_gross, pay_fee, pay_net_amount, pay_unit) ".
         "VALUES ('SELL', '$pay_date', '$pay_user', '$pay_user_email', '$pay_apk_id', '$pay_apk_name', '$pay_apk_developer', '$pay_apk_email', '$pay_gross', '$pay_fee', '$pay_net_amount', '$pay_unit')";
@@ -238,9 +224,8 @@ if ($connkey_billing) {
 
 	}
     else {
-    	// 回傳給 client 付費失敗訊息
-      	header( $redirect_url.'#token='.$token.'&source='.$type.'&b=cancel' ) ;
-			
+			// 回傳給 client 付費失敗訊息
+      header( $redirect_url.'#token='.$token.'&source='.$type.'&b=cancel' ) ;
       //echo "解析回傳結果，失敗:".$result;
     }
 

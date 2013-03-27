@@ -196,11 +196,6 @@ function mod_checkout() {
 								var _n = parseFloat($(".simpleCart_total").html().replace('$', ''), 10).toFixed(2);
 								var _amount = parseFloat($(".simpleCart_quantity").html().replace('$', ''), 10).toFixed(2);
 								var discount = (_amount * data.value).toFixed(2);
-								
-								// Prevent negative price for some special discount (ex. VIP coupon)
-								if (_n - discount < 0)
-									discount = _n;
-	
 								$(".simpleCart_total").html("")
 					                .fadeIn(300)
 					                .append("$" + (_n - discount).toFixed(2).toString());

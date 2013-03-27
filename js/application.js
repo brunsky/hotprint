@@ -3,7 +3,7 @@
  */
  
  // Global settings
- var SANDBOX		= false;
+ var SANDBOX		= true;
  var HOST_URL		= '';
  if (SANDBOX) {
  	HOST_URL		= 'http://sandbox.hotprintcloud.com/';
@@ -27,6 +27,7 @@
  var TITLE_NAME		= '';
  var maskImg;
  var isMenuEntry	= false;
+ var MY_LANG		= 'tw';		// support muti-language: en (English), tw (Traditional Chinese)
   
   var _init
   ,   _getUserData
@@ -213,7 +214,7 @@
 	instaRes = '';
   	
   	var url = 'https://instagram.com/oauth/authorize/?'+
-  							'client_id=c4b0c9a61cc24efbb4cd5feb71be67b8'+
+  							'client_id=48fb462fd1254631a2c63416a01eb3f0'+
   							'&amp;redirect_uri='+HOST_URL+INSTAREDIRECT_URL+
   							'&amp;response_type=token';
   	if (event.data.isPopup == true) {
@@ -355,7 +356,7 @@
 	fbRes = '';
   	
   	var url = 'http://www.facebook.com/dialog/oauth/?'+
-	    'client_id=290426614419964'+
+	    'client_id=396030097155221'+
 	    '&redirect_uri='+HOST_URL+FBREDIRECT_URL+
 	    '&response_type=token'+
 	    '&scope=user_photos';
@@ -501,9 +502,18 @@
 })(jQuery);
 
 function show_price(phone_type) {
-	$.post('db/bom.php', {"part_name":phone_type},function(data) {
+	$.post('db/bom.php', {"part_name":phone_type, "lang":MY_LANG},function(data) {
 		if(data.result == "ok") {
-			$("#price_no").html(data.value);
+			
+			// Set unit
+			$("#price_no").prev().remove('span');
+			if (MY_LANG == 'en')
+				$("#price_no").before('<span>US$</span>');
+			else if (MY_LANG == 'tw')
+				$("#price_no").before('<span>NT$</span>');
+				
+			$("#price_no").hide().html('');
+			$("#price_no").fadeIn(1000).html(data.value);
 		}	
 	}, "json");
 }
@@ -1478,6 +1488,10 @@ $(function(){
 	        { view: "remove" , text: "全部清除" , label: false }
 	    ]
   	});
+  	
+  	if (MY_LANG == 'tw')
+  		simpleCart.currency( "NTD" );
+
   	
   	//Setup title
 	$('#mTitle').editable(function(value, settings) { 
