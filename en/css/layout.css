@@ -1,0 +1,15 @@
+@charset "utf-8";
+/* CSS Document */
+.index_title{width:100%;}
+.index_pic_bg{background-image:url(../images/index_bg.png); width:1000px; height:400px; float:none; margin:auto; padding-top:19px; background-repeat:no-repeat}
+.up_area{width:1000px; float:none; margin:auto; height:70px; position:relative;}
+#index_main{width:100%; float:none; margin:auto; margin-top:20px; background-color:#433127;}
+#index_main img{ width:300px; height:206px;}
+#index_main span{ width:310px; border:#fff solid 5px; float:left; }
+.item{float:right; width:750px;}
+.clear{ clear:both}
+.shopping_car{float:right; background-image:url(../images/shopping-cart.png); width:27px; height:25px; font-size:10px; font-family: Arial, Helvetica, sans-serif; color: #000; padding-top:6px; display:block; padding-left:4px}
+.p_main_layout{width:900px; float:none; margin:20px auto auto auto; background-color:#FFF; padding:30px;-moz-box-shadow: 1px 1px 5px #999; /* Firefox */
+-webkit-box-shadow: 1px 1px 5px #999; /* Safari 和 Chrome */
+box-shadow: 1px 1px 3px #999; /* Opera 10.5 + */}
+

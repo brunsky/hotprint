@@ -36,9 +36,9 @@ function MM_swapImage() { //v3.0
 <script>
 
 function switchLang(lang) {
-    if (lang == 'en') {
+    if (lang == 'tw') {
         $.removeCookie('lang', { path: '/' });
-        window.location = 'http://sandbox.hotprintcloud.com/en/';
+        window.location = 'http://sandbox.hotprintcloud.com/';
     }
 } 
     
@@ -51,7 +51,7 @@ function switchLang(lang) {
 	<!-- Start item -->
 	<div class="item">
     <!--<p style="height:38px">&nbsp;</p>
-    <a href="#"><div class="shopping_car" align="center">10</div></a>-->
+    <a href="#"><div class="shopping_car" align="center">10</div></a> -->
     <p id="login_link" align="right"><a href="#" onclick="switchLang('en')">English</a> | <a href="#" onclick="switchLang('tw')">繁體中文</a>&nbsp;&nbsp;&nbsp;</p>
     
 	<a href="http://sandbox.hotprintcloud.com/index.html" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image2','','images/item01_o.png',1)"><img src="images/item01.png" name="Image2" border="0" id="Image2" /></a>

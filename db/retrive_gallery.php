@@ -7,7 +7,7 @@ $connkey = $db->link_sip( "localhost", $DB_NAME, "root", "tomorrow");
 if ($connkey) {
 
 	$sql = sprintf(
-        "SELECT title_name, s_name, phone_type, phone_color, orig_img, s_save, saveimag, price from gallery WHERE userid='%s'", 
+        "SELECT title_name, s_name, phone_type, phone_color, orig_img, s_save, saveimag, price, currency from gallery WHERE userid='%s'", 
         	mysql_real_escape_string($_POST["userid"])
 		);
 	
@@ -22,7 +22,8 @@ if ($connkey) {
 					'orig_img'=>"/db".$pieces[1],
 					's_save'=>$result[$i]['s_save'],
 					'saveimag'=>$result[$i]['saveimag'],
-					'price'=>$result[$i]['price']);
+					'price'=>$result[$i]['price'],
+					'currency'=>$result[$i]['currency']);
 		array_push($data, $a);
 	}
 	echo json_encode($data);

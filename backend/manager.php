@@ -11,7 +11,6 @@
   <meta charset="utf-8" />
   <meta name="description" content="">
   <link rel="shortcut icon" href="../images/favicon.ico">
-  <link rel="stylesheet" href="../css/screen.css" type="text/css" id="main_css" media="screen" charset="utf-8">
   <link rel="stylesheet" type="text/css" href="../lib/jquery.ad-gallery.css">
   <link rel="stylesheet" href="../lib/messi.min.css" />
   <link rel='stylesheet' href='../lib/popbox.css' type='text/css' />
@@ -52,13 +51,35 @@
     	$("#comment").remove();
     	$("#galleryCanvas").remove();
     	$("#galleryCanvas")[0] = null;
-    	$('body').append('<span id="comment">設計編號：'+item_name+', 機殼型號：'+phone_type+', 顏色：'+color+'</span>');
-  		
+    	$('body').append('<div id="comment" style="top:2000px; position:absolute; z-index:-1">設計編號：'+item_name+', 機殼型號：'+phone_type+', 顏色：'+color+'</div>');
   		_producing_for_factory(saveimag, phone_type);
 
   	}
   	
   </script>
+  <style TYPE="text/css" MEDIA=screen>
+  #progress-bar {
+	border:1px solid #bebebe; 
+	background:#ffffff; 
+	width:310px; 
+	height:14px; 
+	text-align: center;
+	-moz-border-radius:10px; 
+	-webkit-border-radius:10px; 
+	-khtml-border-radius:10px; 
+	border-radius:10px;
+}
+
+#status {
+	background:#0066cc; 
+	width:0%; 
+	height:14px; 
+	-moz-border-radius:10px; 
+	-webkit-border-radius:10px; 
+	-khtml-border-radius:10px; 
+	border-radius:10px;
+}
+  </style>
   <title>後台管理介面</title>
 </head>
 <html>

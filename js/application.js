@@ -27,6 +27,7 @@
  var TITLE_NAME		= '';
  var maskImg;
  var isMenuEntry	= false;
+ var MY_LANG		= 'tw';		// support muti-language: en (English), tw (Traditional Chinese)
   
   var _init
   ,   _getUserData
@@ -501,9 +502,18 @@
 })(jQuery);
 
 function show_price(phone_type) {
-	$.post('db/bom.php', {"part_name":phone_type},function(data) {
+	$.post('db/bom.php', {"part_name":phone_type, "lang":MY_LANG},function(data) {
 		if(data.result == "ok") {
-			$("#price_no").html(data.value);
+			
+			// Set unit
+			$("#price_no").prev().remove('span');
+			if (MY_LANG == 'en')
+				$("#price_no").before('<span>US$</span>');
+			else if (MY_LANG == 'tw')
+				$("#price_no").before('<span>NT$</span>');
+				
+			$("#price_no").hide().html('');
+			$("#price_no").fadeIn(1000).html(data.value);
 		}	
 	}, "json");
 }
@@ -1478,6 +1488,10 @@ $(function(){
 	        { view: "remove" , text: "全部清除" , label: false }
 	    ]
   	});
+  	
+  	if (MY_LANG == 'tw')
+  		simpleCart.currency( "NTD" );
+
   	
   	//Setup title
 	$('#mTitle').editable(function(value, settings) { 

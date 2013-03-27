@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="">
+  <title>Print in Cloud</title>
+  <script src="http://www.google.com/jsapi?key="></script>
+  <script>
+    google.load("jquery", "1.5");
+  </script>
+  
+  <script>
+  $(function(){
+    console.log(location.hash.split('=')[1]);
+	$.get(location.hash.split('=')[1], function(data) { 
+	    
+	    var breakline = false;
+	    var token = '';
+	    var v_counter = 76;
+	    $('#content').append('擷取檔案：'+location.hash.split('=')[1]+'<br>');
+		$('#content').append('總字元數：'+data.length+'<br>');
+		for(var i = 0; i < data.length; i++) {
+           if(data.charCodeAt(i) >= 0x4E00 && data.charCodeAt(i) <= 0x9FA5) {
+                //$('#content').append(data[i]); 
+                token += data[i];
+                breakline = true;
+           }
+           else {
+               if (breakline && $('#content').html().indexOf(token) == -1) {
+                   $('#content').append('Msg_'+v_counter+' = '+token+'<br>');
+                   token = '';
+                   breakline = false;
+                   v_counter++;
+               }
+               else {
+                   token = '';
+                   breakline = false;
+               }
+           }
+       }
+	});
+  });
+  </script>
+</head>
+<body>
+<div id="content"></div>
+</body></html>
