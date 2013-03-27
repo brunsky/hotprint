@@ -1,8 +1,68 @@
 //////////////////////////////////////////////////
 // Show order history
 
+function check_detail(id) {
+		$('#detail_'+id).toggle();
+}
+
 function mode_history() {
-	
+	$.post("db/retrive_order.php", 
+			{ userid: $.cookie('user_id')},  
+			function(data) {
+				var order = $.parseJSON(data);
+				console.log(order);
+				
+				$('body').append('<div class="order_history" style="top:80px; left:20%; position:absolute" >'+
+    					'<p align="center" style="font-size:20px;"><strong>訂單記錄</strong></p>'+
+    					'<table width="800" border="0" align="center" cellpadding="0" cellspacing="0" id="table_sty">'+
+    					'<tr><td width="28%" class="title">編號</td>'+
+					        '<td width="27%" class="title">時間</td>'+
+					        '<td width="10%" class="title">數量</td>'+
+					        '<td width="10%" class="title">已付款</td>'+
+					        '<td width="15%" class="title">信用卡</td>'+
+					        '<td width="10%" class="title"> </td></tr>'+
+    					'</table></div>');
+				
+				$.each(order, function(i, item){
+					var detail = $.parseJSON(order[i].detail);
+					console.log(detail);
+					
+					$('#table_sty').append('<tr><td>'+order[i].order_no+'</td>'+
+									        '<td>'+order[i].c_time_local+'</td>'+
+									        '<td>'+detail.itemCount+'</td>'+
+									        '<td>'+order[i].payment+'</td>'+
+									        '<td>'+detail.card_no.replace(/.(?=.{4})/g, 'x')+'</td>'+
+									        '<td><a href="#" onClick="check_detail(\''+order[i].order_no+'\')">詳細</a></td></tr>');
+					// Detail information
+					var _info = '';
+					for(var j=1; j<=detail.itemCount; j++) {
+						
+						var img_path = detail['item_options_'+j].split(',')[0].split(': ')[1];
+						var title = detail['item_options_'+j].split(',')[1].split(': ')[1];
+						_info += '<img src="'+img_path+'" width="40" height="68" align="absmiddle"/> '+
+								title+', 單價：'+detail['item_price_'+j]+' x'+detail['item_quantity_'+j]+'</img>';
+						if (j%4 == 0)	_info += '<br>';
+					}					
+					
+					// Insert detail into row
+					$('#table_sty').append('<tr id="detail_'+order[i].order_no+'" style="display: none">'+
+											'<td colspan="6" style="text-align: left">'+'<br>'+_info+
+											'<br><br> 運送地址： '+ detail.shipping_addr+','+detail.shipping_city+
+											','+detail.shipping_country+'<br>'+
+											'<br>收件者： '+detail.shipping_name+'<br>'+
+											'<br>email： '+detail.shipping_email+'<br><br>'+
+											'</td></tr>');
+				});
+				
+				// Set bottom line
+				$('#table_sty').append('<tr><td height="38" class="title">&nbsp;</td>'+
+												  '<td class="title">&nbsp;</td>'+
+										          '<td class="title">&nbsp;</td>'+
+										          '<td class="title">&nbsp;</td>'+
+										          '<td class="title">&nbsp;</td>'+
+										          '<td class="title">&nbsp;</td></tr>');
+				
+			});
 }
 
 //////////////////////////////////////////////////
@@ -30,7 +90,7 @@ function switchNum(str){
 // Check if all the input is blnk or invalid 
 function checkValid() {
 	var isValid = true;
-
+	
 	$('.order :input').each(function() {
 		if ($(this).val() == "" && $(this).attr('id') != 'coupon_no') {
 			$(this).after("<span class='fillcheck'><font color='red'>請填寫！<font></span>");
@@ -122,7 +182,7 @@ function mod_checkout() {
 		});
 
 		$("#checkout_confirm").click(function() {
-			// remove valid checker if any
+			// Remove valid checker if any
 			$('.fillcheck').remove();
 			// Set checkout information
 			if ($("#checkout_confirm").val() == '確認資料' && $("#coupon_no").val() != '') {
@@ -136,10 +196,11 @@ function mod_checkout() {
 								var _n = parseFloat($(".simpleCart_total").html().replace('$', ''), 10).toFixed(2);
 								var _amount = parseFloat($(".simpleCart_quantity").html().replace('$', ''), 10).toFixed(2);
 								var discount = (_amount * data.value).toFixed(2);
+								
 								// Prevent negative price for some special discount (ex. VIP coupon)
 								if (_n - discount < 0)
 									discount = _n;
-									
+	
 								$(".simpleCart_total").html("")
 					                .fadeIn(300)
 					                .append("$" + (_n - discount).toFixed(2).toString());
@@ -219,7 +280,7 @@ function mod_gallery() {
     					'<p align="center" style="font-size:20px;"><strong>購物車</strong></p>'+
     					'<table width="650" border="0" align="center" cellpadding="0" cellspacing="0" id="table_sty">'+
     					'</table></div>');
-	
+  	
 	// Update event of cart
 	simpleCart.bind( 'update' , function() {
 		// Clear table row
@@ -233,12 +294,12 @@ function mod_gallery() {
 					          '<td width="15%" class="title">&nbsp;</td></tr>');
 		// For each itemRow
 		$('.itemRow').each(function(index) {
-
+			console.log($(this).children('.item-price').html());
 			$('#table_sty').append('<tr><td><img src="'+$(this).children('.item-image').html()+'" width="40" height="68" /></td>'+
 								  '<td>'+$(this).children('.item-title').html()+'</td>'+
-								  '<td>US'+$(this).children('.item-price').html()+'</td>'+
+								  '<td>'+$(this).children('.item-price').html()+'</td>'+
 								  '<td>'+$(this).children('.item-quantity').html()+'</td>'+
-								  '<td>US'+$(this).children('.item-total').html()+'</td>'+
+								  '<td>'+$(this).children('.item-total').html()+'</td>'+
 								  '<td><img id="cart2_'+$(this).attr('id')+'" style="cursor:pointer" src="css/images/delete.png" width="18" height="18" /></td></tr>');
 			
 			var $thisItem = $(this);
@@ -254,7 +315,7 @@ function mod_gallery() {
 										          '<td class="title">&nbsp;</td>'+
 										          '<td class="title">&nbsp;</td></tr>');
 		// Add summary line								          
-		$('#table_sty').append('<tr><td colspan="4" class="amount">總計 US'+$('.simpleCart_total').html()+'　</td>'+
+		$('#table_sty').append('<tr><td colspan="4" class="amount">總計 '+$('.simpleCart_total').html()+'　</td>'+
 												'<td style="border-bottom: none;"><div class="checkout">結帳</div></td></tr>');
 												
 			
@@ -290,46 +351,24 @@ function mod_gallery() {
 					
 					var json = $.parseJSON(data);
 					$.each(json, function(key, val) {
-							$('#gallery').append('<div class="simpleCart_shelfItem">'+
-							'<div class="list_pic"><img src="'+val.orig_img+'" alt="image" width="120" height="202"/></div>'+
-							'<span class="item_image" style="display:none">'+val.orig_img+'</span>'+
-							'<div class="list_txt"><p><strong class="item_title">'+val.title_name+'</strong><span class="item_name" style="display:none">'+val.s_name+'</span></p>'+
-							'<p>'+val.phone_type+' / '+val.phone_color+'</p>'+
-							'<p><span class="item_price">US$'+val.price+'</span></p>'+
-							'<a class="item_add" href="javascript:;"><img src="css/images/add_shoppingcar.png" width="18" height="18" /></a></div>');
+						// set currency
+						var currency = '';
+						if (val.currency == 'USD')
+							currency = 'US$';
+						else if (val.currency == 'NTD')
+							currency = 'NT$';
+						else
+							currency = 'US$';
+							
+						$('#gallery').append('<div class="simpleCart_shelfItem">'+
+						'<div class="list_pic"><img src="'+val.orig_img+'" alt="image" width="120" height="202"/></div>'+
+						'<span class="item_image" style="display:none">'+val.orig_img+'</span>'+
+						'<div class="list_txt"><p><strong class="item_title">'+val.title_name+'</strong><span class="item_name" style="display:none">'+val.s_name+'</span></p>'+
+						'<p>'+val.phone_type+' / '+val.phone_color+'</p>'+
+						'<p><span class="item_price">'+currency+val.price+'</span></p>'+
+						'<a class="item_add" href="javascript:;"><img src="css/images/add_shoppingcar.png" width="18" height="18" /></a></div>');
 
-						});
-					
-					/*  取圖臨時方法
-					if ($.cookie('user_id') == '1587166409' || 
-						$.cookie('user_id') == '100004857218710' || 
-						$.cookie('user_id') == '527379830' ||
-						$.cookie('user_id') == '54327628' ||
-						$.cookie('user_id') == '1709821659') { // Brunsky, Mark, James. Mark's wife
-						$.each(json, function(key, val) {
-							$('#gallery').append('<div class="simpleCart_shelfItem">'+
-							'<div class="list_pic"><img src="'+val.orig_img+'" alt="image" width="120" height="202"/></div>'+
-							'<div class="list_txt item_name"><p><strong>'+val.phone_type+'</strong></p>'+
-							'<p>'+val.phone_color+' / '+
-							'<span class="item_price">$'+val.price+'</span></p>'+
-							'<a class="item_add" href="javascript:;"><img src="css/images/add_shoppingcar.png" width="18" height="18" /></a>'+
-							'<input type="button" value="產生原圖" onClick="_send_factory(\''+val.s_save+'\')">'+'</div>');
-						});
-
-					}
-					else {
-						$.each(json, function(key, val) {
-							$('#gallery').append('<div class="simpleCart_shelfItem">'+
-							'<div class="list_pic"><img src="'+val.orig_img+'" alt="image" width="120" height="202"/></div>'+
-							'<div class="list_txt item_name"><p><strong>'+val.phone_type+'</strong></p>'+
-							'<p>'+val.phone_color+' / '+
-							'<span class="item_price">$'+val.price+'</span></p>'+
-							'<a class="item_add" href="javascript:;"><img src="css/images/add_shoppingcar.png" width="18" height="18" /></a></div>');
-
-						});
-					}
-					*/
-					
+					});
 		});
 	}
 	
@@ -425,7 +464,8 @@ function mod_saving(func_complete) {
 					phone_type: PHONE_NAME,
 					layout_no: LAYOUT_NAME,
 					phone_color: PHONE_COLOR,
-					orig_img: resCanvas.toDataURL()},  
+					orig_img: resCanvas.toDataURL(),
+					lang: MY_LANG},  
 				function(data) {
 					// Empty title name
 					TITLE_NAME = '';

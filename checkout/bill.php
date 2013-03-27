@@ -21,6 +21,7 @@ $pay_user_email = mysql_real_escape_string($_POST['shipping_email']);
 $token = $_POST['token'];
 $type = $_POST['type'];
 $c_time_local = $_POST['c_time'];
+$coupon_no = mysql_real_escape_string($_POST['coupon_no']);
 
 if (!$user_id || !$card_no || !$cvv2 || !$expiry_date) {
   header( $redirect_url.'#token='.$token.'&source='.$type.'&b=cancel' ) ;
@@ -207,6 +208,14 @@ if ($connkey_billing) {
         		$pay_date,
 				$TWD_amount,
 				$od_sob
+			);
+		$result = $db->sql($sql);
+		
+		$sql = sprintf(
+        		"UPDATE coupon SET userid='%s', date='%s' WHERE code='%s'", 
+        		$user_id,
+				$pay_date,
+				$coupon_no
 			);
 		$result = $db->sql($sql);
         /*
