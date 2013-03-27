@@ -464,8 +464,7 @@ function mod_saving(func_complete) {
 					phone_type: PHONE_NAME,
 					layout_no: LAYOUT_NAME,
 					phone_color: PHONE_COLOR,
-					orig_img: resCanvas.toDataURL(),
-					lang: MY_LANG},  
+					orig_img: resCanvas.toDataURL()},  
 				function(data) {
 					// Empty title name
 					TITLE_NAME = '';
