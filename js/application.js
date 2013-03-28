@@ -27,8 +27,9 @@
  var TITLE_NAME		= '';
  var maskImg;
  var isMenuEntry	= false;
- var MY_LANG		= 'tw';		// support muti-language: en (English), tw (Traditional Chinese)
-  
+ var MY_LANG		= 'en';		// support muti-language: en (English), tw (Traditional Chinese)
+ var DOLLAR_SIGN	= '$';
+ 
   var _init
   ,   _getUserData
   ,   _displayUserData
@@ -50,9 +51,9 @@
   ;
  
 (function(){
- 
+	
   $.extend({
-    instagramr: function(){
+    social_connect: function(){
       _init();
     }
   });
@@ -100,8 +101,8 @@
 				$("body").append('<div class="modalOverlay"></div>');
 		    	if ( b_feedback.split('=')[1]  == 'succeed') {
 		    		
-					new Messi('您已經付款成功! 可以隨時檢視出貨進度<br>或者繼續設計新的作品。', 
-						{title: '恭喜!', 
+					new Messi($.i18n.prop('Msg_20'), 
+						{title: $.i18n.prop('Msg_21'), 
 						 buttons: [{id: 0, label: 'Close', val: 'C'}], 
 						 callback: function(val, content) {  
 							$('.modalOverlay').remove();
@@ -111,8 +112,8 @@
 		    	}
 		    	else { // billing failed
 		    		
-		    		new Messi('剛剛的付款並未成功，您的信用卡沒有產生任何扣款記錄<br><br>請確認付款流程是否有誤，或稍後再試。', 
-						{title: '付款失敗', 
+		    		new Messi($.i18n.prop('Msg_22'), 
+						{title: $.i18n.prop('Msg_23'), 
 						 buttons: [{id: 0, label: 'Close', val: 'C'}], 
 						 callback: function(val, content) {  
 							$('.modalOverlay').remove();
@@ -249,6 +250,10 @@
       if ($.cookie('source') == null)
       	$.cookie('source', source_type);
       $('body').addClass('logged-in');
+      
+      // hide tip
+    	$('.tip').fadeOut(1000);
+    	
 	  _getUserData();
 	  bindFunc();
   };
@@ -380,6 +385,10 @@
   		if ($.cookie('source') == null)
       		$.cookie('source', source_type);
     	$('body').addClass('logged-in');
+    	
+    	// hide tip
+    	$('.tip').fadeOut(1000);
+    	
 	  	bindFunc();
 	  	
 	  	// get album list access_token
@@ -507,10 +516,14 @@ function show_price(phone_type) {
 			
 			// Set unit
 			$("#price_no").prev().remove('span');
-			if (MY_LANG == 'en')
+			if (MY_LANG == 'en') {
 				$("#price_no").before('<span>US$</span>');
-			else if (MY_LANG == 'tw')
+				DOLLAR_SIGN = 'US$';
+			}
+			else if (MY_LANG == 'tw') {
 				$("#price_no").before('<span>NT$</span>');
+				DOLLAR_SIGN = 'NT$';
+			}
 				
 			$("#price_no").hide().html('');
 			$("#price_no").fadeIn(1000).html(data.value);
@@ -893,7 +906,7 @@ function menuLoadPhone(_phoneName) {
 			$('#menu_type').html('iPhone 4/4S').fadeIn(300);
 			PHONE_COLOR = 'white';
 			$.cookie('phone_color', PHONE_COLOR);
-			$('#menu_color').html('白色').fadeIn(300);
+			$('#menu_color').html($.i18n.prop('Msg_13')).fadeIn(300);
 			$('#white.color_item').parent().show();
 			$('#black.color_item').parent().hide();
 			$('#trans.color_item').parent().hide();
@@ -903,7 +916,7 @@ function menuLoadPhone(_phoneName) {
 			if(PHONE_COLOR == 'black') {
 				PHONE_COLOR = 'white';
 				$.cookie('phone_color', PHONE_COLOR);
-				$('#menu_color').html('白色').fadeIn(300);
+				$('#menu_color').html($.i18n.prop('Msg_13')).fadeIn(300);
 			}
 			$('#white.color_item').parent().show();
 			$('#black.color_item').parent().hide();
@@ -914,7 +927,7 @@ function menuLoadPhone(_phoneName) {
 			if(PHONE_COLOR == 'black') {
 				PHONE_COLOR = 'white';
 				$.cookie('phone_color', PHONE_COLOR);
-				$('#menu_color').html('白色').fadeIn(300);
+				$('#menu_color').html($.i18n.prop('Msg_13')).fadeIn(300);
 			}
 			$('#white.color_item').parent().show();
 			$('#black.color_item').parent().hide();
@@ -928,8 +941,8 @@ function menuLoadPhone(_phoneName) {
 	}
 	if ($('.canvas_appended').length != 0 ) {
 		$("body").append('<div class="modalOverlay"></div>');
-		new Messi('您確定要切換手機嗎？所有的圖片將會被清空！', 
-			{title: '切換手機', 
+		new Messi($.i18n.prop('Msg_24'), 
+			{title: $.i18n.prop('Msg_25'), 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 
 			callback: function(val) {  
@@ -965,19 +978,19 @@ function menuLoadColor(_phoneColor) {
 		$('.color').find('.hovered').toggleClass('hovered');
 		$('#'+_phoneColor).parent().toggleClass('hovered');
 		if(_phoneColor === 'white') {
-			$('#menu_color').html('白色').fadeIn(300);
+			$('#menu_color').html($.i18n.prop('Msg_13')).fadeIn(300);
 		}
 		else if(_phoneColor === 'black') {
-			$('#menu_color').html('黑色').fadeIn(300);
+			$('#menu_color').html($.i18n.prop('Msg_14')).fadeIn(300);
 		}
 		else if(_phoneColor === 'trans') {
-			$('#menu_color').html('透明').fadeIn(300);
+			$('#menu_color').html($.i18n.prop('Msg_15')).fadeIn(300);
 		}
 	}
 	if ($('.canvas_appended').length != 0 ) {
 		$("body").append('<div class="modalOverlay"></div>');
-		new Messi('您確定要切換背蓋顏色嗎？所有的圖片將會被清空！', 
-			{title: '切換背蓋顏色', 
+		new Messi($.i18n.prop('Msg_26'), 
+			{title: $.i18n.prop('Msg_26_1'), 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 
 			callback: function(val) {  
@@ -1019,8 +1032,8 @@ function menuLoadLayout(_layoutName) {
 	
 	if ($('.canvas_appended').length != 0 ) {
 		$("body").append('<div class="modalOverlay"></div>');
-		new Messi('您確定要切換版型嗎？所有的圖片將會被清空！', 
-			{title: '切換版型', 
+		new Messi($.i18n.prop('Msg_27'), 
+			{title: $.i18n.prop('Msg_27_1'), 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 
 			callback: function(val) {  
@@ -1104,7 +1117,7 @@ function setContainer(){
   
 function setFooterTop(){  
 	$('#tip1').css('left', Math.round(parseInt($('#popbox > .open').offset().left, 10))-60);
-	$('#tip3').css('left', Math.round(parseInt($('#popbox > .open').offset().left, 10))-60);
+	$('#tip3').css('left', Math.round(parseInt($('#popbox > .open').offset().left, 10))-160);
     //$('.recent').css('width',$(document).width()+'px');
 	//$('.ad-gallery').css('width',($(document).width()-70)+'px');
 
@@ -1263,8 +1276,8 @@ function openHistory() {
 function openFromMainMenu(pagename) {
 	if (PAGE == 'Checkout') {
 		$("body").append('<div class="modalOverlay"></div>');
-		new Messi('您尚未完成付款喔!確定要取消嗎？', 
-			{title: '取消付款', 
+		new Messi($.i18n.prop('Msg_28'), 
+			{title: $.i18n.prop('Msg_29'), 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 
 			 callback: function(val, content) {  
@@ -1277,8 +1290,8 @@ function openFromMainMenu(pagename) {
 	}
 	else if (PAGE == 'Design' && $('.canvas_appended').length != 0 ) {
 		$("body").append('<div class="modalOverlay"></div>');
-		new Messi('您確定要離開設計頁面嗎？所有的圖片將會被清空！', 
-			{title: '離開設計頁面', 
+		new Messi($.i18n.prop('Msg_30'), 
+			{title: $.i18n.prop('Msg_31'), 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 
 			 callback: function(val, content) {  
@@ -1324,8 +1337,8 @@ function newPage(page) {
 		     return(TITLE_NAME);
 		  },{
 		 	onblur : "submit",
-		 	placeholder : "未命名",
-		 	tooltip : "請輸入名稱",
+		 	placeholder : $.i18n.prop('Msg_32'),
+		 	tooltip : $.i18n.prop('Msg_33'),
 		 	style : "display: inline"
 		 });
 	}
@@ -1433,6 +1446,51 @@ function loadPriceTag(isShow) {
  * Initialize on DOM Ready
  */ 
 $(function(){
+	
+	// loading language
+	$.i18n.properties({
+	    name:'Messages', 
+	    path:'lang/', 
+	    mode:'map',
+	    language:MY_LANG, 
+	    callback: function() {
+	        
+	        // setup index.html
+	        $('#logo').attr('title', $.i18n.prop('Msg_1'));
+	        $('#start-design').html($.i18n.prop('Msg_2'));
+	        $('#clear-design').html($.i18n.prop('Msg_3'));
+	        $('#random-design').html($.i18n.prop('Msg_4'));
+	        $('#save-design').html($.i18n.prop('Msg_5'));
+	        $('#my-gallery').html($.i18n.prop('Msg_6'));
+	        $('#go-to-my-gallery').html($.i18n.prop('Msg_6'));
+	        $('.open').html($.i18n.prop('Msg_7'));
+	        $('#go-to-my-order-history').html($.i18n.prop('Msg_8'));
+	        $('#logout').html($.i18n.prop('Msg_9'));
+	        $('#instagram-source-login').attr('title', $.i18n.prop('Msg_18', 'Instagram'));
+	        $('#facebook-source-login').attr('title', $.i18n.prop('Msg_18', 'facebook'));
+	        $('#trans_fee_text').html($.i18n.prop('Msg_19'));
+	        
+	        //menubar
+	        $('#model_name').html($('#model_name').html().replace('{Msg_10}', $.i18n.prop('Msg_10')));
+	        $('#model_layout').html($('#model_layout').html().replace('{Msg_11}', $.i18n.prop('Msg_11')));     
+	        $('#model_color').html($('#model_color').html().replace('{Msg_12}', $.i18n.prop('Msg_12')));
+	        $('#menu_color').html($('#menu_color').html().replace('{Msg_13}', $.i18n.prop('Msg_13')));
+	        $('#white').html($('#white').html().replace('{Msg_13}', $.i18n.prop('Msg_13')));
+	        $('#black').html($('#black').html().replace('{Msg_14}', $.i18n.prop('Msg_14')));
+	        $('#trans').html($('#trans').html().replace('{Msg_15}', $.i18n.prop('Msg_15')));
+	        // show menubar after loading language
+	        $('#menubar').fadeIn(300);
+	        
+	        // execut main process
+			main();
+	
+	    }
+	});
+
+
+});
+
+function main() {
 	// For firefox, to dealing with wrong dragging position
 	if (navigator.userAgent.indexOf("Firefox")!=-1) {
 		$('body').css('overflow', 'auto');
@@ -1441,9 +1499,9 @@ $(function(){
     // Check browser version
     $("body").iealert({
 		support: "ie8",
-		title: "您的瀏覽器版本太老舊了!",
-		text: "為了更好、更安全的使用體驗 <br>請<font color=\"red\">立即更新</font>您的瀏覽器吧。",
-		upgradeTitle: "立即更新"
+		title: $.i18n.prop('Msg_34'),
+		text: $.i18n.prop('Msg_35'),
+		upgradeTitle: $.i18n.prop('Msg_36')
 	});
 	
 	setAccordionMenu();
@@ -1455,13 +1513,13 @@ $(function(){
 	if ($.cookie('phone_color')) {
 		PHONE_COLOR = $.cookie('phone_color');
 		if(PHONE_COLOR === 'white') {
-			$('#menu_color').html('白色').fadeIn(300);
+			$('#menu_color').html($.i18n.prop('Msg_13')).fadeIn(300);
 		}
 		else if(PHONE_COLOR === 'black') {
-			$('#menu_color').html('黑色').fadeIn(300);
+			$('#menu_color').html($.i18n.prop('Msg_14')).fadeIn(300);
 		}
 		else if(PHONE_COLOR === 'trans') {
-			$('#menu_color').html('透明').fadeIn(300);
+			$('#menu_color').html($.i18n.prop('Msg_15')).fadeIn(300);
 		}
 	}
 	if($.cookie('layout_name'))
@@ -1473,44 +1531,55 @@ $(function(){
 	    cartColumns: [
 	        { view: function( item , column ){
         		return item.get('name')
-  				} , attr: "name" , label: "名稱" } ,
-	        { attr: "price" , label: "價格", view: 'currency' } ,
+  				} , attr: "name" , label: $.i18n.prop('Msg_37') } ,
+	        { attr: "price" , label: $.i18n.prop('Msg_38'), view: 'currency' } ,
 	        { attr: "title" , label: "Title" },
 	        { attr: "image" , label: "Image" },
 	        { view: "decrement" , label: false , text: "-" } ,
 	        { view: function( item , column ){
         		return item.quantity()
-  				} , attr: "quantity" , label: "數量" } ,
+  				} , attr: "quantity" , label: $.i18n.prop('Msg_39') } ,
 	        { view: "increment" , label: false , text: "+" } ,
 	        { view: function( item , column ){
         		return simpleCart.toCurrency(item.get('total'))
-  				} ,attr: "total" , label: "小計" } ,
-	        { view: "remove" , text: "全部清除" , label: false }
+  				} ,attr: "total" , label: $.i18n.prop('Msg_40') } ,
+	        { view: "remove" , text: $.i18n.prop('Msg_41') , label: false }
 	    ]
   	});
   	
-  	if (MY_LANG == 'tw')
+  	// language setting
+  	if (MY_LANG == 'tw') {
   		simpleCart.currency( "NTD" );
+  		        
+        // load tip
+        $('#tip1').css('background-image', 'url(css/images/icons2.png)').fadeIn(1000);
+        $('#tip2').css('background-image', 'url(css/images/icons2.png)').fadeIn(1000);
+        $('#tip3').css('background-image', 'url(css/images/icons2.png)').fadeIn(1000);
+  	}
+  	else {
+  		$('#tip1').css('background-image', 'url(css/images/icons2_en.png)').fadeIn(1000);
+  		$('#tip2').css('background-image', 'url(css/images/icons2_en.png)').fadeIn(1000);
+  		$('#tip3').css('background-image', 'url(css/images/icons2_en.png)').fadeIn(1000);
+  	}
 
-  	
   	//Setup title
 	$('#mTitle').editable(function(value, settings) { 
 	     TITLE_NAME = $.trim(value);
 	     return(TITLE_NAME);
 	  },{
 	 	onblur : "submit",
-	 	placeholder : "未命名",
-	 	tooltip : "請輸入名稱",
+	 	placeholder : $.i18n.prop('Msg_32'),
+	 	tooltip : $.i18n.prop('Msg_33'),
 	 	style : "display: inline"
 	 });
-	
-    $.instagramr();
+	 
+	$.social_connect();
     
     $('#start-design').hide();
     $('#my-gallery').hide();
     
     $('#popbox').popbox();
-});
+}
 
 $(window).resize(function() { setContainer();setFooterTop()}); 
 $(window).scroll(function() { setFooterTop();});
