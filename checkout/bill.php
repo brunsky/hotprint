@@ -22,6 +22,7 @@ $type = $_POST['type'];
 $c_time_local = $_POST['c_time'];
 $coupon_no = mysql_real_escape_string($_POST['coupon_no']);
 $lang = $_POST['lang'];
+$currency = $_POST['currency'];
 
 if (!$user_id || !$card_no || !$cvv2 || !$expiry_date) {
   header( $redirect_url.'#token='.$token.'&source='.$type.'&b=cancel' ) ;
@@ -64,7 +65,10 @@ if ($connkey_billing) {
   // 刷卡金額7位數, 左邊補0
   //$TWD_amount = (int)($apk_price*33);
   // 只要不是整數, 無條件進1
-  $TWD_amount = $price * $USD2TWD;
+  if ($currency == "NTD")
+  	$TWD_amount = $price;
+  else
+  	$TWD_amount = $price * $USD2TWD;
   $temp_TWD_amount = (int)($TWD_amount);
   if ($TWD_amount > $temp_TWD_amount) {
     $TWD_amount = (int)($TWD_amount+1);

@@ -26,23 +26,24 @@ function mode_history() {
 				$.each(order, function(i, item){
 					var detail = $.parseJSON(order[i].detail);
 					console.log(detail);
-					
-					$('#table_sty').append('<tr><td>'+order[i].order_no+'</td>'+
-									        '<td>'+order[i].c_time_local+'</td>'+
-									        '<td>'+detail.itemCount+'</td>'+
-									        '<td>'+order[i].payment+'</td>'+
-									        '<td>'+detail.card_no.replace(/.(?=.{4})/g, 'x')+'</td>'+
-									        '<td><a href="#" onClick="check_detail(\''+order[i].order_no+'\')">'+$.i18n.prop('Msg_47')+'</a></td></tr>');
 					// Detail information
 					var _info = '';
+					var _total = 0;
 					for(var j=1; j<=detail.itemCount; j++) {
-						
+						_total += (parseInt(detail['item_quantity_'+j]) || 0);
 						var img_path = detail['item_options_'+j].split(',')[0].split(': ')[1];
 						var title = detail['item_options_'+j].split(',')[1].split(': ')[1];
 						_info += '<img src="'+img_path+'" width="40" height="68" align="absmiddle"/> '+
 								title+', '+$.i18n.prop('Msg_48')+'：'+detail['item_price_'+j]+' x'+detail['item_quantity_'+j]+'</img>';
 						if (j%4 == 0)	_info += '<br>';
-					}					
+					}		
+					
+					$('#table_sty').append('<tr><td>'+order[i].order_no+'</td>'+
+				        '<td>'+order[i].c_time_local+'</td>'+
+				        '<td>'+_total+'</td>'+
+				        '<td>'+order[i].payment+'</td>'+
+				        '<td>'+detail.card_no.replace(/.(?=.{4})/g, 'x')+'</td>'+
+				        '<td><a href="#" onClick="check_detail(\''+order[i].order_no+'\')">'+$.i18n.prop('Msg_47')+'</a></td></tr>');			
 					
 					// Insert detail into row
 					$('#table_sty').append('<tr id="detail_'+order[i].order_no+'" style="display: none">'+
@@ -237,6 +238,7 @@ function mod_checkout() {
 				if (checkValid() == false) {
 					return;
 				}
+
 				simpleCart({
 				    checkout: { 
 				    	type: "SendForm" , 
@@ -252,14 +254,15 @@ function mod_checkout() {
 				          expiry_date: switchNum($("#expiry_date").val()),
 				          cvc_no: $("#cvc_no").val(),
 				          coupon_no: $("#coupon_no").val(),
-				          total: $(".simpleCart_total").html().replace('$', ''),
+				          total: simpleCart.grandTotal(),
 				          shipping_email: $("#shipping_email").val(),
 				          shipping_name: $("#shipping_name").val(),
 				          shipping_addr: $("#shipping_address").val(),
 				          shipping_city: $("#shipping_city").val(),
 				          shipping_country: $("#countrySelect :selected").text(),
 				          c_time: get_time(),
-				          lang: MY_LANG
+				          lang: MY_LANG,
+				          currency: simpleCart.currency().code
 				        }
 				    }
 			  	});
