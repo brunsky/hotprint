@@ -202,17 +202,20 @@ function mod_checkout() {
 			// Remove valid checker if any
 			$('.fillcheck').remove();
 			// Set checkout information
-			if ($("#checkout_confirm").val() == $.i18n.prop('Msg_52') && $("#coupon_no").val() != '') {
+			if ($("#checkout_confirm").val() == $.i18n.prop('Msg_91') && $("#coupon_no").val() != '') {
+					$("#couponcheck").remove();
 					$.post('checkout/coupon.php', 
 					
 						{"code":$("#coupon_no").val(),
-						 "userid":$.cookie('user_id')},
+						 "userid":$.cookie('user_id'),
+						 "currency": simpleCart.currency().code},
 						 
 						function(data) {
+							console.log(data);
 							if(data.result == "ok") {
-								var _n = parseFloat($(".simpleCart_total").html().replace('$', ''), 10).toFixed(2);
-				 				var _amount = parseFloat($(".simpleCart_quantity").html().replace('$', ''), 10).toFixed(2);
-								var discount = (_amount * data.value).toFixed(2);
+								var _n = parseFloat(simpleCart.grandTotal(), 10).toFixed(2);
+				 				//var _amount = parseInt($(".simpleCart_quantity").html(), 10);
+								var discount = data.value;
 								
 								// Prevent negative price for some special discount (ex. VIP coupon)
 								if (_n - discount < 0)
@@ -221,17 +224,21 @@ function mod_checkout() {
 								$(".simpleCart_total").html("")
 					                .fadeIn(300)
 					                .append(DOLLAR_SIGN + (_n - discount).toFixed(2).toString());
-					            $("#coupon_no").after('<font color="red">'+$.i18n.prop('Msg_53')+DOLLAR_SIGN+discount+'</font>');
+					            $("#coupon_no").after('<span id="couponcheck"><font color="red">'+$.i18n.prop('Msg_53')+' '+DOLLAR_SIGN+discount+'</font></span>');
+								$("#checkout_confirm").val($.i18n.prop('Msg_57'));
 							}
 							else {
 								if (data.value == 'used')
-									$("#coupon_no").after('<font color="red">'+$.i18n.prop('Msg_54')+'</font>');
+									$("#coupon_no").after('<span id="couponcheck"><font color="red">'+$.i18n.prop('Msg_54')+'</font></span>');
 								else if( (data.value == 'invalid'))
-									$("#coupon_no").after('<font color="red">'+$.i18n.prop('Msg_55')+'</font>');
+									$("#coupon_no").after('<span id="couponcheck"><font color="red">'+$.i18n.prop('Msg_55')+'</font></span>');
+								else if( (data.value == 'due'))
+									$("#coupon_no").after('<span id="couponcheck"><font color="red">'+$.i18n.prop('Msg_93')+'</font></span>');
 								else
-									$("#coupon_no").after('<font color="red">'+$.i18n.prop('Msg_56')+'</font>');
+									$("#coupon_no").after('<span id="couponcheck"><font color="red">'+$.i18n.prop('Msg_56')+'</font></span>');
+								$("#coupon_no").val('');
 							}
-							$("#checkout_confirm").val($.i18n.prop('Msg_57'));
+							
 						}, "json");
 			}
 			else {
