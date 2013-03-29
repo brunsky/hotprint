@@ -109,15 +109,20 @@ function mod_checkout() {
 	
 	$order.load('checkout/checkout.html?v='+(new Date()).getTime(), function(){
 		
+		// Setup helper
 		dust.helpers.i18n = function (chunk, ctx, bodies, params) {
 		  var key = dust.helpers.tap(params.key, chunk, ctx);
 		  return chunk.write($.i18n.map[key]);
 		};
 		var compiled = dust.compile($(this).html(), "checkout");
 		dust.loadSource(compiled);
+		// rendering html by helper
 		dust.render("checkout", null, function(err, out) {
-		  console.log(out);
+		  $order.html(out);
 		});
+		// change text manually
+		$('#checkout_cancel').val($.i18n.prop('Msg_90'));
+		$('#checkout_confirm').val($.i18n.prop('Msg_91'));
 
 		/* // 這是比較炫的信用卡輸入頁面
 		$('#card_number').validateCreditCard(function(result) {
@@ -205,7 +210,7 @@ function mod_checkout() {
 						function(data) {
 							if(data.result == "ok") {
 								var _n = parseFloat($(".simpleCart_total").html().replace('$', ''), 10).toFixed(2);
-								var _amount = parseFloat($(".simpleCart_quantity").html().replace('$', ''), 10).toFixed(2);
+				 				var _amount = parseFloat($(".simpleCart_quantity").html().replace('$', ''), 10).toFixed(2);
 								var discount = (_amount * data.value).toFixed(2);
 								
 								// Prevent negative price for some special discount (ex. VIP coupon)
@@ -253,7 +258,8 @@ function mod_checkout() {
 				          shipping_addr: $("#shipping_address").val(),
 				          shipping_city: $("#shipping_city").val(),
 				          shipping_country: $("#countrySelect :selected").text(),
-				          c_time: get_time()
+				          c_time: get_time(),
+				          lang: MY_LANG
 				        }
 				    }
 			  	});
@@ -291,6 +297,14 @@ function mod_gallery() {
     					'<p align="center" style="font-size:20px;"><strong>'+$.i18n.prop('Msg_58')+'</strong></p>'+
     					'<table width="650" border="0" align="center" cellpadding="0" cellspacing="0" id="table_sty">'+
     					'</table></div>');
+    		
+    // Check language and currency before add			
+    simpleCart.bind( 'beforeAdd' , function( item ) {
+		if (item.fields().currency != simpleCart.currency().code) {
+			alert($.i18n.prop('Msg_92'));
+			return false;
+		}
+    });
   	
 	// Update event of cart
 	simpleCart.bind( 'update' , function() {
@@ -305,7 +319,7 @@ function mod_gallery() {
 					          '<td width="15%" class="title">&nbsp;</td></tr>');
 		// For each itemRow
 		$('.itemRow').each(function(index) {
-			console.log($(this).children('.item-price').html());
+
 			$('#table_sty').append('<tr><td><img src="'+$(this).children('.item-image').html()+'" width="40" height="68" /></td>'+
 								  '<td>'+$(this).children('.item-title').html()+'</td>'+
 								  '<td>'+$(this).children('.item-price').html()+'</td>'+
@@ -350,8 +364,8 @@ function mod_gallery() {
 			$('.checkout').show();
 	});
 	
-	// Update Shopping Cart
-	simpleCart.update();
+	// Init Shopping Cart
+	simpleCart.init();
 	
 	if($.cookie('user_id')) {
 		$.post("db/retrive_gallery.php", 
@@ -365,11 +379,11 @@ function mod_gallery() {
 						// set currency
 						var currency = '';
 						if (val.currency == 'USD')
-							currency = 'US$';
+							currency = 'USD';
 						else if (val.currency == 'NTD')
-							currency = 'NT$';
+							currency = 'NTD';
 						else
-							currency = 'US$';
+							currency = 'USD';
 							
 						$('#gallery').append('<div class="simpleCart_shelfItem">'+
 						'<div class="list_pic"><img src="'+val.orig_img+'" alt="image" width="120" height="202"/></div>'+
@@ -377,6 +391,7 @@ function mod_gallery() {
 						'<div class="list_txt"><p><strong class="item_title">'+val.title_name+'</strong><span class="item_name" style="display:none">'+val.s_name+'</span></p>'+
 						'<p>'+val.phone_type+' / '+val.phone_color+'</p>'+
 						'<p><span class="item_price">'+currency+val.price+'</span></p>'+
+						'<span class="item_currency" style="display:none">'+currency+'</span>'+
 						'<a class="item_add" href="javascript:;"><img src="css/images/add_shoppingcar.png" width="18" height="18" /></a></div>');
 
 					});

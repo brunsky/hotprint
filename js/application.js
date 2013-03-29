@@ -1446,6 +1446,23 @@ function loadPriceTag(isShow) {
  * Initialize on DOM Ready
  */ 
 $(function(){
+
+	simpleCart.load(); // Load local storage at first
+	console.log('cart currency:'+simpleCart.currency().code);
+	console.log('cart quantity:'+simpleCart.quantity());
+	console.log('cookie lang:'+$.cookie('lang'));
+		
+	// Check language
+	if ($.cookie('lang') == null) {
+		$.cookie('lang', 'en', { path: '/' });
+		MY_LANG = "en";
+		
+		// empty shopping cart
+		simpleCart.empty();
+	}
+	else {
+		MY_LANG = $.cookie('lang');
+	}
 	
 	// loading language
 	$.i18n.properties({
@@ -1483,7 +1500,10 @@ $(function(){
 	        
 	        // execut main process
 			main();
-	
+			console.log('\n after init...')
+			console.log('cart currency:'+simpleCart.currency().code);
+			console.log('cart quantity:'+simpleCart.quantity());
+			console.log('cookie lang:'+$.cookie('lang'));
 	    }
 	});
 
@@ -1557,6 +1577,8 @@ function main() {
         $('#tip3').css('background-image', 'url(css/images/icons2.png)').fadeIn(1000);
   	}
   	else {
+  		simpleCart.currency( "USD" );
+  		
   		$('#tip1').css('background-image', 'url(css/images/icons2_en.png)').fadeIn(1000);
   		$('#tip2').css('background-image', 'url(css/images/icons2_en.png)').fadeIn(1000);
   		$('#tip3').css('background-image', 'url(css/images/icons2_en.png)').fadeIn(1000);

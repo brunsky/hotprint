@@ -38,6 +38,8 @@ function MM_swapImage() { //v3.0
 function switchLang(lang) {
     if (lang == 'en') {
         $.removeCookie('lang', { path: '/' });
+        // empty shopping cart
+        simpleCart.empty();
         window.location = 'http://sandbox.hotprintcloud.com/en/';
     }
 } 

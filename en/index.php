@@ -5,6 +5,7 @@
 <title>Hotprint Cloud</title>
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script type="text/javascript" src="../lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="../lib/simpleCart.js"></script>
 <link href="css/layout.css" rel="stylesheet" type="text/css" />
 <link rel="shortcut icon" href="images/favicon.ico">
 <style type="text/css">
