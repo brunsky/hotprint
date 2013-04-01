@@ -115,8 +115,8 @@ section {
 	position:absolute;
 	top:0px;
 	left:0px;  
+	/*background:#111111#B00000;*/
 	background:#111111;
-	/*background:#B00000;*/
 	width:100%;
 	height:55px;
 	
@@ -286,14 +286,12 @@ body.not-logged-in #my-gallery { display: none; }
 body.not-logged-in #clear-design { display: none; }
 body.not-logged-in #logoutZone { display: none; }
 body.not-logged-in #loginZone { display: block; }
-body.not-logged-in .tip { display: block; }
 
 body.logged-in #save-design { display: block; }
 body.logged-in #random-design { display: block; }
 body.logged-in #clear-design { display: block; }
 body.logged-in #logoutZone { display: block; }
 body.logged-in #loginZone { display: none; }
-body.logged-in .tip { display: none; }
 
 #menubar {
 	position:absolute;
@@ -306,6 +304,7 @@ body.logged-in .tip { display: none; }
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+	display: none;
 }
 
 /* Reset */
@@ -607,7 +606,7 @@ body.logged-in .tip { display: none; }
 	
 	float: right;
 	cursor: pointer;
-	width: 40px;
+	width: 72px;
 	-moz-box-shadow:inset -1px 2px 0px -2px #fab3ad;
 	-webkit-box-shadow:inset -1px 2px 0px -2px #fab3ad;
 	box-shadow:inset -1px 2px 0px -2px #fab3ad;
@@ -822,38 +821,41 @@ body.logged-in .tip { display: none; }
 
 #tip1 {
 	position: absolute;
-	height: 75px;
-	width: 110px;
+	height: 76px;
+	width: 185px;
 	left: 1200px;
 	top: 60px;
 	background-repeat: no-repeat;
 	background-image: url(images/icons2.png);
 	background-position: -63px -532px;
 	z-index: 999;
+	display: none;
 }
 
 #tip2 {
 	position: absolute;
 	height: 50px;
-	width: 210px;
+	width: 254px;
 	left: 260px;
 	top: 80px;
 	background-repeat: no-repeat;
 	background-image: url(images/icons2.png);
 	background-position: -2px -624px;
 	z-index: 999;
+	display: none;
 }
 
 #tip3 {
 	position: fixed;
 	height: 80px;
-	width: 200px;
+	width: 222px;
 	left: 1200px;
 	bottom: 180px;
 	background-repeat: no-repeat;
 	background-image: url(images/icons2.png);
 	background-position: -2px -690px;
 	z-index: 999;
+	display: none;
 }
 
 .layout_item {

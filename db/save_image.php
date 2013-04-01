@@ -11,15 +11,29 @@ $phone_type		= $_POST["phone_type"];
 $layout_no		= $_POST["layout_no"];
 $phone_color	= $_POST["phone_color"];
 $orig_img		= $_POST['orig_img'];
+$lang			= $_POST['lang'];
 
 $db = new DB;
 $connkey = $db->link_sip( "localhost", $DB_NAME, "root", "tomorrow");
 if ($connkey) {
-	
+	$price = '';
+	$currency = '';
 	// Retrive price from db
 	$sql = sprintf("SELECT * FROM bom WHERE part_name='%s'", mysql_real_escape_string($phone_type));
 	$res = $db->sql($sql);
-	$price = $res[0]['price'];
+	if ($lang == 'en') {
+		$price = $res[0]['price'];
+		$currency = 'USD';
+	}
+	else if ($lang == 'tw') {
+		$price = $res[0]['price_TW'];
+		$currency = 'NTD';
+	}
+	else {
+		$price = $res[0]['price'];
+		$currency = 'USD';
+	}
+	
 	
 	$time = getdateinfo(2);
 	$filename = dirname(__FILE__) . "/user/" . $userid ."_".$time.".png";
@@ -32,7 +46,7 @@ if ($connkey) {
  	$s_name = $title_name."_".$time.$random;
 	
 	$sql = sprintf(
-        "INSERT INTO gallery (userid, user_type, title_name, s_name, saveimag, phone_type, layout_no, phone_color, orig_img, price, s_save) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+        "INSERT INTO gallery (userid, user_type, title_name, s_name, saveimag, phone_type, layout_no, phone_color, orig_img, price, currency, s_save) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
         mysql_real_escape_string($userid ),
         mysql_real_escape_string($user_type),
         mysql_real_escape_string($title_name),
@@ -43,6 +57,7 @@ if ($connkey) {
         mysql_real_escape_string($phone_color),
         $filename,
         $price,
+        $currency,
 		$time
 		);
 

@@ -13,43 +13,44 @@ function mode_history() {
 				console.log(order);
 				
 				$('body').append('<div class="order_history" style="top:80px; left:20%; position:absolute" >'+
-    					'<p align="center" style="font-size:20px;"><strong>訂單記錄</strong></p>'+
+    					'<p align="center" style="font-size:20px;"><strong>'+$.i18n.prop('Msg_42')+'</strong></p>'+
     					'<table width="800" border="0" align="center" cellpadding="0" cellspacing="0" id="table_sty">'+
-    					'<tr><td width="28%" class="title">編號</td>'+
-					        '<td width="27%" class="title">時間</td>'+
-					        '<td width="10%" class="title">數量</td>'+
-					        '<td width="10%" class="title">已付款</td>'+
-					        '<td width="15%" class="title">信用卡</td>'+
+    					'<tr><td width="28%" class="title">'+$.i18n.prop('Msg_43')+'</td>'+
+					        '<td width="27%" class="title">'+$.i18n.prop('Msg_44')+'</td>'+
+					        '<td width="10%" class="title">'+$.i18n.prop('Msg_39')+'</td>'+
+					        '<td width="10%" class="title">'+$.i18n.prop('Msg_45')+'</td>'+
+					        '<td width="15%" class="title">'+$.i18n.prop('Msg_46')+'</td>'+
 					        '<td width="10%" class="title"> </td></tr>'+
     					'</table></div>');
 				
 				$.each(order, function(i, item){
 					var detail = $.parseJSON(order[i].detail);
 					console.log(detail);
-					
-					$('#table_sty').append('<tr><td>'+order[i].order_no+'</td>'+
-									        '<td>'+order[i].c_time_local+'</td>'+
-									        '<td>'+detail.itemCount+'</td>'+
-									        '<td>'+order[i].payment+'</td>'+
-									        '<td>'+detail.card_no.replace(/.(?=.{4})/g, 'x')+'</td>'+
-									        '<td><a href="#" onClick="check_detail(\''+order[i].order_no+'\')">詳細</a></td></tr>');
 					// Detail information
 					var _info = '';
+					var _total = 0;
 					for(var j=1; j<=detail.itemCount; j++) {
-						
+						_total += (parseInt(detail['item_quantity_'+j]) || 0);
 						var img_path = detail['item_options_'+j].split(',')[0].split(': ')[1];
 						var title = detail['item_options_'+j].split(',')[1].split(': ')[1];
 						_info += '<img src="'+img_path+'" width="40" height="68" align="absmiddle"/> '+
-								title+', 單價：'+detail['item_price_'+j]+' x'+detail['item_quantity_'+j]+'</img>';
+								title+', '+$.i18n.prop('Msg_48')+'：'+detail['item_price_'+j]+' x'+detail['item_quantity_'+j]+'</img>';
 						if (j%4 == 0)	_info += '<br>';
-					}					
+					}		
+					
+					$('#table_sty').append('<tr><td>'+order[i].order_no+'</td>'+
+				        '<td>'+order[i].c_time_local+'</td>'+
+				        '<td>'+_total+'</td>'+
+				        '<td>'+order[i].payment+'</td>'+
+				        '<td>'+detail.card_no.replace(/.(?=.{4})/g, 'x')+'</td>'+
+				        '<td><a href="#" onClick="check_detail(\''+order[i].order_no+'\')">'+$.i18n.prop('Msg_47')+'</a></td></tr>');			
 					
 					// Insert detail into row
 					$('#table_sty').append('<tr id="detail_'+order[i].order_no+'" style="display: none">'+
 											'<td colspan="6" style="text-align: left">'+'<br>'+_info+
-											'<br><br> 運送地址： '+ detail.shipping_addr+','+detail.shipping_city+
+											'<br><br> '+$.i18n.prop('Msg_49')+'： '+ detail.shipping_addr+','+detail.shipping_city+
 											','+detail.shipping_country+'<br>'+
-											'<br>收件者： '+detail.shipping_name+'<br>'+
+											'<br>'+$.i18n.prop('Msg_50')+'： '+detail.shipping_name+'<br>'+
 											'<br>email： '+detail.shipping_email+'<br><br>'+
 											'</td></tr>');
 				});
@@ -93,7 +94,7 @@ function checkValid() {
 	
 	$('.order :input').each(function() {
 		if ($(this).val() == "" && $(this).attr('id') != 'coupon_no') {
-			$(this).after("<span class='fillcheck'><font color='red'>請填寫！<font></span>");
+			$(this).after("<span class='fillcheck'><font color='red'>"+$.i18n.prop('Msg_51')+"<font></span>");
 			isValid = false;
 		}
 	}); 
@@ -106,8 +107,24 @@ function mod_checkout() {
 	$order.addClass('order');
 	$order.css('position', 'absolute');
 	$order.css('top', $('.mainmenu').height()+50+'px');
+	
 	$order.load('checkout/checkout.html?v='+(new Date()).getTime(), function(){
 		
+		// Setup helper
+		dust.helpers.i18n = function (chunk, ctx, bodies, params) {
+		  var key = dust.helpers.tap(params.key, chunk, ctx);
+		  return chunk.write($.i18n.map[key]);
+		};
+		var compiled = dust.compile($(this).html(), "checkout");
+		dust.loadSource(compiled);
+		// rendering html by helper
+		dust.render("checkout", null, function(err, out) {
+		  $order.html(out);
+		});
+		// change text manually
+		$('#checkout_cancel').val($.i18n.prop('Msg_90'));
+		$('#checkout_confirm').val($.i18n.prop('Msg_91'));
+
 		/* // 這是比較炫的信用卡輸入頁面
 		$('#card_number').validateCreditCard(function(result) {
 	      if (!(result.card_type != null)) {
@@ -185,17 +202,20 @@ function mod_checkout() {
 			// Remove valid checker if any
 			$('.fillcheck').remove();
 			// Set checkout information
-			if ($("#checkout_confirm").val() == '確認資料' && $("#coupon_no").val() != '') {
+			if ($("#checkout_confirm").val() == $.i18n.prop('Msg_91') && $("#coupon_no").val() != '') {
+					$("#couponcheck").remove();
 					$.post('checkout/coupon.php', 
 					
 						{"code":$("#coupon_no").val(),
-						 "userid":$.cookie('user_id')},
+						 "userid":$.cookie('user_id'),
+						 "currency": simpleCart.currency().code},
 						 
 						function(data) {
+							console.log(data);
 							if(data.result == "ok") {
-								var _n = parseFloat($(".simpleCart_total").html().replace('$', ''), 10).toFixed(2);
-								var _amount = parseFloat($(".simpleCart_quantity").html().replace('$', ''), 10).toFixed(2);
-								var discount = (_amount * data.value).toFixed(2);
+								var _n = parseFloat(simpleCart.grandTotal(), 10).toFixed(2);
+				 				//var _amount = parseInt($(".simpleCart_quantity").html(), 10);
+								var discount = data.value;
 								
 								// Prevent negative price for some special discount (ex. VIP coupon)
 								if (_n - discount < 0)
@@ -203,24 +223,29 @@ function mod_checkout() {
 	
 								$(".simpleCart_total").html("")
 					                .fadeIn(300)
-					                .append("$" + (_n - discount).toFixed(2).toString());
-					            $("#coupon_no").after('<font color="red">已折扣 $'+discount+'</font>');
+					                .append(DOLLAR_SIGN + (_n - discount).toFixed(2).toString());
+					            $("#coupon_no").after('<span id="couponcheck"><font color="red">'+$.i18n.prop('Msg_53')+' '+DOLLAR_SIGN+discount+'</font></span>');
+								$("#checkout_confirm").val($.i18n.prop('Msg_57'));
 							}
 							else {
 								if (data.value == 'used')
-									$("#coupon_no").after('<font color="red">已經被使用</font>');
+									$("#coupon_no").after('<span id="couponcheck"><font color="red">'+$.i18n.prop('Msg_54')+'</font></span>');
 								else if( (data.value == 'invalid'))
-									$("#coupon_no").after('<font color="red">無效的折扣碼</font>');
+									$("#coupon_no").after('<span id="couponcheck"><font color="red">'+$.i18n.prop('Msg_55')+'</font></span>');
+								else if( (data.value == 'due'))
+									$("#coupon_no").after('<span id="couponcheck"><font color="red">'+$.i18n.prop('Msg_93')+'</font></span>');
 								else
-									$("#coupon_no").after('<font color="red">稍後再試</font>');
+									$("#coupon_no").after('<span id="couponcheck"><font color="red">'+$.i18n.prop('Msg_56')+'</font></span>');
+								$("#coupon_no").val('');
 							}
-							$("#checkout_confirm").val("刷卡付款");
+							
 						}, "json");
 			}
 			else {
 				if (checkValid() == false) {
 					return;
 				}
+
 				simpleCart({
 				    checkout: { 
 				    	type: "SendForm" , 
@@ -236,13 +261,15 @@ function mod_checkout() {
 				          expiry_date: switchNum($("#expiry_date").val()),
 				          cvc_no: $("#cvc_no").val(),
 				          coupon_no: $("#coupon_no").val(),
-				          total: $(".simpleCart_total").html().replace('$', ''),
+				          total: simpleCart.grandTotal(),
 				          shipping_email: $("#shipping_email").val(),
 				          shipping_name: $("#shipping_name").val(),
 				          shipping_addr: $("#shipping_address").val(),
 				          shipping_city: $("#shipping_city").val(),
 				          shipping_country: $("#countrySelect :selected").text(),
-				          c_time: get_time()
+				          c_time: get_time(),
+				          lang: MY_LANG,
+				          currency: simpleCart.currency().code
 				        }
 				    }
 			  	});
@@ -270,16 +297,24 @@ function mod_gallery() {
 	});
 */
 	// Add deatail of cart
-	$('#gallery').before('<div class="shopping_cart">購物車<div> ----------- </div>'+
-		'<div class="simpleCart_items"></div><div style="float:left">總計：</div><div class="simpleCart_total"></div></div>');
+	$('#gallery').before('<div class="shopping_cart">'+$.i18n.prop('Msg_58')+'<div> ----------- </div>'+
+		'<div class="simpleCart_items"></div><div style="float:left">'+$.i18n.prop('Msg_59')+'：</div><div class="simpleCart_total"></div></div>');
 	$('.shopping_cart').css('top','100px');
 	$('.shopping_cart').css('left','100px');
 	
 	// Add cart2 for showing
 	$('#gallery').before('<div class="shopping_cart2" style="top:80px; left:25%; position:absolute" >'+
-    					'<p align="center" style="font-size:20px;"><strong>購物車</strong></p>'+
+    					'<p align="center" style="font-size:20px;"><strong>'+$.i18n.prop('Msg_58')+'</strong></p>'+
     					'<table width="650" border="0" align="center" cellpadding="0" cellspacing="0" id="table_sty">'+
     					'</table></div>');
+    		
+    // Check language and currency before add			
+    simpleCart.bind( 'beforeAdd' , function( item ) {
+		if (item.fields().currency != simpleCart.currency().code) {
+			alert($.i18n.prop('Msg_92'));
+			return false;
+		}
+    });
   	
 	// Update event of cart
 	simpleCart.bind( 'update' , function() {
@@ -287,14 +322,14 @@ function mod_gallery() {
 		$('#table_sty').html('');
 		// Add table title
 	    $('#table_sty').append('<tr><td width="5%" class="title">　</td>'+
-	    					  '<td width="30%" class="title">名 稱</td>'+
-					          '<td width="20%" class="title">價 格</td>'+
-					          '<td width="10%" class="title">數 量</td>'+
-					          '<td width="20%" class="title">小 計</td>'+
+	    					  '<td width="30%" class="title">'+$.i18n.prop('Msg_37')+'</td>'+
+					          '<td width="20%" class="title">'+$.i18n.prop('Msg_38')+'</td>'+
+					          '<td width="10%" class="title">'+$.i18n.prop('Msg_39')+'</td>'+
+					          '<td width="20%" class="title">'+$.i18n.prop('Msg_40')+'</td>'+
 					          '<td width="15%" class="title">&nbsp;</td></tr>');
 		// For each itemRow
 		$('.itemRow').each(function(index) {
-			console.log($(this).children('.item-price').html());
+
 			$('#table_sty').append('<tr><td><img src="'+$(this).children('.item-image').html()+'" width="40" height="68" /></td>'+
 								  '<td>'+$(this).children('.item-title').html()+'</td>'+
 								  '<td>'+$(this).children('.item-price').html()+'</td>'+
@@ -315,8 +350,8 @@ function mod_gallery() {
 										          '<td class="title">&nbsp;</td>'+
 										          '<td class="title">&nbsp;</td></tr>');
 		// Add summary line								          
-		$('#table_sty').append('<tr><td colspan="4" class="amount">總計 '+$('.simpleCart_total').html()+'　</td>'+
-												'<td style="border-bottom: none;"><div class="checkout">結帳</div></td></tr>');
+		$('#table_sty').append('<tr><td colspan="4" class="amount">'+$.i18n.prop('Msg_59')+' '+$('.simpleCart_total').html()+'　</td>'+
+												'<td style="border-bottom: none;"><div class="checkout">'+$.i18n.prop('Msg_60')+'</div></td></tr>');
 												
 			
 		// Click chechout button
@@ -339,26 +374,26 @@ function mod_gallery() {
 			$('.checkout').show();
 	});
 	
-	// Update Shopping Cart
-	simpleCart.update();
+	// Init Shopping Cart
+	simpleCart.init();
 	
 	if($.cookie('user_id')) {
 		$.post("db/retrive_gallery.php", 
 				{ userid: $.cookie('user_id')
 				},  
 				function(data) {
-					$('#gallery').append('<p align="center" style="font-size:20px;"><strong>我的設計</strong></p>')
+					$('#gallery').append('<p align="center" style="font-size:20px;"><strong>'+$.i18n.prop('Msg_61')+'</strong></p>')
 					
 					var json = $.parseJSON(data);
 					$.each(json, function(key, val) {
 						// set currency
 						var currency = '';
 						if (val.currency == 'USD')
-							currency = 'US$';
+							currency = 'USD';
 						else if (val.currency == 'NTD')
-							currency = 'NT$';
+							currency = 'NTD';
 						else
-							currency = 'US$';
+							currency = 'USD';
 							
 						$('#gallery').append('<div class="simpleCart_shelfItem">'+
 						'<div class="list_pic"><img src="'+val.orig_img+'" alt="image" width="120" height="202"/></div>'+
@@ -366,6 +401,7 @@ function mod_gallery() {
 						'<div class="list_txt"><p><strong class="item_title">'+val.title_name+'</strong><span class="item_name" style="display:none">'+val.s_name+'</span></p>'+
 						'<p>'+val.phone_type+' / '+val.phone_color+'</p>'+
 						'<p><span class="item_price">'+currency+val.price+'</span></p>'+
+						'<span class="item_currency" style="display:none">'+currency+'</span>'+
 						'<a class="item_add" href="javascript:;"><img src="css/images/add_shoppingcar.png" width="18" height="18" /></a></div>');
 
 					});
@@ -401,16 +437,16 @@ function mod_saving(func_complete) {
 	// Check if design is completed
 	if (!($('.canvas_appended').length != 0 && 
 		$('.canvas_appended').length == $('.layout_corner').length)) {
-		new Messi('<p>您尚未完成設計哦</p><p>請先將圖片按您的喜好拖拉至所有的區塊後，才能儲存</p>', {title: '提醒您 !', modal: true});
+		new Messi($.i18n.prop('Msg_62'), {title: $.i18n.prop('Msg_63'), modal: true});
 		$wDiv.remove();
 		return;
 	}
 	// Check if did not set title yet
 	if (TITLE_NAME == '') {
-		Messi.alert('請輸入名稱 : <input type="text">', function(value, content){
+		Messi.alert($.i18n.prop('Msg_64')+' <input type="text">', function(value, content){
 			TITLE_NAME = content;
 			saveImg();
-		},{title: '提醒您 !', modal: true});
+		},{title: $.i18n.prop('Msg_63'), modal: true});
 		$wDiv.remove();
 		return;
 	}
@@ -453,7 +489,7 @@ function mod_saving(func_complete) {
 			setTimeout(process, 10);
 		}
 		else {
-			$status.after('<br><span style="font-size: 16px; color: white"> 上傳中...</span>');
+			$status.after('<br><span style="font-size: 16px; color: white">'+$.i18n.prop('Msg_65')+'...</span>');
 			var resCanvas = document.createElement('canvas');
 			_show_save(resCanvas);
 			$.post("db/save_image.php", 
@@ -464,7 +500,8 @@ function mod_saving(func_complete) {
 					phone_type: PHONE_NAME,
 					layout_no: LAYOUT_NAME,
 					phone_color: PHONE_COLOR,
-					orig_img: resCanvas.toDataURL()},  
+					orig_img: resCanvas.toDataURL(),
+					lang: MY_LANG},  
 				function(data) {
 					// Empty title name
 					TITLE_NAME = '';
@@ -898,8 +935,8 @@ function mod_randesign() {
 	
 	if ($('.canvas_appended').length != 0 ) {
 		$("body").append('<div class="modalOverlay"></div>');
-		new Messi('您確定要重新隨機設計嗎？之前的圖片將會被清空！', 
-			{title: '隨機設計', 
+		new Messi($.i18n.prop('Msg_66'), 
+			{title: $.i18n.prop('Msg_67'), 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 
 			 callback: function(val, content) {  
@@ -1032,8 +1069,8 @@ function clearDesign() {
 	// Check if any design already
 	if ($('.canvas_appended').length != 0 ) {
 		$("body").append('<div class="modalOverlay"></div>');
-		new Messi('您確定要清除設計嗎？所有的圖片將會被清空！', 
-			{title: '清除內容', 
+		new Messi($.i18n.prop('Msg_68'), 
+			{title: $.i18n.prop('Msg_69'), 
 			 buttons: [{id: 0, label: 'Yes', val: 'Y'}, 
 						{id: 1, label: 'No', val: 'N'}], 
 			 callback: function(val, content) {  

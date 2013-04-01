@@ -5,6 +5,7 @@
 <title>Hotprint Cloud</title>
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script type="text/javascript" src="../lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="../lib/simpleCart.js"></script>
 <link href="css/layout.css" rel="stylesheet" type="text/css" />
 <link rel="shortcut icon" href="images/favicon.ico">
 <style type="text/css">
@@ -65,7 +66,7 @@
 			$.cookie('lang', 'en', { path: '/' });
 		}
 		else if ($.cookie('lang') == 'tw') {
-			window.location = 'http://sandbox.hotprintcloud.com/';
+			window.location = 'http://www.hotprintcloud.com/';
 		}
 
 		// 先取得必要的元素並用 jQuery 包裝
@@ -140,7 +141,7 @@ include "title.html"
 <div id="abgneBlock">
 		<ul class="list">
 			<li><img src="images/index_02.jpg"></li>
-			<li><a href="http://sandbox.hotprintcloud.com/index.html"><img src="images/index_01.jpg"></a></li>
+			<li><a href="http://www.hotprintcloud.com/index.html"><img src="images/index_01.jpg"></a></li>
 			<li><img src="images/index_03.jpg"></li>
 		</ul>
 </div>
@@ -148,7 +149,7 @@ include "title.html"
 <div class="t13" id="index_main">
 <p>&nbsp;</p>
 
-<p align="center"><a href="https://www.facebook.com/pages/Hotprintcloud/532450930112692" target="_blank"><img src="images/index_3block_1.png" border="0" style="margin-right:20px" /></a><a href="http://sandbox.hotprintcloud.com/index.html"><img src="images/index_3block_3.png" style="margin-right:20px"></a><img src="images/index_3block_2.png" /></p>
+<p align="center"><a href="https://www.facebook.com/pages/Hotprintcloud/532450930112692" target="_blank"><img src="images/index_3block_1.png" border="0" style="margin-right:20px" /></a><a href="http://www.hotprintcloud.com/index.html"><img src="images/index_3block_3.png" style="margin-right:20px"></a><img src="images/index_3block_2.png" /></p>
 
 <p>
 

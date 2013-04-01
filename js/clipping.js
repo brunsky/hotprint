@@ -28,7 +28,7 @@ function isImageUnclear(w0, h0, w1, h1, divObj) {
 				$warning_big.css("position", "absolute");
 				$warning_big.css("top", 20+layout_oy+'px');
 				$warning_big.css("left", 370+layout_ox+'px');
-				$warning_big.html('<img src="../css/images/warning.png" align="absmiddle"><span style="font-size: 16px; color: grey">注意！有些圖片可能已經失真囉</span></img>');
+				$warning_big.html('<img src="../css/images/warning.png" align="absmiddle"><span style="font-size: 16px; color: grey">'+$.i18n.prop('Msg_71')+'</span></img>');
 				$('body').append($warning_big);
 			}
 		}

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>UMORFIL Beauty Fiber</title>
+<title>Hotprint Cloud</title>
 <link rel="shortcut icon" href="images/favicon.ico">
 <link href="css/reset.css" rel="stylesheet" type="text/css" />
 <link href="css/layout.css" rel="stylesheet" type="text/css" />
@@ -38,7 +38,9 @@ function MM_swapImage() { //v3.0
 function switchLang(lang) {
     if (lang == 'tw') {
         $.removeCookie('lang', { path: '/' });
-        window.location = 'http://sandbox.hotprintcloud.com/';
+        // empty shopping cart
+        simpleCart.empty();
+        window.location = 'http://www.hotprintcloud.com/';
     }
 } 
     
@@ -54,7 +56,7 @@ function switchLang(lang) {
     <a href="#"><div class="shopping_car" align="center">10</div></a> -->
     <p id="login_link" align="right"><a href="#" onclick="switchLang('en')">English</a> | <a href="#" onclick="switchLang('tw')">繁體中文</a>&nbsp;&nbsp;&nbsp;</p>
     
-	<a href="http://sandbox.hotprintcloud.com/index.html" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image2','','images/item01_o.png',1)"><img src="images/item01.png" name="Image2" border="0" id="Image2" /></a>
+	<a href="http://www.hotprintcloud.com/index.html" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image2','','images/item01_o.png',1)"><img src="images/item01.png" name="Image2" border="0" id="Image2" /></a>
 	<a href="https://www.facebook.com/pages/Hotprintcloud/532450930112692" target="_blank" onmouseover="MM_swapImage('Image3','','images/item02_o.png',1)" onmouseout="MM_swapImgRestore()"><img src="images/item02.png" name="Image3" border="0" id="Image3" /></a>
 	<a href="faq.php" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image4','','images/item03_o.png',1)"><img src="images/item03.png" name="Image4" border="0" id="Image4" /></a></div>
 	<!-- End item -->

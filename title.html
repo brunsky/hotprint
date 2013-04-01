@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>UMORFIL Beauty Fiber</title>
+<title>Hotprint Cloud</title>
 <link rel="shortcut icon" href="images/favicon.ico">
 <link href="css/reset.css" rel="stylesheet" type="text/css" />
 <link href="css/layout.css" rel="stylesheet" type="text/css" />
@@ -33,6 +33,18 @@ function MM_swapImage() { //v3.0
 }
 //-->
 </script>
+<script>
+
+function switchLang(lang) {
+    if (lang == 'en') {
+        $.removeCookie('lang', { path: '/' });
+        // empty shopping cart
+        simpleCart.empty();
+        window.location = 'http://www.hotprintcloud.com/en/';
+    }
+} 
+    
+</script>
 </head>
 
 <body onload="MM_preloadImages('images/item01_o.png','images/item02_o.png','images/item03_o.png','images/btn01_o.png','images/btn02_o.png')">
@@ -40,9 +52,9 @@ function MM_swapImage() { //v3.0
 	<div class=" up_area">
 	<!-- Start item -->
 	<div class="item">
-    <p style="height:38px">&nbsp;</p>
-    <!--<a href="#"><div class="shopping_car" align="center">10</div></a>
-    <p id="login_link" align="right"><a href="#">登入</a>&nbsp;&nbsp;&nbsp;</p> -->
+    <!--<p style="height:38px">&nbsp;</p>
+    <a href="#"><div class="shopping_car" align="center">10</div></a>-->
+    <p id="login_link" align="right"><a href="#" onclick="switchLang('en')">English</a> | <a href="#" onclick="switchLang('tw')">繁體中文</a>&nbsp;&nbsp;&nbsp;</p>
     
 	<a href="http://www.hotprintcloud.com/index.html" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image2','','images/item01_o.png',1)"><img src="images/item01.png" name="Image2" border="0" id="Image2" /></a>
 	<a href="https://www.facebook.com/pages/Hotprintcloud/532450930112692" target="_blank" onmouseover="MM_swapImage('Image3','','images/item02_o.png',1)" onmouseout="MM_swapImgRestore()"><img src="images/item02.png" name="Image3" border="0" id="Image3" /></a>

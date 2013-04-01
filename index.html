@@ -20,6 +20,9 @@
   <script>
   	$LAB
   	.script("http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js").wait()
+  	.script("lib/dust-full-1.1.1.js")
+  	.script("lib/dust-helpers-1.1.1.js")
+  	.script("lib/jquery.i18n.properties-min-1.0.9.js")
   	.script("lib/iealert.min.js")
   	.script("js/jquery.ui.touch-punch.min.js")
   	.script("js/jquery.corner.js")
@@ -51,9 +54,9 @@
 	<div id="logo" title="hotprintCloud 雲端手機殼設計" style="cursor: pointer;" onclick="window.location='http://www.hotprintcloud.com';"></div>
 </td>
 <td width="280px">
-	<div id="start-design" title="Enter design page">繼續設計新款式</div>
-	<div id="clear-design" title="Clear content">　 <span>　　</span> 清除內容　|</div>
-	<div id="random-design" title="Random generizing">　<span>　　</span> 隨機設計</div>
+	<div id="start-design" title="New Design">繼續設計新款式</div>
+	<div id="clear-design" title="Remove Design">　 <span>　　</span> 清除內容　|</div>
+	<div id="random-design" title="Randomized Design">　<span>　　</span> 隨機設計</div>
 </td>
 <td width="250px" >
 	<div id="mTitle"></div>
@@ -76,10 +79,10 @@
 		  </div>
 		  <div id="logoutZone">
 		  	<a id="go-to-my-gallery" href="#" style="color: #454545">瀏覽我的設計</a>
-            <br>
-            <a id="go-to-my-order-history" href="#" style="color: #454545">瀏覽我的訂單</a>
-            <br>
-            <a id="logout" href="#" style="color: #454545">登出</a>	
+		  	<br>
+		  	<a id="go-to-my-order-history" href="#" style="color: #454545">瀏覽我的訂單</a>
+		  	<br>
+		  	<a id="logout" href="#" style="color: #454545">登出</a>
 		  </div>
 	    </div>
 	  </div>
@@ -91,7 +94,7 @@
 <div id="menubar">
 <ul class="accordion">			
 	<li id="one" class="device">
-		<a href="#one">手機型號<span id='menu_type'>iPhone 4/4S</span></a>
+		<a href="#one" id='model_name'>{Msg_10}<span id='menu_type'>iPhone 4/4S</span></a>
 		<ul class="sub-menu">	
 			<li><a class='phone_item' id='iphone5'>iPhone 5</a></li>				
 			<li><a class='phone_item' id='iphone4'>iPhone 4/4S</a></li>				
@@ -100,7 +103,7 @@
 		</ul>
 	</li>			
 	<li id="two" class="layout">
-		<a href="#two">版型設計<span id='menu_layout'>layout 1</span></a>
+		<a href="#two" id='model_layout'>{Msg_11}<span id='menu_layout'>layout 1</span></a>
 		<ul class="sub-menu">			
 			<li><table>
 				<tr>
@@ -125,11 +128,11 @@
 		</ul>
 	</li>			
 	<li id="three" class="color">
-		<a href="#three">背蓋顏色<span id='menu_color'>白色</span></a>
+		<a href="#three" id='model_color'>{Msg_12}<span id='menu_color'>{Msg_13}</span></a>
 		<ul class="sub-menu">					
-			<li><a class='color_item' id='white'>白色</a></li>					
-			<li><a class='color_item' id='black'>黑色</a></li>
-			<li><a class='color_item' id='trans'>透明</a></li>
+			<li><a class='color_item' id='white'>{Msg_13}</a></li>					
+			<li><a class='color_item' id='black'>{Msg_14}</a></li>
+			<li><a class='color_item' id='trans'>{Msg_15}</a></li>
 		</ul>
 	</li>
 	<!--
@@ -165,7 +168,7 @@
 </div>
 </div>
 
-<div id="price_tag"><div id='price'>US$<span id='price_no'>---</span><br><span style="font-size: 16px; color: grey">免運費</span></div></div>
+<div id="price_tag"><div id='price'><span>$</span></span><span id='price_no'>---</span><br><span style="font-size: 16px; color: grey" id='trans_fee_text'>免運費</span></div></div>
 <div id="tip1" class="tip"></div>
 <div id="tip2" class="tip"></div>
 <div id="tip3" class="tip"></div>
@@ -177,6 +180,7 @@
   js.src = "//connect.facebook.net/zh_TW/all.js#xfbml=1&appId=290426614419964";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
+
 <script type="text/javascript">
 
   var _gaq = _gaq || [];

@@ -1,6 +1,5 @@
 <?
 
-//header( 'Location: http://sandbox.hotprintcloud.com/#token='.$token.'&source='.$type.'&b=succeed' ) ;
 $redirect_url = "Location: http://www.hotprintcloud.com/index.html";
 $USD2TWD = 30;
 
@@ -22,6 +21,8 @@ $token = $_POST['token'];
 $type = $_POST['type'];
 $c_time_local = $_POST['c_time'];
 $coupon_no = mysql_real_escape_string($_POST['coupon_no']);
+$lang = $_POST['lang'];
+$currency = $_POST['currency'];
 
 if (!$user_id || !$card_no || !$cvv2 || !$expiry_date) {
   header( $redirect_url.'#token='.$token.'&source='.$type.'&b=cancel' ) ;
@@ -64,7 +65,10 @@ if ($connkey_billing) {
   // 刷卡金額7位數, 左邊補0
   //$TWD_amount = (int)($apk_price*33);
   // 只要不是整數, 無條件進1
-  $TWD_amount = $price * $USD2TWD;
+  if ($currency == "NTD")
+  	$TWD_amount = $price;
+  else
+  	$TWD_amount = $price * $USD2TWD;
   $temp_TWD_amount = (int)($TWD_amount);
   if ($TWD_amount > $temp_TWD_amount) {
     $TWD_amount = (int)($TWD_amount+1);
@@ -226,9 +230,15 @@ if ($connkey_billing) {
     	*/
         
         // 寄出購買通知信給 user
+        
+        $mail_title = $MAIL_OK_TITLE_TW;
+		$mail_content = $MAIL_OK_CONTENT_TW;
+		if ($lang == "en") {
+			$mail_title = $MAIL_OK_TITLE_EN;
+			$mail_content = $MAIL_OK_CONTENT_EN;
+		}
                     
-        if(!sendMail($pay_user_email, "hotprintCloud 付費成功通知", mysql_real_escape_string($_GET['shipping_name']).
-							" 您好！<br><br>您已經成功完成付費，我們正在為您處理訂單囉！<br><br>hotprintCloud 團隊敬上")) { // 寄信失敗記錄
+        if(!sendMail($pay_user_email, $mail_title, $mail_content)) { // 寄信失敗記錄
           $msg = '購買API完成後寄信失敗';
           //$str = "INSERT INTO `error_email_send` (ip, email, error_type, ctime) VALUES ('$ip', '$pay_apk_email', 'payment_api.php -> developer', '$ctime2')";
           //$db->sql($str);

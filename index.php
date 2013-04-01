@@ -4,6 +4,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Hotprint Cloud</title>
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/simpleCart.js"></script>
 <link href="css/layout.css" rel="stylesheet" type="text/css" />
 <link rel="shortcut icon" href="images/favicon.ico">
 <style type="text/css">
@@ -58,6 +60,15 @@
 
 <script type="text/javascript">
 	$(function(){
+
+		// Check language
+		if ($.cookie('lang') == null) {
+			$.cookie('lang', 'tw', { path: '/' });
+		}
+		else if ($.cookie('lang') == 'en') {
+			window.location = 'http://www.hotprintcloud.com/en/';
+		}
+		
 		// 先取得必要的元素並用 jQuery 包裝
 		// 再來取得 $block 的高度及設定動畫時間
 		var $block = $('#abgneBlock'),
