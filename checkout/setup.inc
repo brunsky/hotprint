@@ -1,5 +1,5 @@
 <?
-$DB_NAME = "hotprint";
+$DB_NAME = "hotprint_sandbox";
 
 $MAIL_OK_TITLE_TW = "HotprintCloud 付費成功通知";
 $MAIL_OK_TITLE_EN = "HotprintCloud Payment Success";

@@ -102,7 +102,24 @@ function checkValid() {
 	return isValid;
 }
 
+// fill blank automatically for free charge
+function autoComplete() {
+	$('.order :input').each(function() {
+		if ($(this).val() == "" && $(this).attr('id') != 'coupon_no') {
+			if ($(this).attr('id') == 'card_no')
+				$(this).val('1111111111111111');
+			else if ($(this).attr('id') == 'expiry_date') 
+				$(this).val('1223');
+			else if ($(this).attr('id') == 'cvc_no') 
+				$(this).val('111');
+		}
+	});
+}
+
 function mod_checkout() {
+	
+	var discount = 0;
+	
 	$order = $('<div></div>');
 	$order.addClass('order');
 	$order.css('position', 'absolute');
@@ -211,21 +228,29 @@ function mod_checkout() {
 						 "currency": simpleCart.currency().code},
 						 
 						function(data) {
-							console.log(data);
+
 							if(data.result == "ok") {
 								var _n = parseFloat(simpleCart.grandTotal(), 10).toFixed(2);
 				 				//var _amount = parseInt($(".simpleCart_quantity").html(), 10);
-								var discount = data.value;
-								
+								discount = data.value;
+					
 								// Prevent negative price for some special discount (ex. VIP coupon)
-								if (_n - discount < 0)
+								if (_n - discount <= 0) {
 									discount = _n;
+									$('.chk_hide').hide();
+									autoComplete();
+									$("#coupon_no").hide();
+									$("#checkout_confirm").val($.i18n.prop('Msg_52'));
+								}
+								else
+									$("#checkout_confirm").val($.i18n.prop('Msg_57'));
+									
+								var _price = parseFloat(_n - discount).toFixed(2);
 	
 								$(".simpleCart_total").html("")
 					                .fadeIn(300)
-					                .append(DOLLAR_SIGN + (_n - discount).toFixed(2).toString());
+					                .append(DOLLAR_SIGN + _price.toString());
 					            $("#coupon_no").after('<span id="couponcheck"><font color="red">'+$.i18n.prop('Msg_53')+' '+DOLLAR_SIGN+discount+'</font></span>');
-								$("#checkout_confirm").val($.i18n.prop('Msg_57'));
 							}
 							else {
 								if (data.value == 'used')
@@ -261,7 +286,7 @@ function mod_checkout() {
 				          expiry_date: switchNum($("#expiry_date").val()),
 				          cvc_no: $("#cvc_no").val(),
 				          coupon_no: $("#coupon_no").val(),
-				          total: simpleCart.grandTotal(),
+				          total: simpleCart.grandTotal() - discount,
 				          shipping_email: $("#shipping_email").val(),
 				          shipping_name: $("#shipping_name").val(),
 				          shipping_addr: $("#shipping_address").val(),
@@ -310,6 +335,7 @@ function mod_gallery() {
     		
     // Check language and currency before add			
     simpleCart.bind( 'beforeAdd' , function( item ) {
+    	console.log(item.fields());
 		if (item.fields().currency != simpleCart.currency().code) {
 			alert($.i18n.prop('Msg_92'));
 			return false;

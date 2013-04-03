@@ -3,7 +3,7 @@
  */
  
  // Global settings
- var SANDBOX		= false;
+ var SANDBOX		= true;
  var HOST_URL		= '';
  if (SANDBOX) {
  	HOST_URL		= 'http://sandbox.hotprintcloud.com/';

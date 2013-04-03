@@ -1,6 +1,6 @@
 <?
 
-$redirect_url = "Location: http://www.hotprintcloud.com/index.html";
+$redirect_url = "Location: http://sandbox.hotprintcloud.com/index.html";
 $USD2TWD = 30;
 
 $order_detail = addslashes(json_encode($_POST));
