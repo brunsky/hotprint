@@ -353,6 +353,7 @@ function mod_gallery() {
 					          '<td width="10%" class="title">'+$.i18n.prop('Msg_39')+'</td>'+
 					          '<td width="20%" class="title">'+$.i18n.prop('Msg_40')+'</td>'+
 					          '<td width="15%" class="title">&nbsp;</td></tr>');
+					          
 		// For each itemRow
 		$('.itemRow').each(function(index) {
 
@@ -394,7 +395,7 @@ function mod_gallery() {
 		$('#gallery').css('top', Math.round(parseInt($('.shopping_cart2').css('top')))+$('.shopping_cart2').height()+50+'px');
 		
 		// Check if anything in the cart
-		if ($('.simpleCart_total').html() == '$0.00' || $('.simpleCart_total').html() == '')
+		if (simpleCart.grandTotal() == 0)
 			$('.checkout').hide();
 		else
 			$('.checkout').show();
