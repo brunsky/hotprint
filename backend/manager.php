@@ -47,7 +47,7 @@
   	.script("../lib/jquery.creditCardValidator.js")
   	.script("../js/mapping.min.js?v="+(new Date()).getTime())
   	.script("../js/clipping.min.js?v="+(new Date()).getTime())
-  	.script("../js/extention.min.js?v="+(new Date()).getTime());
+  	.script("../js/extention.js?v="+(new Date()).getTime());
 
   	// Generating image
   	function init(obj, phone_type, color, item_name) {

@@ -757,10 +757,13 @@ function setDnD(maskImg, ox, oy) {
 			
 			// Select high resolution photo if corner.width or corner.height larger than 100 
 			var imgSrc;
+			imgSrc = $(this).children(".draggable").attr('src');
+			/*
 			if (parseInt($(this).css('width'), 10) > 100 || parseInt($(this).css('height'), 10) > 100 )
 				imgSrc = $(this).children(".draggable").attr('delay_src_h');
 			else
 				imgSrc = $(this).children(".draggable").attr('src');
+			*/
 			var divObj = $(this);
 			
 			if ($(this).children(".draggable").attr("class").indexOf("cached") >= 0) {
