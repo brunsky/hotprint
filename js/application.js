@@ -47,6 +47,7 @@
   ,	  _fblogout
   ,	  _logout
   ,	  _loadLayout
+  ,	  _bindFunc
   ;
   
   var access_token
@@ -167,7 +168,7 @@
   	}
   }
   
-  function bindFunc() {
+  _bindFunc = function() {
   	$('#save-design').unbind('click');
 	$('#random-design').unbind('click');
 	$('#clear-design').unbind('click');
@@ -259,7 +260,7 @@
     	$('.tip').fadeOut(1000);
     	
 	  _getUserData();
-	  bindFunc();
+	  
   };
   
   /*
@@ -392,8 +393,6 @@
     	
     	// hide tip
     	$('.tip').fadeOut(1000);
-    	
-	  	bindFunc();
 	  	
 	  	// get album list access_token
 		FB.api('/me?access_token='+access_token+'&fields=albums,id,name', function(response) {
@@ -1598,6 +1597,11 @@ function main() {
     $('#my-gallery').hide();
     
     $('#popbox').popbox();
+    
+    // binding all the operation after loading simpleCart 
+    simpleCart.ready( function(){
+	  	_bindFunc();
+	});
 }
 
 $(window).resize(function() { setContainer();setFooterTop()}); 

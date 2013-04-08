@@ -10,7 +10,7 @@ function mode_history() {
 			{ userid: $.cookie('user_id')},  
 			function(data) {
 				var order = $.parseJSON(data);
-				console.log(order);
+				//console.log(order);
 				
 				$('body').append('<div class="order_history" style="top:80px; left:20%; position:absolute" >'+
     					'<p align="center" style="font-size:20px;"><strong>'+$.i18n.prop('Msg_42')+'</strong></p>'+
@@ -25,7 +25,7 @@ function mode_history() {
 				
 				$.each(order, function(i, item){
 					var detail = $.parseJSON(order[i].detail);
-					console.log(detail);
+					//console.log(detail);
 					// Detail information
 					var _info = '';
 					var _total = 0;
@@ -335,7 +335,7 @@ function mod_gallery() {
     		
     // Check language and currency before add			
     simpleCart.bind( 'beforeAdd' , function( item ) {
-    	console.log(item.fields());
+    	//console.log(item.fields());
 		if (item.fields().currency != simpleCart.currency().code) {
 			alert($.i18n.prop('Msg_92'));
 			return false;
@@ -353,6 +353,7 @@ function mod_gallery() {
 					          '<td width="10%" class="title">'+$.i18n.prop('Msg_39')+'</td>'+
 					          '<td width="20%" class="title">'+$.i18n.prop('Msg_40')+'</td>'+
 					          '<td width="15%" class="title">&nbsp;</td></tr>');
+					          
 		// For each itemRow
 		$('.itemRow').each(function(index) {
 
@@ -394,7 +395,7 @@ function mod_gallery() {
 		$('#gallery').css('top', Math.round(parseInt($('.shopping_cart2').css('top')))+$('.shopping_cart2').height()+50+'px');
 		
 		// Check if anything in the cart
-		if ($('.simpleCart_total').html() == '$0.00' || $('.simpleCart_total').html() == '')
+		if (simpleCart.grandTotal() == 0)
 			$('.checkout').hide();
 		else
 			$('.checkout').show();
