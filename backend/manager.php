@@ -11,7 +11,7 @@
   <meta charset="utf-8" />
   <meta name="description" content="">
   <link rel="shortcut icon" href="../images/favicon.ico">
-  <link rel="stylesheet" href="../css/screen.css" type="text/css" id="main_css" media="screen" charset="utf-8">
+  <!-- <link rel="stylesheet" href="../css/screen.css" type="text/css" id="main_css" media="screen" charset="utf-8"> -->
   <link rel="stylesheet" type="text/css" href="../lib/jquery.ad-gallery.css">
   <link rel="stylesheet" href="../lib/messi.min.css" />
   <link rel='stylesheet' href='../lib/popbox.css' type='text/css' />
@@ -21,6 +21,12 @@
     google.load("jquery", "1.5");
   </script>
   <script src="../lib/LAB.min.js"></script>
+  <style type="text/css">
+  #galleryCanvas 
+  {
+    z-index: -1
+  }
+  </style>
   <script>
   	$LAB
   	.script("http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js").wait()
