@@ -644,7 +644,7 @@ function _producing_for_factory(json, phone_type) {
 				        type: "GET",
 				        url: HOST_URL+"proxy/getImageData.php",
 				        data: {url: _data},
-				        async: false,
+				        async: false
 				    });
 				    console.log('get complete');
 				}
@@ -849,15 +849,21 @@ function _randesign() {
 
 	// clear content
 	$('.layout_corner').css('opacity', CORNER_OPT);
-	$('.layout_corner').html('');
-	$('.layout_corner > draggable').each(function(index) {
-	  	$(this).remove();
-	  	$(this)[0] = null;
-	});
-	$('.canvas_appended').each(function(index) {
-	  	$(this).remove();
-	  	$(this)[0] = null;
-	});
+	//$('.layout_corner').html('');
+	
+	if ( $('.layout_corner').length ) {
+		$('.layout_corner').children('.draggable').each(function(index) {
+			removeUnclearWarning($(this).parent().attr('id'));
+	  		$(this).remove();
+		  	$(this)[0] = null;
+		});
+	}
+	if ( $('.canvas_appended').length ) {
+		$('.canvas_appended').each(function(index) {
+		  	$(this).remove();
+		  	$(this)[0] = null;
+		});
+	}
 
 	// visit image gallery in randomly
 	$('.layout_corner').each(function(index) {
@@ -958,6 +964,7 @@ function clearDesign() {
 				if (val === 'Y') {
 					if ( $('.layout_corner').length ) {
 						$('.layout_corner').children('.draggable').each(function(index) {
+							removeUnclearWarning($(this).parent().attr('id'));
 					  		$(this).remove();
 						  	$(this)[0] = null;
 						});
