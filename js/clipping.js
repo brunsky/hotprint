@@ -97,7 +97,7 @@ function autoClipper2(srcImgDom, dstCanvas, srcCorner, dstCorner) {
 	
 		if ($(srcImgDom).data('is_unclear') == 'true') {
 			
-			console.log("此圖已失真");
+			//console.log("此圖已失真");
 			IS_UNCLEAR = true;
 		}
 		else
@@ -227,7 +227,8 @@ var ori_ratio;
 		var c2 = $('<canvas>');
 
 		c2.attr('id', 'clipper.temp');
-		c2[0].setAttribute('style', 'position: absolute; z-index:1002;');
+		
+		c2[0].setAttribute('style', 'position: absolute; z-index:1002; pointer-events: none');
 		c2[0].style.top = cornerY + bdr + 'px';
 		c2[0].style.left = cornerX + bdr + 'px';
 		c2[0].width = cornerW + bdr;
@@ -285,7 +286,7 @@ var ori_ratio;
 	}
 	
 	if (cornerDiv.children(".draggable").data('is_unclear') == 'true') {
-		console.log("此圖已失真");
+		//console.log("此圖已失真");
 		IS_UNCLEAR = true;
 	}
 	else
@@ -307,6 +308,7 @@ var ori_ratio;
 	$cDiv.css('z-index', '1003');
 	$cDiv.css('opacity', 1);
 	$cDiv.css('cursor', 'default');
+	$cDiv.css('pointer-events', 'none'); // forward mouse event for non-IE
 	$("body").append($cDiv);
 	
 	/*
@@ -625,10 +627,11 @@ var ori_ratio;
         }
         
 
-        if (iMouseX > theSelection.x && iMouseX < theSelection.x+theSelection.w &&
+        if (iMouseX > theSelection.x && iMouseX < theSelection.x+theSelection.w ||
             iMouseY > theSelection.y && iMouseY < theSelection.y+theSelection.h ) {
 
             theSelection.bDragAll = true;
+
         }
 
         for (i = 0; i < 4; i++) {
@@ -818,7 +821,7 @@ var ori_ratio;
 	}
 	
 	if (cornerDiv.children(".draggable").data('is_unclear') == 'true') {
-		console.log("此圖已失真");
+		//console.log("此圖已失真");
 		IS_UNCLEAR = true;
 	}
 	else
