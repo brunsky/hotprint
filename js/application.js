@@ -671,9 +671,12 @@ function setDnD(maskImg, ox, oy) {
 			// Fixed url to hotprintCloud server
 			var str = HOST_URL + TEMP_DIR + toObj.attr('src').replace(/\//g, "+");
 			toObj.data('src', str);
+			var str_h = HOST_URL + TEMP_DIR + toObj.attr('delay_src_h').replace(/\//g, "+");
+			toObj.data('src_h', str_h);
 		}
 		else {
 			toObj.data('src', fromObj.data('src'));
+			toObj.data('src_h', fromObj.data('src_h'));
 		}
 		//console.log('toObj zdx:'+toObj.data('zdx'));
 		//console.log('toObj src:'+toObj.data('src'));
