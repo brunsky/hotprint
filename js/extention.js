@@ -958,6 +958,7 @@ function clearDesign() {
 				if (val === 'Y') {
 					if ( $('.layout_corner').length ) {
 						$('.layout_corner').children('.draggable').each(function(index) {
+							removeUnclearWarning($(this).parent().attr('id'));
 					  		$(this).remove();
 						  	$(this)[0] = null;
 						});
