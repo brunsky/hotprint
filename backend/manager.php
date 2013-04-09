@@ -72,7 +72,7 @@
   	.script("../js/clipping.min.js?v="+(new Date()).getTime())
   	.script("../js/extention.min.js?v="+(new Date()).getTime());
   	
-  	HOST_URL		= 'http://www..hotprintcloud.com/';
+  	HOST_URL		= 'http://www.hotprintcloud.com/';
 
   	// Generating image
   	function init(obj, phone_type, color, item_name) {

@@ -632,17 +632,16 @@ function _producing_for_factory(json, phone_type) {
 			if ($(e).length) {
 				
 				function getRemoteAgain() {
-					if ( false == urlExists(e.imgURL) ) {
-						console.log('ready to get again');
-						var _data = (e.imgURL.split("hotprintcloud.com/proxy/tmp/"))[1].replace(/\+/g, "\/");
-					    $.ajax({
-					        type: "GET",
-					        url: HOST_URL+"proxy/getImageData.php",
-					        data: {url: _data},
-					        async: false
-					    });
-					    console.log('get complete');
-				   }
+					
+					var _data = (e.imgURL.split("hotprintcloud.com/proxy/tmp/"))[1].replace(/\+/g, "\/");
+					console.log('ready to get : '+_data+" from:"+HOST_URL+"proxy/getImageData.php");
+				    $.ajax({
+				        type: "GET",
+				        url: HOST_URL+"proxy/getImageData.php",
+				        data: {url: _data},
+				        async: false
+				    });
+				    console.log('get complete');
 				}
 				
 				// getImageData again
