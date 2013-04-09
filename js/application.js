@@ -972,6 +972,9 @@ function menuLoadPhone(_phoneName) {
 					}
 					change_phone(_phoneName);
 				}
+				else {
+					isMenuEntry = false;
+				}
 			}});
 	}
 	else
@@ -1020,6 +1023,9 @@ function menuLoadColor(_phoneColor) {
 					}
 					change_color(_phoneColor);
 				}
+				else {
+					isMenuEntry = false;
+				}
 			}});
 	}
 	else
@@ -1062,6 +1068,9 @@ function menuLoadLayout(_layoutName) {
 						});
 					}
 					change_layout(_layoutName);
+				}
+				else {
+					isMenuEntry = false;
 				}
 			}});
 	}
