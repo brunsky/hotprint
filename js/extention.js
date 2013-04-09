@@ -577,6 +577,20 @@ function _show_save(resCanvas) {
  * HD ouput for factory 
  */
 function _producing_for_factory(json, phone_type) {
+	
+	var urlExists = function(url){
+	    $.ajax({
+	        type: 'HEAD',
+	        url: url,
+	        async: false,
+	        success: function() {
+	            return true;
+	        },
+	        error: function() {
+	            return false;
+	        }            
+	    });
+	}
 
 	$("body").append('<div class="modalOverlay"></div>');
 	$wDiv = $('.modalOverlay');
@@ -616,6 +630,23 @@ function _producing_for_factory(json, phone_type) {
 		function process() {
 			var e = elements[index++];
 			if ($(e).length) {
+				
+				function getRemoteAgain() {
+					if ( false == urlExists(e.imgURL) ) {
+						console.log('ready to get again');
+						var _data = (e.imgURL.split("hotprintcloud.com/proxy/tmp/"))[1].replace(/\+/g, "\/");
+					    $.ajax({
+					        type: "GET",
+					        url: HOST_URL+"proxy/getImageData.php",
+					        data: {url: _data},
+					        async: false,
+					    });
+					    console.log('get complete');
+				   }
+				}
+				
+				// getImageData again
+				getRemoteAgain();
 
 				$status.css('width', function(){
 					inc += factor;
@@ -650,7 +681,7 @@ function _producing_for_factory(json, phone_type) {
 				if (typeof e.imgURL == 'undefined') {
 					alert(e.cornerId);
 				}
-				//console.log(e.imgURL);
+				console.log('loading...'+e.imgURL);
 				//console.log(e.cornerId);
 		
 				b.load(function() {
@@ -1012,15 +1043,9 @@ function _randesign() {
 			"opacity": "0"
 		});
 		
-		// Select high resolution photo if corner.width or corner.height larger than 100 
 		var imgSrc;
 		imgSrc = $(this).children(".draggable").attr('src');
-		/*
-		if (parseInt($(this).css('width'), 10) > 100 || parseInt($(this).css('height'), 10) > 100 )
-			imgSrc = $(this).children(".draggable").attr('delay_src_h');
-		else
-			imgSrc = $(this).children(".draggable").attr('src');
-		*/	
+	
 		var divObj = $(this);
 		// copy img url from gallery-pool object
 		// Fixed url to hotprintCloud server
@@ -1056,19 +1081,6 @@ function _randesign() {
 			success: function(image){
 				divObj.children(".draggable").attr('src', image.src);
 				divObj.children(".draggable").addClass("cached");
-				/*
-				if (divObj.attr("class").indexOf("layout_circle") >= 0) {
-					doClipping( 
-						doMasking(image, maskImg, divObj, layout_ox, layout_oy), 
-						divObj, 
-						cirClipper);	
-				}
-				else if (divObj.attr("class").indexOf("layout_square") >= 0) {
-					doClipping( 
-						doMasking(image, maskImg, divObj, layout_ox, layout_oy), 
-						divObj, 
-						boxClipper);
-				}*/
 				
 				autoCentered(divObj, image);
 				

@@ -26,6 +26,29 @@
   {
     z-index: -1
   }
+  
+  #progress-bar {
+	border:1px solid #bebebe; 
+	background:#ffffff; 
+	width:310px; 
+	height:14px; 
+	text-align: center;
+	-moz-border-radius:10px; 
+	-webkit-border-radius:10px; 
+	-khtml-border-radius:10px; 
+	border-radius:10px;
+	}
+	
+	#status {
+		background:#0066cc; 
+		width:0%; 
+		height:14px; 
+		-moz-border-radius:10px; 
+		-webkit-border-radius:10px; 
+		-khtml-border-radius:10px; 
+		border-radius:10px;
+	}
+
   </style>
   <script>
   	$LAB
@@ -48,6 +71,8 @@
   	.script("../js/mapping.min.js?v="+(new Date()).getTime())
   	.script("../js/clipping.min.js?v="+(new Date()).getTime())
   	.script("../js/extention.js?v="+(new Date()).getTime());
+  	
+  	HOST_URL		= 'http://sandbox.hotprintcloud.com/';
 
   	// Generating image
   	function init(obj, phone_type, color, item_name) {
