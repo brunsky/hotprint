@@ -447,8 +447,6 @@ function _send_factory(savetime){
 				var json = $.parseJSON(data);
 				var Obj = $.parseJSON(json[0].saveimag);
 				_producing_for_factory(Obj, json[0].phone_type);
-
-				//_producing_for_factory_from_layout(json[0]);
 			});
 }
 
@@ -508,6 +506,7 @@ function mod_saving(func_complete) {
 	    		cornerClass: $(e).attr('class'),
 	    		cornerStyle: $(e).attr('style')+' width:'+$(e).css('width')+'; height:'+$(e).css('height'),
 	    		imgURL: $(e).children(".draggable").data('src'),
+	    		imgURL_h: $(e).children(".draggable").data('src_h'),
 	    		zdx: $(e).children(".draggable").data('zdx'),
 	    		zdy: $(e).children(".draggable").data('zdy'),
 	    		zw: $(e).children(".draggable").data('zw'),
@@ -632,9 +631,15 @@ function _producing_for_factory(json, phone_type) {
 			if ($(e).length) {
 				
 				function getRemoteAgain() {
-					
-					var _data = (e.imgURL.split("hotprintcloud.com/proxy/tmp/"))[1].replace(/\+/g, "\/");
-					console.log('ready to get : '+_data+" from:"+HOST_URL+"proxy/getImageData.php");
+					console.log('ready to get again');
+					var _data
+					if (typeof e.imgURL_h == 'undefined') {
+						_data = (e.imgURL.split("hotprintcloud.com/proxy/tmp/"))[1].replace(/\+/g, "\/");
+					}
+					else {
+						_data = (e.imgURL_h.split("hotprintcloud.com/proxy/tmp/"))[1].replace(/\+/g, "\/");
+					}
+						
 				    $.ajax({
 				        type: "GET",
 				        url: HOST_URL+"proxy/getImageData.php",
@@ -676,11 +681,16 @@ function _producing_for_factory(json, phone_type) {
 				$('body').append($c);
 				
 				var b = $('<img/>');
-				b.attr('src', e.imgURL);
-				if (typeof e.imgURL == 'undefined') {
-					alert(e.cornerId);
+				if (typeof e.imgURL_h == 'undefined') {
+					b.attr('src', e.imgURL);
+					console.log('imgURL loading...'+e.imgURL);
 				}
-				console.log('loading...'+e.imgURL);
+				else {
+					b.attr('src', e.imgURL_h);
+					console.log('imgURL_h loading...'+e.imgURL_h);
+				}
+
+				
 				//console.log(e.cornerId);
 		
 				b.load(function() {
@@ -748,179 +758,6 @@ function _producing_for_factory(json, phone_type) {
 		}
 	}
 
-}
-
-function _producing_for_factory_from_layout(json) {
-	
-	var canvas = document.createElement('Canvas');
-    canvas.setAttribute('id', 'mCanvas');
-    var context = canvas.getContext('2d');
-    $('.mainmenu').before(canvas);
-	
-	$("link[type='text/css']#layout_css").remove();
-    //Import CSS
-    var cssFile = jQuery("<link>");
-    cssFile.attr({
-      rel:  "stylesheet",
-      type: "text/css",
-      href: "css/"+json.phone_type+"_"+json.layout_no+".css?v="+(new Date()).getTime(),
-      id: "layout_css"
-    });   
-
-    $("head").append(cssFile);
-	// Import layout js
-	styleOnload(cssFile[0],function() {
-		var layoutLocation = "js/"+json.phone_type+"_"+json.layout_no+".js?v="+(new Date()).getTime();
-		$.getScript(layoutLocation)
-			.done(function(data, textStatus, jqxhr) {
-				//console.log(json.saveimag);
-				_producing($.parseJSON(json.saveimag));
-			})
-			.fail(function(data, textStatus, jqxhr) {
-				//console.log('_producing_for_factory: load layout.js failed');
-			});
-
-	});
-	
-	function _producing(json) {
-	
-		$("body").append('<div class="modalOverlay"></div>');
-		$wDiv = $('.modalOverlay');
-		
-		$("body").append('<div id="progress-bar"><div id="status"></div></div>');
-		$( "#progress-bar" ).css('position','fixed');
-		$( "#progress-bar" ).css('z-index', '1001');
-		$( "#progress-bar" ).css('top', '300px');
-		$( "#progress-bar" ).css('left', layout_ox+'px');
-		$status = $('#status');
-		var a = new Image();
-		a.src = "images/"+PHONE_NAME+"_mask3.png";
-		//console.log('_producing:'+a.src)
-		a.onload = function(){
-		
-			var resCanvas = document.createElement('canvas');
-		    var resCtx = resCanvas.getContext('2d');
-			resCanvas.width = Math.round(a.width);
-			resCanvas.height = Math.round(a.height);
-			
-			// scaling mask
-			var adjustMaskCanvas = document.createElement('canvas');
-		    adjustMaskCanvas.width = a.width;
-		    adjustMaskCanvas.height = a.height;
-		    var adjustMaskCtx = adjustMaskCanvas.getContext('2d');                       
-		    adjustMaskCtx.drawImage(a, 0, 0); 
-			
-			var factor = 100 / json.length; 
-			var inc = 0;
-			
-			var elements = json;
-			
-			var index = 0;
-			process();
-			
-			// Using settimeout to let browser update screen.
-			function process() {
-
-				var e = elements[index++];
-				if ($(e).length) {
-	
-					$status.css('width', function(){
-						inc += factor;
-						return inc+"%";
-					});
-		
-					// parse CSS
-					var _stylestemp = e.cornerStyle.split(';');
-					var styles = {};
-				    var _c = '';
-				    for (var x in _stylestemp) {
-				    	_c = _stylestemp[x].split(':');
-				    	styles[$.trim(_c[0])] = $.trim(_c[1]);
-				    }
-			   
-			   		//console.log('corner id:'+e.cornerId);
-			   
-					var $c = $('<div></div>');
-					$c.css('position', 'absolute');
-					$c.css('top', Math.round(parseInt(styles.top), 10) * scaling + 'px');
-					$c.css('left', Math.round(parseInt(styles.left), 10) * scaling + 'px');
-					$c.css('width', Math.round(parseInt($('body').find('#'+e.cornerId).css('width')), 10) * scaling + 'px');
-					$c.css('height', Math.round(parseInt($('body').find('#'+e.cornerId).css('height')), 10) * scaling + 'px');
-					$c.css('border', '6px solid silver'); // setup border in manually !!
-					
-					// parse Attribute
-				   	$c.addClass(e.cornerClass);
-				   	
-					$('body').append($c);
-					
-					var b = $('<img/>');
-					b.attr('src', e.imgURL);
-			
-					b.load(function() {
-						var bb = new Image();
-						// Get transform automatically
-						if (typeof e.zdx != 'undefined') { 
-							// parse data
-							b.data('zdx', e.zdx * scaling);
-							b.data('zdy', e.zdy * scaling);
-							b.data('zw', e.zw * scaling);
-							b.data('zh', e.zh * scaling);
-	
-							var $dstCanvas = $('<canvas>');
-							var $srcDiv = $c.clone();
-							$dstCanvas[0].width = parseInt($c.css('width'), 10) + parseInt($c.css('border-left-width'), 10);
-							$dstCanvas[0].height = parseInt($c.css('height'), 10) + parseInt($c.css('border-left-width'), 10);
-							autoClipper2(b[0], $dstCanvas, $srcDiv, $c);
-							bb.src = $dstCanvas[0].toDataURL();
-							bb.width = $dstCanvas[0].width;
-							bb.height = $dstCanvas[0].height;
-						}
-						else {
-							bb.src = b.attr('src');
-						}
-						
-						bb.onload = function() {
-							if ($c.attr("class").indexOf("layout_circle") >= 0) {
-								doClipping( 
-									doMasking(bb, adjustMaskCanvas, $c, layout_ox*scaling, layout_oy*scaling), 
-									$c, 
-									cirClipper);	
-							}
-							else if ($c.attr("class").indexOf("layout_square") >= 0) {
-								doClipping( 
-									doMasking(bb, adjustMaskCanvas, $c, layout_ox*scaling, layout_oy*scaling), 
-									$c, 
-									boxClipper);
-							}
-						
-							resCtx.drawImage($c.next()[0], 
-					    					(Math.round(parseInt($c.next().css('left'), 10))-layout_ox*scaling), 
-					    					(Math.round(parseInt($c.next().css('top'), 10))-layout_oy*scaling), 
-					    					Math.round(parseInt($c.next().css('width'), 10)),
-					    					Math.round(parseInt($c.next().css('height'), 10)));
-					    	$c.next().remove();
-					    	$c.next()[0] = null;			
-					    	$c.remove();
-					    	$c[0] = null;
-							
-							setTimeout(process, 10);
-						}					
-					});
-				}
-				else {
-	
-					mod_saveremote(resCanvas);
-					delete resCanvas;
-					resCanvas = null;
-					$( "#progress-bar" ).remove();
-					$( "#progress-bar" )[0] = null;
-					$wDiv.remove();
-					$wDiv[0] = null;
-	
-				}
-			}
-		}
-	} // End of _producing()
 }
 
 /*
@@ -1050,6 +887,9 @@ function _randesign() {
 		// Fixed url to hotprintCloud server
 		var str = HOST_URL + TEMP_DIR + imgSrc.replace(/\//g, "+");
 		$(this).children(".draggable").data('src', str);
+		
+		var str_h = HOST_URL + TEMP_DIR + $(this).children(".draggable").attr('delay_src_h').replace(/\//g, "+");
+		$(this).children(".draggable").data('src_h', str_h);
 		
 		var spinner_color = '#000';
 		if(PHONE_COLOR == 'black')

@@ -671,9 +671,12 @@ function setDnD(maskImg, ox, oy) {
 			// Fixed url to hotprintCloud server
 			var str = HOST_URL + TEMP_DIR + toObj.attr('src').replace(/\//g, "+");
 			toObj.data('src', str);
+			var str_h = HOST_URL + TEMP_DIR + toObj.attr('delay_src_h').replace(/\//g, "+");
+			toObj.data('src_h', str_h);
 		}
 		else {
 			toObj.data('src', fromObj.data('src'));
+			toObj.data('src_h', fromObj.data('src_h'));
 		}
 		//console.log('toObj zdx:'+toObj.data('zdx'));
 		//console.log('toObj src:'+toObj.data('src'));
@@ -757,10 +760,13 @@ function setDnD(maskImg, ox, oy) {
 			
 			// Select high resolution photo if corner.width or corner.height larger than 100 
 			var imgSrc;
+			imgSrc = $(this).children(".draggable").attr('src');
+			/*
 			if (parseInt($(this).css('width'), 10) > 100 || parseInt($(this).css('height'), 10) > 100 )
 				imgSrc = $(this).children(".draggable").attr('delay_src_h');
 			else
 				imgSrc = $(this).children(".draggable").attr('src');
+			*/
 			var divObj = $(this);
 			
 			if ($(this).children(".draggable").attr("class").indexOf("cached") >= 0) {
